@@ -49,9 +49,28 @@ class Desktop with _FocusHandling, _KeyHandling, _ToastHandling, _WindowHandling
     onKey("<S-TAB>", focusPrevious);
     onKey("<A-i>", minimizeFocusedWindow);
     // onKey("<A-m>", moveFocusedWindow);
-    // onKey("<A-o>", maximizeFocusedWindow);
+    onKey("<C-o>", toggleMaximizeFocusedWindow);
     // onKey("<A-r>", resizeFocusedWindow);
     onKey("<A-x>", closeFocusedWindow);
+  }
+
+  void toggleMaximizeFocusedWindow() {
+    final current = _focused;
+    if (current == null) return;
+    if (!current.flags.contains(WindowFlag.maximizable)) return;
+
+    if (current.state == WindowState.maximized) {
+      current.state = WindowState.normal;
+      current.resize_(_restoreSizes[current] ?? current.size.max);
+    } else {
+      // horrible.. :-D but will it do for now?
+      _restoreSizes[current] = current.size.current;
+
+      current.state = WindowState.maximized;
+      current.resize(columns, rows);
+    }
+
+    redraw();
   }
 
   void minimizeFocusedWindow() {
@@ -119,7 +138,11 @@ class Desktop with _FocusHandling, _KeyHandling, _ToastHandling, _WindowHandling
     _invalidated.add(DateTime.now());
   }
 
-  _redraw(_) => _redrawDesktop(columns: _conIO.columns(), rows: _conIO.rows() - 1);
+  int get columns => _conIO.columns();
+
+  int get rows => _conIO.rows() - 1;
+
+  _redraw(_) => _redrawDesktop(columns: columns, rows: rows);
 
   /// TODO Change the displayed menu.
   setMenu(Menu menu) {}
@@ -152,7 +175,7 @@ class Desktop with _FocusHandling, _KeyHandling, _ToastHandling, _WindowHandling
   @override
   closeWindow(Window window) {
     window.requestRedraw = () {};
-    _windows.remove(window);
+    _removeWindow(window);
     _updateFocus();
     redraw();
   }

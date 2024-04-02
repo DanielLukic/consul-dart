@@ -46,7 +46,7 @@ enum WindowState {
 // TODO create once only per window... not once per frame... :-D ^^
 class DecoratedWindow implements Window {
   final Window _window;
-  final bool focused;
+  final bool Function(Window) focused;
 
   DecoratedWindow.decorate(this._window, {required this.focused});
 
@@ -78,7 +78,7 @@ class DecoratedWindow implements Window {
 
     final controls = _buildControls();
     final title = _buildTitle(controls);
-    final titlebar = focused ? "$title$controls".inverse() : "$title$controls";
+    final titlebar = focused(_window) ? "$title$controls".inverse() : "$title$controls";
 
     final lines = [titlebar, ...buffer.split("\n")];
     var fitted = lines.map((line) => _fitLineWidth(line, width)).toList();
@@ -146,6 +146,9 @@ class Window {
   WindowState state;
 
   bool get focusable => !flags.contains(WindowFlag.undecorated);
+
+  bool get isMaximized => state == WindowState.maximized;
+
   bool get isMinimized => state == WindowState.minimized;
 
   int get width => size.current.width;
@@ -186,4 +189,6 @@ class Window {
     // TODO restrict min/max
     size = WindowSize(Size(width, height), size.min, size.max);
   }
+
+  resize_(Size size) => resize(size.width, size.height);
 }

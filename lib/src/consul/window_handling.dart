@@ -5,11 +5,20 @@ abstract mixin class _WindowHandling {
   final _buffer = Buffer(0, 0);
   final _differ = Buffer(0, 0);
 
+  final _decorators = <Window, DecoratedWindow>{};
+  final _restoreSizes = <Window, Size>{};
+
   int _background = '░'.codeUnits.first;
 
   abstract Window? _focused;
 
   void _updateRow(int row, String data);
+
+  _removeWindow(Window window) {
+    _windows.remove(window);
+    _decorators.remove(window);
+    _restoreSizes.remove(window);
+  }
 
   _redrawDesktop({required int columns, required int rows}) {
     _buffer.update(columns, rows);
@@ -26,10 +35,20 @@ abstract mixin class _WindowHandling {
     for (var window in _windows) {
       if (window.state == WindowState.minimized) continue;
       _layoutWindow(window);
-      final decorated = DecoratedWindow.decorate(window, focused: _focused == window);
+
+      final decorated = _decorators.putIfAbsent(
+        window,
+        () => DecoratedWindow.decorate(window, focused: (it) => _focused == it),
+      );
+
       final buffer = decorated.redrawBuffer();
       if (buffer != null) {
-        final p = decorated.position.toAbsolute(desktop, window.size.current);
+        AbsolutePosition p;
+        if (window.isMaximized) {
+          p = Position.topLeft;
+        } else {
+          p = decorated.position.toAbsolute(desktop, window.size.current);
+        }
         _buffer.drawBuffer(p.x, p.y, buffer);
       }
     }

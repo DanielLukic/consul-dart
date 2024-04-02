@@ -13,6 +13,8 @@ enum RelativePositionMode {
 sealed class Position {
   const Position();
 
+  static const AbsolutePosition topLeft = AbsolutePosition(0, 0);
+
   static const unsetInitially = UnsetInitially();
 
   AbsolutePosition toAbsolute(Size desktop, Size window);
