@@ -79,6 +79,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
     _moving = _WindowMoving(current, () => _moving = null);
   }
 
+  /// Toggle maximized state of currently focused window. Nop if no window focused.
   void toggleMaximizeFocusedWindow() {
     final current = _focused;
     if (current == null) return;
@@ -98,6 +99,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
     redraw();
   }
 
+  /// Toggle minimized state of currently focused window.
   void minimizeFocusedWindow() {
     final current = _focused;
     if (current == null) return;
@@ -108,6 +110,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
     redraw();
   }
 
+  /// Close the currently focused window. Nop without focused window.
   void closeFocusedWindow() {
     final current = _focused;
     if (current == null) return;
