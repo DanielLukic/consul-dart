@@ -1,6 +1,6 @@
 part of 'desktop.dart';
 
-abstract mixin class _FocusHandling {
+abstract mixin class FocusHandling {
   abstract final List<Window> _windows;
 
   Window? _focused;
