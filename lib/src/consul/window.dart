@@ -16,24 +16,6 @@ class Window with AutoDispose, KeyHandling {
     onStateChanged();
   }
 
-  bool get focusable => !flags.contains(WindowFlag.undecorated);
-
-  bool get resizable => flags.contains(WindowFlag.resizable);
-
-  bool get undecorated => flags.contains(WindowFlag.undecorated);
-
-  bool get isClosed => state == WindowState.closed;
-
-  bool get isMaximized => state == WindowState.maximized;
-
-  bool get isMinimized => state == WindowState.minimized;
-
-  bool get isFocused => _isFocused(this);
-
-  int get width => size.current.width;
-
-  int get height => size.current.height;
-
   bool Function(Window) _isFocused = (_) => false;
 
   String? Function() redrawBuffer = () => null;
@@ -79,14 +61,6 @@ class Window with AutoDispose, KeyHandling {
     }
   }
 
-  resize(int width, int height) {
-    // TODO restrict min/max
-    size = WindowSize(Size(width, height), size.min, size.max);
-    onSizeChanged();
-  }
-
-  resize_(Size size) => resize(size.width, size.height);
-
   final _overlays = <WindowOverlay>[];
 
   void addOverlay(WindowOverlay it) => _overlays.add(it);
@@ -99,4 +73,39 @@ class Window with AutoDispose, KeyHandling {
     final f = flags.map((e) => e.name.take(2)).join(",");
     return "Window(name=$name,id=$id,position=$position,size=$s,flags=$f,state=${state.name}))";
   }
+}
+
+extension WindowExtensions on Window {
+  bool get closeable => flags.contains(WindowFlag.closeable);
+
+  // TODO Note the negation. Should this be a proper flag, too, right?
+  bool get focusable => !flags.contains(WindowFlag.undecorated);
+
+  bool get maximizable => flags.contains(WindowFlag.maximizable);
+
+  bool get minimizable => flags.contains(WindowFlag.minimizable);
+
+  bool get resizable => flags.contains(WindowFlag.resizable);
+
+  bool get undecorated => flags.contains(WindowFlag.undecorated);
+
+  bool get isClosed => state == WindowState.closed;
+
+  bool get isMaximized => state == WindowState.maximized;
+
+  bool get isMinimized => state == WindowState.minimized;
+
+  bool get isFocused => _isFocused(this);
+
+  int get width => size.current.width;
+
+  int get height => size.current.height;
+
+  resize(int width, int height) {
+    // TODO restrict min/max
+    size = WindowSize(Size(width, height), size.min, size.max);
+    onSizeChanged();
+  }
+
+  resize_(Size size) => resize(size.width, size.height);
 }
