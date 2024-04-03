@@ -63,3 +63,9 @@ However, there is far too much to do to call this useful in any way...
 * Window Move
 * Taskbar
 * Window Raise Lower Minimize Maximize (?)
+
+#### Bugs
+
+* moving window out left side breaks ansi.
+  potential fix: collect all ansi sequences cut off and combine into one.
+  placing this one into the first visible cell.
