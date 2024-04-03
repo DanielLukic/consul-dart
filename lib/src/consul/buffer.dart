@@ -39,12 +39,35 @@ class Buffer {
     final lines = data.split("\n");
     for (var i = 0; i < lines.length; i++) {
       if (y + i < 0 || y + i >= _buffer.length) continue;
+
       final target = _buffer[y + i];
       final cells = lines[i].asCells();
+      final ansi = StringBuffer();
+
       for (var j = 0; j < cells.length; j++) {
+        // collect all ansi codes outside the left boundary:
+        if (x + j < 0) {
+          ansi.write(cells[j].before);
+          ansi.write(cells[j].after);
+        }
+
+        // after the right boundary just ignore everything:
         if (x + j < 0 || x + j >= target.length) continue;
-        target[x + j] = cells[j];
-        if (j == cells.length - 1) target[x + j].reset = true;
+
+        // for the first visible cell, add all collected ansi codes:
+        if (ansi.isNotEmpty) {
+          target[x + j] = cells[j].withBeforeExtended(ansi.toString());
+          ansi.clear();
+        } else
+        // for all following cells just copy:
+        {
+          target[x + j] = cells[j];
+        }
+
+        // for the last cell enforce an ansi reset always:
+        if (j == cells.length - 1) {
+          target[x + j] = target[x + j].withReset();
+        }
       }
     }
   }
@@ -57,9 +80,14 @@ class Cell {
   final int charCode;
   final String before;
   final String after;
-  bool reset = false;
+  final bool reset;
 
-  Cell(this.charCode, {this.before = '', this.after = ''});
+  Cell(this.charCode, {this.before = '', this.after = '', this.reset = false});
+
+  Cell withBeforeExtended(String moreBefore) =>
+      Cell(charCode, before: before + moreBefore, after: after, reset: reset);
+
+  Cell withReset() => Cell(charCode, before: before, after: after, reset: true);
 
   @override
   String toString() => before + String.fromCharCode(charCode) + after + (reset ? _ansiReset : "");
