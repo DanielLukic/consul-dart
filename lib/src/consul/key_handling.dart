@@ -1,5 +1,11 @@
 part of 'desktop.dart';
 
+enum _MatchResult {
+  gotNothing,
+  matchedAndTriggered,
+  partialOnly,
+}
+
 mixin KeyHandling {
   var _keyTimeoutMillis = 400;
 
@@ -12,7 +18,25 @@ mixin KeyHandling {
   final _matchers = <_Matcher>[];
   Timer? _autoReset;
 
+  KeyHandling? _nested;
+
   _onKeyEvent(KeyEvent it) {
+    // if nested handler matched and triggered, reset "this" and stop here:
+    if (_nested?._match(it) == _MatchResult.matchedAndTriggered) {
+      _reset();
+    } else
+    // if "this" matched and triggered, reset the nested handler:
+    if (_match(it) == _MatchResult.matchedAndTriggered) {
+      _nested?._reset();
+    }
+  }
+
+  void _reset() {
+    _autoReset?.cancel();
+    _resetMatchers();
+  }
+
+  _MatchResult _match(KeyEvent it) {
     _autoReset?.cancel();
 
     // provide the current event to all registered handlers:
@@ -29,16 +53,18 @@ mixin KeyHandling {
     if (matches.isNotEmpty && partials.isEmpty) {
       matches.firstOrNull?.trigger();
       _resetMatchers();
-      return;
+      return _MatchResult.matchedAndTriggered;
     }
 
     // if nothing matched at all, immediately reset and be done:
     if (matches.isEmpty && partials.isEmpty) {
       _resetMatchers();
-      return;
+      return _MatchResult.gotNothing;
     }
 
-    // otherwise we have partial matches. auto reset these after a timeout:
+    // otherwise we have partial matches.
+
+    // auto reset these after a timeout if a timeout is set:
     if (_keyTimeoutMillis != 0) {
       _autoReset = Timer(keyTimeoutMillis.millis, () {
         final matches = _matchers.where((element) => element.isMatch());
@@ -46,6 +72,8 @@ mixin KeyHandling {
         _resetMatchers();
       });
     }
+
+    return _MatchResult.partialOnly;
   }
 
   void _resetMatchers() {
