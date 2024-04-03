@@ -36,14 +36,21 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
   KeyHandling? _keyInterceptor;
 
+  /// Currently available width for the desktop.
   int get columns => _conIO.columns();
 
+  /// Currently available height for the desktop.
   int get rows => _conIO.rows() - 1;
 
+  /// Currently available width and height for the desktop.
   Size get size => Size(columns, rows);
 
+  /// Is <Ctrl-c> intercepted? Or auto-handled by the console to stop the program? Note that if you
+  /// loop in your code, <Ctrl-c> will not be handled either way!
   get interceptSigInt => _conIO.interceptSigInt;
 
+  /// If [intercept] is true, <Ctrl-c> will be reported as a key event. It will be auto-handled as
+  /// program termination otherwise.
   set interceptSigInt(intercept) => _conIO.interceptSigInt = intercept;
 
   Desktop({
