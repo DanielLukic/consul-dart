@@ -21,13 +21,12 @@ class DecoratedWindow implements Window {
       "redrawBuffer" => _decorateBuffer(),
       "size" => _decoratedSize(),
       "state" => _window.state,
+      "undecorated" => _window.undecorated,
       "width" => _window.width,
       _ => throw NoSuchMethodError.withInvocation(_window, invocation),
     };
     return result;
   }
-
-  bool get undecorated => _window.flags.contains(WindowFlag.undecorated);
 
   String? Function() _decorateBuffer() {
     var buffer = _window.redrawBuffer();
