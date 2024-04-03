@@ -46,23 +46,23 @@ However, there is far too much to do to call this useful in any way...
 
 #### To Do
 
-2. Tab Switching
-3. Key Event Hierarchy
-4. Min/Max/Close/Move via Keys
-5. Taskbar
-6. Menu
-7. Global [?] vs Local _ Hotkeys
-7. Mouse...
-
+* Resize window via keys
 * Dialog
 * Menu Bar
 * Window Life Cycle
-* Key Event Hierarchy
-* Mouse Events
 * Mouse Event Hierarchy
-* Window Move
 * Taskbar
-* Window Raise Lower Minimize Maximize (?)
+
+#### Done
+
+- [X] Draw windows
+- [X] Window title bar with controls
+- [X] Console input handling (keys only for now)
+- [X] Tab switching
+- [X] Console mouse input handling
+- [X] Minimize/maximize/close windows via key
+- [X] Nested key handling
+- [X] Move windows via key
 
 #### Bugs
 
