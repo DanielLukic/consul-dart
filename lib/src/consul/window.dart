@@ -38,6 +38,11 @@ class Window with AutoDispose, KeyHandling {
 
   String? Function() redrawBuffer = () => null;
 
+  /// Override this to intercept/receive mouse events. It is important to return true here as long
+  /// as mouse events are consumed. Then end with a false after some action is done. Only after
+  /// returning false here, another consumer and/or new action is allowed to start.
+  OngoingMouseAction? Function(MouseEvent) onMouseEvent = (event) => null;
+
   void Function() onSizeChanged = () {};
   void Function() onStateChanged = () {};
 

@@ -15,6 +15,7 @@ part 'focus_handling.dart';
 part 'key_event.dart';
 part 'key_handling.dart';
 part 'menu.dart';
+part 'mouse_actions.dart';
 part 'mouse_event.dart';
 part 'toast.dart';
 part 'types.dart';
@@ -26,9 +27,9 @@ part 'window_resizing.dart';
 /// Pseudo desktop environment for the console.
 /// Requires an implementation of [ConIO] for rendering.
 /// Functions only during awaited execution of the [run] function.
-class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
+class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _WindowHandling {
   final ConIO _conIO;
-  final _subscriptions = StreamController<String>.broadcast();
+  final _subscriptions = StreamController<dynamic>.broadcast();
   final _invalidated = StreamController<DateTime>.broadcast();
 
   FPS _maxFPS;
@@ -43,6 +44,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   int get rows => _conIO.rows() - 1;
 
   /// Currently available width and height for the desktop.
+  @override
   Size get size => Size(columns, rows);
 
   /// Is <Ctrl-c> intercepted? Or auto-handled by the console to stop the program? Note that if you
@@ -60,6 +62,8 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   })  : _conIO = conIO,
         _maxFPS = FPS(maxFPS) {
     _conIO.onKeyEvent = _handleKeyEvent;
+    _conIO.onMouseEvent = _handleMouseEvent;
+    _subscriptions.stream.listen(_onMessage);
   }
 
   void _handleKeyEvent(KeyEvent it) {
@@ -73,6 +77,21 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
     _nested = _focused;
     _onKeyEvent(it);
+  }
+
+  void _onMessage(dynamic msg) {
+    switch (msg) {
+      case ("close-window", Window it):
+        closeWindow(it);
+      case ("maximize-window", Window it):
+        toggleMaximizeWindow(it);
+      case ("minimize-window", Window it):
+        minimizeWindow(it);
+      case ("raise-window", Window it):
+        raiseWindow(it);
+      default:
+        eventDebugLog.add("unhandled: $msg");
+    }
   }
 
   /// Handle <TAB> and <S-TAB> for window switching.
@@ -112,6 +131,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
   /// Toggle maximized state of [window].
   void toggleMaximizeWindow(Window window) {
+    if (window is DecoratedWindow) window = window._window;
     if (!window.flags.contains(WindowFlag.maximizable)) return;
 
     if (window.state == WindowState.maximized) {
@@ -137,6 +157,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
   /// Minimize [window].
   void minimizeWindow(Window window) {
+    if (window is DecoratedWindow) window = window._window;
     if (window.state == WindowState.minimized) return;
     if (!window.flags.contains(WindowFlag.minimizable)) return;
     window.state = WindowState.minimized;
@@ -211,6 +232,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
   /// Ensure [window] is not minimized.
   raiseWindow(Window window) {
+    if (window is DecoratedWindow) window = window._window;
     if (window.state == WindowState.minimized) {
       window.state = WindowState.normal;
     }
@@ -220,6 +242,8 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   /// Start displaying the [window] on this "desktop".
   @override
   openWindow(Window window) {
+    if (window is DecoratedWindow) window = window._window;
+
     window._isFocused = (it) => it == _focused;
     window.sendMessage = sendMessage;
     window.requestRedraw = redraw;
@@ -235,6 +259,8 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   /// Remove [window] from this "desktop".
   @override
   closeWindow(Window window) {
+    if (window is DecoratedWindow) window = window._window;
+
     window.state = WindowState.closed;
     window.requestRedraw = () {};
     window.sendMessage = (_) {};
@@ -248,10 +274,10 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   sendMessage(msg) => _subscriptions.sink.add(msg);
 
   /// Receive notifications of [msg] via [Stream].
-  Stream<String> listen(msg) => _subscriptions.stream.where((event) => event == msg);
+  Stream<dynamic> listen(msg) => _subscriptions.stream.where((event) => event == msg);
 
   /// Receive notifications of [msg] via callback function.
-  StreamSubscription<String> subscribe(msg, Function(dynamic) callback) =>
+  StreamSubscription<dynamic> subscribe(msg, Function(dynamic) callback) =>
       _subscriptions.stream.where((event) => event == msg).listen((event) {
         callback(event);
       });

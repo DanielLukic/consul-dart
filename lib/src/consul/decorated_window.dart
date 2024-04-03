@@ -5,7 +5,45 @@ class DecoratedWindow implements Window {
 
   DecoratedWindow.decorate(this._window) {
     eventDebugLog.add("window decorated: $_window");
+    onMouseEvent = _onMouseEvent;
   }
+
+  OngoingMouseAction? _onMouseEvent(MouseEvent it) {
+    final isLmbDown = it is MouseButtonEvent && it.kind == MouseButtonKind.lmbDown;
+
+    // check for titlebar click:
+    if (isLmbDown && it.y == 0 && it.x >= 0 && it.x < width) {
+      if (it.x >= width - 3) {
+        return CloseWindowAction(this, it, sendMessage);
+      } else if (it.x >= width - 6) {
+        return MaximizeWindowAction(this, it, sendMessage);
+      } else if (it.x >= width - 9) {
+        return MinimizeWindowAction(this, it, sendMessage);
+      } else {
+        return MoveWindowAction(this, it, sendMessage);
+      }
+    }
+
+    // check for resize control click:
+    if (isLmbDown && it.y == height - 1 && it.x == width - 1 && resizable) {
+      return ResizeWindowAction(this, it, sendMessage);
+    }
+
+    // check for inside click:
+    if (it.x >= 0 && it.x < width && it.y > 0 && it.y < height) {
+      // TODO handle inner handler ^^
+      return RaiseWindowAction(this, it, sendMessage);
+    }
+
+    // no action here, pass on null to let someone else handle it:
+    return null;
+  }
+
+  @override
+  Function(dynamic) get sendMessage => _window.sendMessage;
+
+  @override
+  late OngoingMouseAction? Function(MouseEvent) onMouseEvent;
 
   AbsolutePosition decoratedPosition(Size desktop) {
     if (_window.isMaximized) {

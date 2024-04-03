@@ -33,6 +33,12 @@ enum MouseButtonKind {
   mmbUp,
   rmbDown,
   rmbUp,
+  ;
+
+  bool get isUp =>
+      this == MouseButtonKind.lmbUp ||
+      this == MouseButtonKind.mmbUp ||
+      this == MouseButtonKind.rmbUp;
 }
 
 class MouseButtonEvent extends MouseEvent {
