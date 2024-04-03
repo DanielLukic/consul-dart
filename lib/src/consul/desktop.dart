@@ -20,6 +20,7 @@ part 'toast.dart';
 part 'types.dart';
 part 'window.dart';
 part 'window_handling.dart';
+part 'window_moving.dart';
 
 /// Pseudo desktop environment for the console.
 /// Requires an implementation of [ConIO] for rendering.
@@ -31,6 +32,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
   FPS _maxFPS;
   StreamSubscription? _tick;
+  _WindowMoving? _moving;
 
   get interceptSigInt => _conIO.interceptSigInt;
 
@@ -46,6 +48,11 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   }
 
   void _handleKeyEvent(KeyEvent it) {
+    if (_moving != null) {
+      _moving?._onKeyEvent(it);
+      return;
+    }
+
     // when focus changes, reset unfocused window/handler:
     if (_nested != _focused) _nested?._reset();
 
@@ -58,10 +65,18 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
     onKey("<Tab>", focusNext);
     onKey("<S-Tab>", focusPrevious);
     onKey("<C-w>_", minimizeFocusedWindow);
-    // onKey("<A-m>", moveFocusedWindow);
+    onKey("<C-w>m", moveFocusedWindow);
     onKey("<C-w>o", toggleMaximizeFocusedWindow);
     // onKey("<A-r>", resizeFocusedWindow);
     onKey("<C-w>x", closeFocusedWindow);
+  }
+
+  /// Move currently focused window via keyboard. Nop if no window focused.
+  void moveFocusedWindow() {
+    final current = _focused;
+    if (current == null) return;
+    if (current.flags.contains(WindowFlag.unmovable)) return;
+    _moving = _WindowMoving(current, () => _moving = null);
   }
 
   void toggleMaximizeFocusedWindow() {

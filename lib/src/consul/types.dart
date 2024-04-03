@@ -18,6 +18,8 @@ sealed class Position {
   static const unsetInitially = UnsetInitially();
 
   AbsolutePosition toAbsolute(Size desktop, Size window);
+
+  Position moved(int dx, int dy);
 }
 
 class UnsetInitially extends Position {
@@ -29,6 +31,9 @@ class UnsetInitially extends Position {
     final y = (desktop.height - window.height) ~/ 2;
     return AbsolutePosition(x, y);
   }
+
+  @override
+  Position moved(int dx, int dy) => AbsolutePosition(dx, dy);
 
   @override
   String toString() => "Unset";
@@ -73,6 +78,9 @@ class RelativePosition extends Position {
     return AbsolutePosition(x, y);
   }
 
+  @override
+  Position moved(int dx, int dy) => RelativePosition(xMode, yMode, xOffset + dx, yOffset + dy);
+
   int _applyMode(RelativePositionMode mode, int desktop, int window, int offset) {
     return switch (mode) {
       RelativePositionMode.autoCentered => (desktop - window) ~/ 2 + offset,
@@ -97,6 +105,9 @@ class AbsolutePosition extends Position {
   AbsolutePosition toAbsolute(Size desktop, Size window) => this;
 
   @override
+  Position moved(int dx, int dy) => AbsolutePosition(x + dx, y + dy);
+
+  @override
   String toString() => "Absolute($x,$y)";
 }
 
@@ -116,7 +127,7 @@ enum WindowFlag {
   closeable,
   maximizable,
   minimizable,
-  movable,
+  unmovable,
   resizable,
   undecorated,
 }
