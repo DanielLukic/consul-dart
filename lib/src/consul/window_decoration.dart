@@ -8,17 +8,22 @@ mixin _WindowDecoration {
   /// returned without any decoration.
   String? Function() _decorateBuffer(Window window) {
     var buffer = window.redrawBuffer();
-    if (window.undecorated || buffer == null) return () => buffer;
+    if (buffer == null) return () => buffer;
 
-    final controls = _buildControls(window);
-    final title = _buildTitle(window, controls);
-    final titlebar = window.isFocused ? "$title$controls".inverse() : "$title$controls";
+    final List<String> lines;
+    if (window.undecorated) {
+      lines = [...buffer.split("\n").take(window.height)];
+    } else {
+      final controls = _buildControls(window);
+      final title = _buildTitle(window, controls);
+      final titlebar = window.isFocused ? "$title$controls".inverse() : "$title$controls";
+      lines = [titlebar, ...buffer.split("\n").take(window.height)];
+    }
 
-    final lines = [titlebar, ...buffer.split("\n").take(window.height)];
     final extraLines = List.filled(max(0, window.height - lines.length), "");
     var fitted = (lines + extraLines).map((line) => _fitLineWidth(line, window.width)).toList();
 
-    if (window.resizable) {
+    if (window.resizable && !window.undecorated) {
       var bottom = fitted.takeLast(1).single;
       bottom = bottom.replaceRange(bottom.length - 1, bottom.length, "◢");
       fitted = fitted.dropLast(1) + [bottom];
