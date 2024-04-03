@@ -33,7 +33,12 @@ extension ListExtensions<E> on List<E> {
 
   List<E> dropLast(int count) => sublist(0, max(0, length - count));
 
-  E? lastWhereOrNull(bool Function(E) predicate) => where(predicate).lastOrNull;
+  E? lastWhereOrNull(bool Function(E) predicate) {
+    for (final it in reversed) {
+      if (predicate(it)) return it;
+    }
+    return null;
+  }
 
   List<E> take_(int count) => take(count).toList();
 
