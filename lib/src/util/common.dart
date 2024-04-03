@@ -33,6 +33,13 @@ extension ListExtensions<E> on List<E> {
 
   List<E> dropLast(int count) => sublist(0, max(0, length - count));
 
+  E? firstWhereOrNull(bool Function(E) predicate) {
+    for (final it in this) {
+      if (predicate(it)) return it;
+    }
+    return null;
+  }
+
   E? lastWhereOrNull(bool Function(E) predicate) {
     for (final it in reversed) {
       if (predicate(it)) return it;
