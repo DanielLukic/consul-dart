@@ -37,15 +37,9 @@ abstract mixin class _WindowHandling {
       _layoutWindow(window);
 
       final decorated = _decorators.putIfAbsent(window, () => DecoratedWindow.decorate(window));
+      final decoratedPosition = decorated.decoratedPosition(desktop);
       final buffer = decorated.redrawBuffer();
-      if (buffer != null) {
-        AbsolutePosition p;
-        if (window.isMaximized) {
-          p = Position.topLeft;
-        } else {
-          p = decorated.position.toAbsolute(desktop, window.size.current);
-        }
-        _buffer.drawBuffer(p.x, p.y, buffer);
+      if (buffer != null) _buffer.drawBuffer(decoratedPosition.x, decoratedPosition.y, buffer);
       }
     }
   }

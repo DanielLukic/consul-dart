@@ -7,6 +7,14 @@ class DecoratedWindow implements Window {
     eventDebugLog.add("window decorated: $_window");
   }
 
+  AbsolutePosition decoratedPosition(Size desktop) {
+    if (_window.isMaximized) {
+      return Position.topLeft;
+    } else {
+      return position.toAbsolute(desktop, _decoratedSize().current);
+    }
+  }
+
   @override
   dynamic noSuchMethod(Invocation invocation) {
     // Quick hack for now to prototype this...
