@@ -48,7 +48,6 @@ However, there is far too much to do to call this useful in any way...
 
 * Dialog
 * Menu Bar
-* Window Life Cycle
 * Mouse Event Hierarchy
 * Taskbar
 
@@ -63,6 +62,7 @@ However, there is far too much to do to call this useful in any way...
 - [X] Nested key handling
 - [X] Move windows via key
 - [X] Resize window via keys
+- [X] Window hooks (state & size for now)
 
 #### Bugs
 
