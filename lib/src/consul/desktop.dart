@@ -161,8 +161,9 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
   /// Trigger an (async) redraw.
   redraw() {
-    // ignore broken windows:
+    // ignore broken windows still sending after shutdown:
     if (_invalidated.isClosed) return;
+
     _invalidated.add(DateTime.now());
   }
 
