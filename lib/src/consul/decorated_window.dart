@@ -114,4 +114,7 @@ class DecoratedWindow implements Window {
       _window.size.max,
     );
   }
+
+  @override
+  String toString() => "Decorated($_window)";
 }
