@@ -55,8 +55,8 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
   /// Handle <TAB> and <S-TAB> for window switching.
   void setDefaultKeys() {
-    onKey("<TAB>", focusNext);
-    onKey("<S-TAB>", focusPrevious);
+    onKey("<Tab>", focusNext);
+    onKey("<S-Tab>", focusPrevious);
     onKey("<C-w>_", minimizeFocusedWindow);
     // onKey("<A-m>", moveFocusedWindow);
     onKey("<C-w>o", toggleMaximizeFocusedWindow);

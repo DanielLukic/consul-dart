@@ -55,7 +55,7 @@ class ControlKey extends KeyEvent {
     if (alt) prefix.write("A-");
     if (ctrl) prefix.write("C-");
     if (shift) prefix.write("S-");
-    return "<$prefix${key.name.toUpperCase()}>";
+    return "<$prefix${key.name}>";
   }
 }
 
