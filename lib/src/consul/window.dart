@@ -40,7 +40,7 @@ class Window with AutoDispose, KeyHandling {
   void Function() onStateChanged = () {};
 
   /// Call this to request a redraw. Note that it will be a nop until the window is actually opened
-  /// on the desktop via [Desktop.openWindow].
+  /// on the desktop via [Desktop.openWindow]. (And it will be a nop after closing the window. Doh.)
   Function requestRedraw = () {};
 
   Window(
