@@ -40,6 +40,10 @@ abstract mixin class _WindowHandling {
       final decoratedPosition = decorated.decoratedPosition(desktop);
       final buffer = decorated.redrawBuffer();
       if (buffer != null) _buffer.drawBuffer(decoratedPosition.x, decoratedPosition.y, buffer);
+
+      for (final overlay in window._overlays) {
+        final inside = VirtualBuffer(_buffer, decoratedPosition, decorated.size.current);
+        overlay.decorate(inside);
       }
     }
   }

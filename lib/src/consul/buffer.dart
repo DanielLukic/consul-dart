@@ -84,3 +84,22 @@ extension on String {
     return cells;
   }
 }
+
+class VirtualBuffer extends OverlayBuffer {
+  final Buffer _targetBuffer;
+  final AbsolutePosition _offset;
+  final Size _size;
+
+  @override
+  int get height => _size.height;
+
+  @override
+  int get width => _size.width;
+
+  VirtualBuffer(this._targetBuffer, this._offset, this._size);
+
+  @override
+  draw(int x, int y, String buffer) {
+    _targetBuffer.drawBuffer(x + _offset.x, y + _offset.y, buffer);
+  }
+}

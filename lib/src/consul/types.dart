@@ -157,3 +157,15 @@ enum WindowState {
   minimized,
   normal,
 }
+
+abstract interface class WindowOverlay {
+  void decorate(OverlayBuffer buffer);
+}
+
+abstract class OverlayBuffer {
+  int get height;
+
+  int get width;
+
+  draw(int x, int y, String buffer);
+}

@@ -75,6 +75,12 @@ class Window with AutoDispose, KeyHandling {
 
   resize_(Size size) => resize(size.width, size.height);
 
+  final _overlays = <WindowOverlay>[];
+
+  void addOverlay(WindowOverlay it) => _overlays.add(it);
+
+  void removeOverlay(WindowOverlay it) => _overlays.remove(it);
+
   @override
   String toString() {
     final s = size.current;
