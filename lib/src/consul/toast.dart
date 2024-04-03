@@ -1,6 +1,6 @@
 part of 'desktop.dart';
 
-abstract mixin class _ToastHandling {
+abstract mixin class ToastHandling {
   final _pending = <String>[];
   Window? _active;
 
