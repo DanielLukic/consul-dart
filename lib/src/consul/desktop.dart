@@ -24,7 +24,7 @@ part 'window_handling.dart';
 /// Pseudo desktop environment for the console.
 /// Requires an implementation of [ConIO] for rendering.
 /// Functions only during awaited execution of the [run] function.
-class Desktop with FocusHandling, _KeyHandling, ToastHandling, _WindowHandling {
+class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   final ConIO _conIO;
   final _subscriptions = StreamController<String>.broadcast();
   final _invalidated = StreamController<DateTime>.broadcast();

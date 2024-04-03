@@ -1,6 +1,6 @@
 part of 'desktop.dart';
 
-mixin _KeyHandling {
+mixin KeyHandling {
   var _keyTimeoutMillis = 400;
 
   int get keyTimeoutMillis => _keyTimeoutMillis;
