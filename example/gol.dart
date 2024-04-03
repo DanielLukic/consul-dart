@@ -8,7 +8,7 @@ import 'package:consul/consul.dart';
 gameOfLife(Desktop desktop) {
   final running = desktop.findWindow("gol");
   if (running != null) {
-    desktop.restore(running);
+    desktop.raiseWindow(running);
   } else {
     final gol = GOL(60, 60);
     final window = Window(

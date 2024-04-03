@@ -8,7 +8,7 @@ import 'package:consul/consul.dart';
 starfield(Desktop desktop) {
   final running = desktop.findWindow("stars");
   if (running != null) {
-    desktop.restore(running);
+    desktop.raiseWindow(running);
   } else {
     final window = Window(
       "stars",

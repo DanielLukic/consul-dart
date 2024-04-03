@@ -210,7 +210,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   Window? findWindow(String id) => _windows.where((it) => it.id == id).firstOrNull;
 
   /// Ensure [window] is not minimized.
-  restore(Window window) {
+  raiseWindow(Window window) {
     if (window.state == WindowState.minimized) {
       window.state = WindowState.normal;
     }
