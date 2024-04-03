@@ -5,6 +5,8 @@ sealed class MouseEvent {
   final int y;
 
   const MouseEvent(this.x, this.y);
+
+  MouseEvent relativeTo(AbsolutePosition p);
 }
 
 enum MouseWheelKind {
@@ -16,6 +18,9 @@ class MouseWheelEvent extends MouseEvent {
   final MouseWheelKind kind;
 
   const MouseWheelEvent(this.kind, super.x, super.y);
+
+  @override
+  MouseEvent relativeTo(AbsolutePosition p) => MouseWheelEvent(kind, x - p.x, y - p.y);
 
   @override
   String toString() => "$kind,$x,$y";
@@ -36,6 +41,9 @@ class MouseButtonEvent extends MouseEvent {
   const MouseButtonEvent(this.kind, super.x, super.y);
 
   @override
+  MouseEvent relativeTo(AbsolutePosition p) => MouseButtonEvent(kind, x - p.x, y - p.y);
+
+  @override
   String toString() => "$kind,$x,$y";
 }
 
@@ -49,6 +57,9 @@ class MouseMotionEvent extends MouseEvent {
   final MouseMotionKind kind;
 
   const MouseMotionEvent(this.kind, super.x, super.y);
+
+  @override
+  MouseEvent relativeTo(AbsolutePosition p) => MouseMotionEvent(kind, x - p.x, y - p.y);
 
   @override
   String toString() => "$kind,$x,$y";
