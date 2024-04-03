@@ -38,10 +38,10 @@ class Buffer {
   drawBuffer(int x, int y, String data) {
     final lines = data.split("\n");
     for (var i = 0; i < lines.length; i++) {
+      if (y + i < 0 || y + i >= _buffer.length) continue;
       final target = _buffer[y + i];
       final cells = lines[i].asCells();
       for (var j = 0; j < cells.length; j++) {
-        if (y + i < 0 || y + i >= _buffer.length) continue;
         if (x + j < 0 || x + j >= target.length) continue;
         target[x + j] = cells[j];
         if (j == cells.length - 1) target[x + j].reset = true;

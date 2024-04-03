@@ -10,41 +10,57 @@ starfield(Desktop desktop) {
   if (running != null) {
     desktop.restore(running);
   } else {
-    final stars = _Starfield(80, 80);
     final window = Window(
       "stars",
       "✷✸✹ Stars ✹✸✷",
       position: RelativePosition.fromTopLeft(xOffset: 2, yOffset: 1),
       size: WindowSize.min(Size(40, 20)),
     );
-    window.redrawBuffer = stars.render;
-    desktop.openWindow(window);
 
-    //window.onState.listen ...
-    Timer.periodic(FPS(60).milliseconds, (timer) {
-      stars.move();
-      window.requestRedraw();
-    });
+    window.onSizeChanged = () => _update(window);
+    window.onStateChanged = () => _update(window);
+    window.onStateChanged();
+
+    desktop.openWindow(window);
   }
 }
 
+_Starfield? _starfield;
+
+void _update(Window window) {
+  window.dispose("tick");
+
+  if (window.isClosed || window.isMinimized) return;
+
+  final w = window.width * 2;
+  final h = window.height * 4;
+  if (_starfield?.width != w || _starfield?.height != h) {
+    final starfield = _Starfield(window.width * 2, window.height * 4);
+    _starfield = starfield;
+    window.redrawBuffer = starfield.render;
+  }
+
+  final tick = Timer.periodic(FPS(60).milliseconds, (timer) {
+    _starfield?.move();
+    window.requestRedraw();
+  });
+
+  window.autoDispose("tick", tick);
+
+  eventDebugLog.add("stars: ${_starfield?.width} x ${_starfield?.height}");
+}
+
 class _Starfield {
-  final int width;
-
-  final int height;
-
-  final double w;
-
-  final double h;
-
   final rnd = Random();
   final List<_Star> stars = [];
-  final DrawingCanvas canvas;
 
-  _Starfield(this.width, this.height)
-      : w = width.toDouble(),
-        h = height.toDouble(),
-        canvas = DrawingCanvas(width, height) {
+  int width;
+
+  int height;
+
+  DrawingCanvas canvas;
+
+  _Starfield(this.width, this.height) : canvas = DrawingCanvas(width, height) {
     placeStarsRandomly();
   }
 
@@ -58,15 +74,29 @@ class _Starfield {
   }
 
   move() {
-    canvas.clear();
     for (var star in stars) {
       star.move();
       if (star.x < 0) star.reset(width, height, rnd);
-      star.draw(canvas);
     }
+    _dirty = true;
   }
 
-  String render() => canvas.frame();
+  var _dirty = false;
+
+  String render() {
+    if (_dirty) {
+      if (canvas.width != width || canvas.height != height) {
+        canvas = DrawingCanvas(width, height);
+      } else {
+        canvas.clear();
+      }
+      for (var star in stars) {
+        star.draw(canvas);
+      }
+      _dirty = false;
+    }
+    return canvas.frame();
+  }
 }
 
 class _Star {

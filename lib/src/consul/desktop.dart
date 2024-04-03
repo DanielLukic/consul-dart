@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:ansi/ansi.dart';
 import 'package:consul/src/util/common.dart';
@@ -9,6 +10,7 @@ import 'package:rxdart/transformers.dart';
 part 'buffer.dart';
 part 'con_io.dart';
 part 'debug_log.dart';
+part 'decorated_window.dart';
 part 'focus_handling.dart';
 part 'key_event.dart';
 part 'key_handling.dart';
@@ -47,11 +49,11 @@ class Desktop with _FocusHandling, _KeyHandling, _ToastHandling, _WindowHandling
   void setDefaultKeys() {
     onKey("<TAB>", focusNext);
     onKey("<S-TAB>", focusPrevious);
-    onKey("<A-i>", minimizeFocusedWindow);
+    onKey("<C-w>_", minimizeFocusedWindow);
     // onKey("<A-m>", moveFocusedWindow);
-    onKey("<C-o>", toggleMaximizeFocusedWindow);
+    onKey("<C-w>o", toggleMaximizeFocusedWindow);
     // onKey("<A-r>", resizeFocusedWindow);
-    onKey("<A-x>", closeFocusedWindow);
+    onKey("<C-w>x", closeFocusedWindow);
   }
 
   void toggleMaximizeFocusedWindow() {
@@ -67,7 +69,7 @@ class Desktop with _FocusHandling, _KeyHandling, _ToastHandling, _WindowHandling
       _restoreSizes[current] = current.size.current;
 
       current.state = WindowState.maximized;
-      current.resize(columns, rows);
+      current.resize(columns, rows - (current.undecorated ? 0 : 1 /*titlebar*/));
     }
 
     redraw();
@@ -161,6 +163,7 @@ class Desktop with _FocusHandling, _KeyHandling, _ToastHandling, _WindowHandling
   /// Start displaying the [window] on this "desktop".
   @override
   openWindow(Window window) {
+    window._isFocused = (it) => it == _focused;
     window.requestRedraw = redraw;
 
     // move window to top (end) of stack:
@@ -174,7 +177,9 @@ class Desktop with _FocusHandling, _KeyHandling, _ToastHandling, _WindowHandling
   /// Remove [window] from this "desktop".
   @override
   closeWindow(Window window) {
+    window.state = WindowState.closed;
     window.requestRedraw = () {};
+    window.disposeAll();
     _removeWindow(window);
     _updateFocus();
     redraw();

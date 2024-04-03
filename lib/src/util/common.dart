@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'log.dart';
@@ -64,4 +65,33 @@ class Disposable {
   Disposable(this._disposable);
 
   void dispose() => _disposable();
+}
+
+mixin AutoDispose {
+  final _disposables = <String, Disposable>{};
+
+  void disposeAll() {
+    for (var it in _disposables.values) {
+      it.dispose();
+    }
+  }
+
+  void dispose(String tag) => _disposables[tag]?.dispose();
+
+  void autoDispose(String tag, dynamic something) {
+    final Disposable it;
+    if (something is Timer) {
+      it = Disposable(() => something.cancel());
+    } else if (something is StreamController) {
+      it = Disposable(() => something.close());
+    } else if (something is StreamSubscription) {
+      it = Disposable(() => something.cancel());
+    } else if (something is Disposable) {
+      it = something;
+    } else {
+      throw ArgumentError("${something.runtimeType} not supported (yet)", "something");
+    }
+    _disposables.remove(tag)?.dispose();
+    _disposables[tag] = it;
+  }
 }

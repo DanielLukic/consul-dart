@@ -36,11 +36,7 @@ abstract mixin class _WindowHandling {
       if (window.state == WindowState.minimized) continue;
       _layoutWindow(window);
 
-      final decorated = _decorators.putIfAbsent(
-        window,
-        () => DecoratedWindow.decorate(window, focused: (it) => _focused == it),
-      );
-
+      final decorated = _decorators.putIfAbsent(window, () => DecoratedWindow.decorate(window));
       final buffer = decorated.redrawBuffer();
       if (buffer != null) {
         AbsolutePosition p;

@@ -29,6 +29,9 @@ class UnsetInitially extends Position {
     final y = (desktop.height - window.height) ~/ 2;
     return AbsolutePosition(x, y);
   }
+
+  @override
+  String toString() => "Unset";
 }
 
 class RelativePosition extends Position {
@@ -77,6 +80,9 @@ class RelativePosition extends Position {
       RelativePositionMode.fromEnd => desktop - window + offset,
     };
   }
+
+  @override
+  String toString() => "Relative(${xMode.name}:$xOffset,${yMode.name}:$yOffset)";
 }
 
 class AbsolutePosition extends Position {
@@ -89,6 +95,9 @@ class AbsolutePosition extends Position {
 
   @override
   AbsolutePosition toAbsolute(Size desktop, Size window) => this;
+
+  @override
+  String toString() => "Absolute($x,$y)";
 }
 
 class Size {
@@ -98,4 +107,53 @@ class Size {
   const Size(this.width, this.height);
 
   static const Size autoFill = Size(-2, -2);
+
+  @override
+  String toString() => "Size(${width}x$height)";
+}
+
+enum WindowFlag {
+  closeable,
+  maximizable,
+  minimizable,
+  movable,
+  resizable,
+  undecorated,
+}
+
+class WindowSize {
+  final Size current;
+  final Size min;
+  final Size max;
+
+  const WindowSize(this.current, this.min, this.max);
+
+  const WindowSize.max(this.current)
+      : min = const Size(0, 0),
+        max = current;
+
+  const WindowSize.min(this.current)
+      : min = current,
+        max = Size.autoFill;
+
+  const WindowSize.defaultMinMax(this.current)
+      : min = const Size(0, 0),
+        max = Size.autoFill;
+
+  const WindowSize.fixed(this.current)
+      : min = current,
+        max = current;
+
+  const WindowSize.fillScreen()
+      : current = Size.autoFill,
+        min = Size.autoFill,
+        max = Size.autoFill;
+}
+
+enum WindowState {
+  // final state
+  closed,
+  maximized,
+  minimized,
+  normal,
 }

@@ -5,7 +5,14 @@ abstract mixin class _FocusHandling {
 
   Window? _focused;
 
-  _updateFocus() => _focused = _windows.lastWhereOrNull((it) => it.focusable && !it.isMinimized);
+  _updateFocus() {
+    final current = _focused;
+    _focused = _windows.lastWhereOrNull((it) => it.focusable && !it.isMinimized);
+    if (current == _focused) return;
+    
+    current?.onStateChanged();
+    _focused?.onStateChanged();
+  }
 
   void focusNext() {
     final current = _focused;
