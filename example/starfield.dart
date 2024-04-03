@@ -21,6 +21,8 @@ starfield(Desktop desktop) {
     window.onStateChanged = () => _update(window);
     window.onStateChanged();
 
+    window.onKey("q", () => desktop.closeWindow(window));
+
     desktop.openWindow(window);
   }
 }
