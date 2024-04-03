@@ -107,29 +107,39 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   void toggleMaximizeFocusedWindow() {
     final current = _focused;
     if (current == null) return;
-    if (!current.flags.contains(WindowFlag.maximizable)) return;
+    toggleMaximizeWindow(current);
+  }
 
-    if (current.state == WindowState.maximized) {
-      current.state = WindowState.normal;
-      current.resize_(_restoreSizes[current] ?? current.size.max);
+  /// Toggle maximized state of [window].
+  void toggleMaximizeWindow(Window window) {
+    if (!window.flags.contains(WindowFlag.maximizable)) return;
+
+    if (window.state == WindowState.maximized) {
+      window.state = WindowState.normal;
+      window.resize_(_restoreSizes[window] ?? window.size.max);
     } else {
       // horrible.. :-D but will it do for now?
-      _restoreSizes[current] = current.size.current;
+      _restoreSizes[window] = window.size.current;
 
-      current.state = WindowState.maximized;
-      current.resize(columns, rows - (current.undecorated ? 0 : 1 /*titlebar*/));
+      window.state = WindowState.maximized;
+      window.resize(columns, rows - (window.undecorated ? 0 : 1 /*titlebar*/));
     }
 
     redraw();
   }
 
-  /// Toggle minimized state of currently focused window.
+  /// Minimize currently focused window.
   void minimizeFocusedWindow() {
     final current = _focused;
     if (current == null) return;
-    if (current.state == WindowState.minimized) return;
-    if (!current.flags.contains(WindowFlag.minimizable)) return;
-    current.state = WindowState.minimized;
+    minimizeWindow(current);
+  }
+
+  /// Minimize [window].
+  void minimizeWindow(Window window) {
+    if (window.state == WindowState.minimized) return;
+    if (!window.flags.contains(WindowFlag.minimizable)) return;
+    window.state = WindowState.minimized;
     _updateFocus();
     redraw();
   }
