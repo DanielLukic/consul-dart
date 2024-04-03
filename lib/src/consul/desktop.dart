@@ -21,6 +21,7 @@ part 'types.dart';
 part 'window.dart';
 part 'window_handling.dart';
 part 'window_moving.dart';
+part 'window_resizing.dart';
 
 /// Pseudo desktop environment for the console.
 /// Requires an implementation of [ConIO] for rendering.
@@ -32,7 +33,14 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
   FPS _maxFPS;
   StreamSubscription? _tick;
-  _WindowMoving? _moving;
+
+  KeyHandling? _keyInterceptor;
+
+  int get columns => _conIO.columns();
+
+  int get rows => _conIO.rows() - 1;
+
+  Size get size => Size(columns, rows);
 
   get interceptSigInt => _conIO.interceptSigInt;
 
@@ -48,8 +56,8 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   }
 
   void _handleKeyEvent(KeyEvent it) {
-    if (_moving != null) {
-      _moving?._onKeyEvent(it);
+    if (_keyInterceptor != null) {
+      _keyInterceptor?._onKeyEvent(it);
       return;
     }
 
@@ -67,8 +75,17 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
     onKey("<C-w>_", minimizeFocusedWindow);
     onKey("<C-w>m", moveFocusedWindow);
     onKey("<C-w>o", toggleMaximizeFocusedWindow);
-    // onKey("<A-r>", resizeFocusedWindow);
+    onKey("<C-w>r", resizeFocusedWindow);
     onKey("<C-w>x", closeFocusedWindow);
+  }
+
+  /// Resize currently focused window via keyboard. Nop if no window focused. Nop if window is not
+  /// [WindowFlag.resizable].
+  void resizeFocusedWindow() {
+    final current = _focused;
+    if (current == null) return;
+    if (!current.flags.contains(WindowFlag.resizable)) return;
+    _keyInterceptor = _WindowResizing(size, current, () => _keyInterceptor = null);
   }
 
   /// Move currently focused window via keyboard. Nop if no window focused.
@@ -76,7 +93,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
     final current = _focused;
     if (current == null) return;
     if (current.flags.contains(WindowFlag.unmovable)) return;
-    _moving = _WindowMoving(current, () => _moving = null);
+    _keyInterceptor = _WindowMoving(current, () => _keyInterceptor = null);
   }
 
   /// Toggle maximized state of currently focused window. Nop if no window focused.
@@ -166,10 +183,6 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
 
     _invalidated.add(DateTime.now());
   }
-
-  int get columns => _conIO.columns();
-
-  int get rows => _conIO.rows() - 1;
 
   _redraw(_) => _redrawDesktop(columns: columns, rows: rows);
 

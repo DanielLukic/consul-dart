@@ -117,6 +117,12 @@ class Size {
 
   const Size(this.width, this.height);
 
+  /// Special size to auto-limit (either min or max). Effectively same as [autoFill] for max. But
+  /// for min will make sure titlebar and resize control is visible. However, these minimums are
+  /// enforced always anyways. So this is mostly a formality. ‾\_('')_/‾
+  static const Size autoLimit = Size(-1, -1);
+
+  /// Auto fill the available space (desktop). Useful really only for max size.
   static const Size autoFill = Size(-2, -2);
 
   @override
@@ -140,7 +146,7 @@ class WindowSize {
   const WindowSize(this.current, this.min, this.max);
 
   const WindowSize.max(this.current)
-      : min = const Size(0, 0),
+      : min = Size.autoLimit,
         max = current;
 
   const WindowSize.min(this.current)
@@ -148,7 +154,7 @@ class WindowSize {
         max = Size.autoFill;
 
   const WindowSize.defaultMinMax(this.current)
-      : min = const Size(0, 0),
+      : min = Size.autoLimit,
         max = Size.autoFill;
 
   const WindowSize.fixed(this.current)
@@ -162,7 +168,6 @@ class WindowSize {
 }
 
 enum WindowState {
-  // final state
   closed,
   maximized,
   minimized,

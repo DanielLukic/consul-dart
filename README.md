@@ -46,7 +46,6 @@ However, there is far too much to do to call this useful in any way...
 
 #### To Do
 
-* Resize window via keys
 * Dialog
 * Menu Bar
 * Window Life Cycle
@@ -63,6 +62,7 @@ However, there is far too much to do to call this useful in any way...
 - [X] Minimize/maximize/close windows via key
 - [X] Nested key handling
 - [X] Move windows via key
+- [X] Resize window via keys
 
 #### Bugs
 
