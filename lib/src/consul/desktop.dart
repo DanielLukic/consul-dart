@@ -42,7 +42,15 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
     int maxFPS = 60,
   })  : _conIO = conIO,
         _maxFPS = FPS(maxFPS) {
-    _conIO.onKeyEvent = _onKeyEvent;
+    _conIO.onKeyEvent = _handleKeyEvent;
+  }
+
+  void _handleKeyEvent(KeyEvent it) {
+    // when focus changes, reset unfocused window/handler:
+    if (_nested != _focused) _nested?._reset();
+
+    _nested = _focused;
+    _onKeyEvent(it);
   }
 
   /// Handle <TAB> and <S-TAB> for window switching.

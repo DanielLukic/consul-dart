@@ -1,6 +1,6 @@
 part of 'desktop.dart';
 
-class Window with AutoDispose {
+class Window with AutoDispose, KeyHandling {
   String id;
   String name;
   Set<WindowFlag> flags = {};
