@@ -47,6 +47,15 @@ extension ListExtensions<E> on List<E> {
     return null;
   }
 
+  List<R> mapNotNull<R>(R? Function(E) predicate) {
+    final result = <R>[];
+    for (final it in this) {
+      final mapped = predicate(it);
+      if (mapped != null) result.add(mapped);
+    }
+    return result;
+  }
+
   List<E> take_(int count) => take(count).toList();
 
   List<E> takeLast(int count) => sublist(max(0, length - count));
