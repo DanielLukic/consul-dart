@@ -27,6 +27,7 @@ class DecoratedWindow implements Window {
       "name" => _window.name,
       "position" => _window.position,
       "redrawBuffer" => _decorateBuffer(),
+      "resizable" => _window.resizable,
       "size" => _decoratedSize(),
       "state" => _window.state,
       "undecorated" => _window.undecorated,

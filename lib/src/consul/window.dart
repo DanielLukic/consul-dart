@@ -18,6 +18,8 @@ class Window with AutoDispose, KeyHandling {
 
   bool get focusable => !flags.contains(WindowFlag.undecorated);
 
+  bool get resizable => flags.contains(WindowFlag.resizable);
+
   bool get undecorated => flags.contains(WindowFlag.undecorated);
 
   bool get isClosed => state == WindowState.closed;
