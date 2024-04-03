@@ -45,6 +45,11 @@ class Window with AutoDispose, KeyHandling {
   /// on the desktop via [Desktop.openWindow]. (And it will be a nop after closing the window. Doh.)
   Function requestRedraw = () {};
 
+  /// Shortcut to [Desktop.sendMessage]. Available from after [Desktop.openWindow] up until
+  /// [Desktop.closeWindow]. Primary use case is internal functionality. But open for use by
+  /// client code.
+  Function(dynamic) sendMessage = (_) {};
+
   Window(
     this.id,
     this.name, {

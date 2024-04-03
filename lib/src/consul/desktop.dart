@@ -221,6 +221,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   @override
   openWindow(Window window) {
     window._isFocused = (it) => it == _focused;
+    window.sendMessage = sendMessage;
     window.requestRedraw = redraw;
 
     // move window to top (end) of stack:
@@ -236,6 +237,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _WindowHandling {
   closeWindow(Window window) {
     window.state = WindowState.closed;
     window.requestRedraw = () {};
+    window.sendMessage = (_) {};
     window.disposeAll();
     _removeWindow(window);
     _updateFocus();
