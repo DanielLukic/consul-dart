@@ -10,21 +10,44 @@ gameOfLife(Desktop desktop) {
   if (running != null) {
     desktop.raiseWindow(running);
   } else {
-    final gol = GOL(60, 60);
     final window = Window(
       "gol",
       "Game Of Life",
-      size: WindowSize.min(Size(30, 20)),
+      size: WindowSize.min(Size(32, 16)),
       position: RelativePosition.fromTopRight(xOffset: -2, yOffset: 1),
     );
-    window.redrawBuffer = gol.render;
     desktop.openWindow(window);
 
-    //window.onState.listen ...
-    Timer.periodic(FPS(30).milliseconds, (timer) {
-      gol.iterate();
-      window.requestRedraw();
-    });
+    var gol = GOL(window.width * 2, window.height * 4);
+
+    void update() {
+      window.dispose("tick");
+
+      if (window.state == WindowState.closed) return;
+      if (window.state == WindowState.minimized) return;
+
+      final golWidth = window.width * 2;
+      final golHeight = window.height * 4;
+      if (gol.width != golWidth || gol.height != golHeight) {
+        gol = GOL(golWidth, golHeight);
+      }
+      window.redrawBuffer = gol.render;
+      window.autoDispose(
+        "tick",
+        Timer.periodic(FPS(30).milliseconds, (timer) {
+          gol.iterate();
+          window.requestRedraw();
+        }),
+      );
+    }
+
+    window.onSizeChanged = update;
+    window.onStateChanged = update;
+    window.onMouseEvent = (it) {
+      eventDebugLog.add("???");
+      gol.set(it.x * 2, it.y * 4);
+      return null;
+    };
   }
 }
 
@@ -51,6 +74,17 @@ class GOL {
     initStartPatternAtCenter();
   }
 
+  void set(int x, int y) {
+    eventDebugLog.add("set $x $y");
+    for (var i = 0; i < 5; i++) {
+      x += _random.nextInt(7) - 3;
+      y += _random.nextInt(7) - 3;
+      if (x < 0 || x >= width) return;
+      if (y < 0 || y >= height) return;
+      _grid[y][x] = 1;
+    }
+  }
+
   void initStartPatternAtCenter() {
     final x = width ~/ 2;
     final y = height ~/ 2;
@@ -63,11 +97,15 @@ class GOL {
   }
 
   void iterate() {
-    // make sure it never stops, we place a random pixel before every iteration. this will break up
-    // static patterns constantly...
-    final x = _random.nextInt(_grid[0].length);
-    final y = _random.nextInt(_grid.length);
-    _grid[x][y] = 1;
+    // restart on full die off:
+    if (_grid.every((element) => element.every((element) => element == 0))) {
+      initStartPatternAtCenter();
+    }
+
+    // change a random pixel every iteration, to avoid static patterns:
+    final x = _random.nextInt(width);
+    final y = _random.nextInt(height);
+    _grid[y][x] = 1;
 
     // compute the next generation:
     var next = List.generate(_grid.length, (i) => List.filled(_grid[0].length, 0));
