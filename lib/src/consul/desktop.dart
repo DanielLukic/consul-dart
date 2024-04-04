@@ -109,6 +109,20 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     onKey("<C-w>x", closeFocusedWindow);
   }
 
+  /// Change the background character. Does not redraw the desktop. Call [_redrawDesktop] as
+  /// necessary.
+  setBackground(int charCode) {
+    _background = charCode;
+    redraw();
+  }
+
+  /// Change the max FPS being rendered.
+  changeMaxFPS(FPS maxFPS) {
+    _maxFPS = maxFPS;
+    _redraw(0);
+    _startTicking();
+  }
+
   /// Run the desktop "main loop".
   run() async {
     try {
@@ -126,9 +140,19 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     }
   }
 
+  _redraw(_) => _redrawDesktop(columns: columns, rows: rows);
+
   void _startTicking() {
     _tick?.cancel();
     _tick = _invalidated.stream.throttleTime(_maxFPS.milliseconds, trailing: true).listen(_redraw);
+  }
+
+  /// Trigger an (async) redraw.
+  redraw() {
+    // ignore broken windows still sending after shutdown:
+    if (_invalidated.isClosed) return;
+
+    _invalidated.add(DateTime.now());
   }
 
   /// Resize currently focused window via keyboard. Nop if no window focused. Nop if window is not
@@ -204,30 +228,6 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     _conIO.moveCursor(0, row);
     _conIO.write(data + _ansiReset);
   }
-
-  /// Change the background character. Does not redraw the desktop. Call [_redrawDesktop] as
-  /// necessary.
-  setBackground(int charCode) {
-    _background = charCode;
-    redraw();
-  }
-
-  /// Change the max FPS being rendered.
-  changeMaxFPS(FPS maxFPS) {
-    _maxFPS = maxFPS;
-    _redraw(0);
-    _startTicking();
-  }
-
-  /// Trigger an (async) redraw.
-  redraw() {
-    // ignore broken windows still sending after shutdown:
-    if (_invalidated.isClosed) return;
-
-    _invalidated.add(DateTime.now());
-  }
-
-  _redraw(_) => _redrawDesktop(columns: columns, rows: rows);
 
   /// TODO Change the displayed menu.
   setMenu(Menu menu) {}
