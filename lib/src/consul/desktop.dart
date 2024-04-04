@@ -268,6 +268,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     window.state = WindowState.closed;
     window.requestRedraw = () {};
     window.sendMessage = (_) {};
+    window._isFocused = (_) => false;
     window.disposeAll();
     _removeWindow(window);
     _updateFocus();
