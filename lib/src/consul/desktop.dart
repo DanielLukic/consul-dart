@@ -155,6 +155,53 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     _invalidated.add(DateTime.now());
   }
 
+  /// Lookup a window by [id].
+  Window? findWindow(String id) => _windows.where((it) => it.id == id).firstOrNull;
+
+  /// Ensure [window] is not minimized.
+  raiseWindow(Window window) {
+    if (window is DecoratedWindow) window = window._window;
+    if (window.state == WindowState.minimized) {
+      window.state = window._restoreState ?? WindowState.normal;
+      window._restoreState = null;
+    }
+    openWindow(window);
+  }
+
+  /// Start displaying the [window] on this "desktop".
+  @override
+  openWindow(Window window) {
+    if (window is DecoratedWindow) window = window._window;
+
+    window._desktopSize = () => size;
+    window._isFocused = (it) => it == _focused;
+    window.sendMessage = sendMessage;
+    window.requestRedraw = redraw;
+
+    // move window to top (end) of stack:
+    _windows.remove(window);
+    _windows.add(window);
+
+    _updateFocus();
+    redraw();
+  }
+
+  /// Remove [window] from this "desktop".
+  @override
+  closeWindow(Window window) {
+    if (window is DecoratedWindow) window = window._window;
+
+    window.state = WindowState.closed;
+    window.requestRedraw = () {};
+    window.sendMessage = (_) {};
+    window._isFocused = (_) => false;
+    window._desktopSize = () => Size.zero;
+    window.disposeAll();
+    _removeWindow(window);
+    _updateFocus();
+    redraw();
+  }
+
   /// Resize currently focused window via keyboard. Nop if no window focused. Nop if window is not
   /// [WindowFlag.resizable].
   void resizeFocusedWindow() {
@@ -231,53 +278,6 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
 
   /// TODO Change the displayed menu.
   setMenu(Menu menu) {}
-
-  /// Lookup a window by [id].
-  Window? findWindow(String id) => _windows.where((it) => it.id == id).firstOrNull;
-
-  /// Ensure [window] is not minimized.
-  raiseWindow(Window window) {
-    if (window is DecoratedWindow) window = window._window;
-    if (window.state == WindowState.minimized) {
-      window.state = window._restoreState ?? WindowState.normal;
-      window._restoreState = null;
-    }
-    openWindow(window);
-  }
-
-  /// Start displaying the [window] on this "desktop".
-  @override
-  openWindow(Window window) {
-    if (window is DecoratedWindow) window = window._window;
-
-    window._desktopSize = () => size;
-    window._isFocused = (it) => it == _focused;
-    window.sendMessage = sendMessage;
-    window.requestRedraw = redraw;
-
-    // move window to top (end) of stack:
-    _windows.remove(window);
-    _windows.add(window);
-
-    _updateFocus();
-    redraw();
-  }
-
-  /// Remove [window] from this "desktop".
-  @override
-  closeWindow(Window window) {
-    if (window is DecoratedWindow) window = window._window;
-
-    window.state = WindowState.closed;
-    window.requestRedraw = () {};
-    window.sendMessage = (_) {};
-    window._isFocused = (_) => false;
-    window._desktopSize = () => Size.zero;
-    window.disposeAll();
-    _removeWindow(window);
-    _updateFocus();
-    redraw();
-  }
 
   /// Forward [msg] to all subscribers.
   sendMessage(msg) => _subscriptions.sink.add(msg);
