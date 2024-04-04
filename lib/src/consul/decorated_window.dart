@@ -71,6 +71,7 @@ class DecoratedWindow with _WindowDecoration implements Window {
       "height" => _window.height,
       "id" => _window.id,
       "name" => _window.name,
+      "onSizeChanged" => _window.onSizeChanged,
       "position" => _window.position,
       "redrawBuffer" => _decorateBuffer(_window),
       "resizable" => _window.resizable,
