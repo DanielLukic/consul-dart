@@ -43,8 +43,7 @@ Future createDesktop(ConIO conIO) async {
       );
 
   // Note the use of "exit" as message to end [Desktop.run].
-  // TODO Should really be [Desktop.exit] instead.
-  desktop.subscribe("quit", (_) => notify("exit")); // TODO confirm dialog
+  desktop.subscribe("quit", (_) => desktop.exit()); // TODO confirm dialog
   desktop.subscribe("show-gol", (_) => gameOfLife(desktop));
   desktop.subscribe("show-starfield", (_) => starfield(desktop));
   desktop.subscribe("change-fps", (_) => print("TODO"));

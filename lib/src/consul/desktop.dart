@@ -98,6 +98,8 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     }
   }
 
+  void exit() => sendMessage("exit");
+
   /// Handle <Tab> and <S-Tab> for window switching, <C-w> plus <some-key> for window manipulation.
   void setDefaultKeys() {
     onKey("<Tab>", focusNext);
