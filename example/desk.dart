@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'dart:async';
 import 'dart:io';
 
 import 'package:consul/consul.dart';
+import 'package:consul/src/auto_help.dart';
 import 'package:consul/src/consul/con_io/mad_con_io.dart';
 import 'package:consul/src/debug_log.dart';
 
@@ -75,6 +78,12 @@ Future createDesktop(ConIO conIO) async {
     desktop,
     key: "<C-w>l",
     position: RelativePosition.fromBottom(yOffset: -1),
+  );
+
+  addAutoHelp(
+    desktop,
+    key: "<C-?>",
+    position: RelativePosition.fromBottomRight(),
   );
 
   return await desktop.run();

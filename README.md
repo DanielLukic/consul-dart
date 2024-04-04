@@ -121,7 +121,6 @@ The essentials I want to be done for a "Version 1":
 
 - [ ] Taskbar showing all (including minimized) windows
 - [ ] Taskbar overflow with all remaining windows
-- [ ] Help (?) button to show key configuration
 
 Maybes:
 
@@ -145,6 +144,7 @@ Maybes:
 - [X] Basic mouse actions (raise, minimize, maximize, close)
 - [X] Resize window with mouse
 - [X] Move window with mouse
+- [X] Help (?) button to show key configuration
 
 #### Bugs
 
