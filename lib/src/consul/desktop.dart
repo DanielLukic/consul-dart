@@ -92,7 +92,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
         raiseWindow(it);
       case ("resize-window", Window it, Size size_):
         final titlebar = it is DecoratedWindow ? 1 : 0;
-        it._resizeClamped(size_.width, size_.height - titlebar, size);
+        it._resizeClamped(size_.width, size_.height - titlebar);
       default:
         eventDebugLog.add("unhandled: $msg");
     }
@@ -115,7 +115,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     final current = _focused;
     if (current == null) return;
     if (!current.flags.contains(WindowFlag.resizable)) return;
-    _keyInterceptor = _WindowResizing(size, current, () => _keyInterceptor = null);
+    _keyInterceptor = _WindowResizing(current, () => _keyInterceptor = null);
   }
 
   /// Move currently focused window via keyboard. Nop if no window focused.

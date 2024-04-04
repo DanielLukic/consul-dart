@@ -119,12 +119,17 @@ extension WindowExtensions on Window {
 
   int get height => size.current.height;
 
+  /// Ensure the window [position] is an [AbsolutePosition]. This is required for many operations.
+  /// At least for now.
+  void fixPosition() => position = position.toAbsolute(_desktopSize(), size.current);
+
   /// Keeping this private for now, too. It handles restricting to min/max now, but still to
   /// fiddly to expose imho.
-  _resizeClamped(int width, int height, Size desktop) {
+  _resizeClamped(int width, int height) {
+    final desktop = _desktopSize();
+
     // fix the current position because it is the origin against which the resize happens:
-    final fixPosition = position.toAbsolute(desktop, size.current);
-    position = fixPosition;
+    fixPosition();
 
     final minSize = size.min.ifAutoFill(desktop);
     final maxSize = size.max.ifAutoFill(desktop);

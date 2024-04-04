@@ -1,11 +1,10 @@
 part of 'desktop.dart';
 
 class _WindowResizing with KeyHandling implements WindowOverlay {
-  final Size _desktop;
   final Window _window;
   final Function _onDone;
 
-  _WindowResizing(this._desktop, this._window, this._onDone) {
+  _WindowResizing(this._window, this._onDone) {
     onKey("<Enter>", done);
     onKey("<Escape>", done);
     onKey("<Return>", done);
@@ -31,7 +30,7 @@ class _WindowResizing with KeyHandling implements WindowOverlay {
     eventDebugLog.add("max: ${_window.size.max}");
 
     final current = _window.size.current;
-    _window._resizeClamped(current.width + dx, current.height + dy, _desktop);
+    _window._resizeClamped(current.width + dx, current.height + dy);
   }
 
   done() {
