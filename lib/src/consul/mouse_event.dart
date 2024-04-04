@@ -7,6 +7,11 @@ sealed class MouseEvent {
   const MouseEvent(this.x, this.y);
 
   MouseEvent relativeTo(AbsolutePosition p);
+
+  bool get isUp {
+    final self = this;
+    return self is MouseButtonEvent && self.kind.isUp;
+  }
 }
 
 enum MouseWheelKind {
