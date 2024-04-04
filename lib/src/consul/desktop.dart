@@ -270,12 +270,6 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     closeWindow(current);
   }
 
-  @override
-  void _updateRow(int row, String data) {
-    _conIO.moveCursor(0, row);
-    _conIO.write(data + _ansiReset);
-  }
-
   /// TODO Change the displayed menu.
   setMenu(Menu menu) {}
 
@@ -290,4 +284,10 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
       _subscriptions.stream.where((event) => event == msg).listen((event) {
         callback(event);
       });
+
+  @override
+  void _updateRow(int row, String data) {
+    _conIO.moveCursor(0, row);
+    _conIO.write(data + _ansiReset);
+  }
 }
