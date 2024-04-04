@@ -10,20 +10,39 @@ class DecoratedWindow with _WindowDecoration implements Window {
   }
 
   OngoingMouseAction? _onMouseEvent(MouseEvent it) {
+    if (_window.undecorated) {
+      return _window.onMouseEvent(it);
+    }
+
     final isLmbDown = it is MouseButtonEvent && it.kind == MouseButtonKind.lmbDown;
 
     // check for titlebar click:
     if (isLmbDown && it.y == 0 && it.x >= 0 && it.x < width) {
-      if (it.x >= width - 3) {
-        return CloseWindowAction(this, it, sendMessage);
-      } else if (it.x >= width - 6) {
-        return MaximizeWindowAction(this, it, sendMessage);
-      } else if (it.x >= width - 9) {
-        return MinimizeWindowAction(this, it, sendMessage);
-      } else {
+      // lovely... :-D
+      var check = width - 3;
+      if (_window.closeable) {
+        if (it.x >= check && it.x < check + 3) {
+          return CloseWindowAction(this, it, sendMessage);
+        }
+        check -= 3;
+      }
+      if (_window.maximizable) {
+        if (it.x >= check && it.x < check + 3) {
+          return MaximizeWindowAction(this, it, sendMessage);
+        }
+        check -= 3;
+      }
+      if (_window.minimizable) {
+        if (it.x >= check && it.x < check + 3) {
+          return MinimizeWindowAction(this, it, sendMessage);
+        }
+        check -= 3;
+      }
+      if (_window.movable) {
         sendMessage(("raise-window", this));
         return MoveWindowAction(this, it, sendMessage);
       }
+      return null;
     }
 
     // check for resize control click:

@@ -107,6 +107,8 @@ extension WindowExtensions on Window {
 
   bool get minimizable => flags.contains(WindowFlag.minimizable);
 
+  bool get movable => !flags.contains(WindowFlag.unmovable);
+
   bool get resizable => flags.contains(WindowFlag.resizable);
 
   bool get undecorated => flags.contains(WindowFlag.undecorated);

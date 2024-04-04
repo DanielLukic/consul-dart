@@ -148,6 +148,7 @@ Maybes:
 
 #### Bugs
 
+- [X] *MAJOR* Titlebar controls do not respect window flags.
 - [ ] *MAJOR* Moving window fast, then moving another window, moves the first one again.
 - [ ] *MAJOR* Focus does not skip minimized windows properly.
 - [X] *CRITICAL* One off bug for resize control. Applies only for some `Position` type it seems?
