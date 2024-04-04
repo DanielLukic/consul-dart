@@ -43,6 +43,78 @@ It does support a "braille" characters based "canvas". This way you can do somet
 
 ![Screenshot](images/consul-example.gif)
 
+#### Rationale
+
+So one aspect I wanted to gain insight into is how fast/easy it is to add functionality for an existing,
+not-entirely-trivial, code base. Here's adding moving windows via mouse as an example:
+
+```dart
+OngoingMouseAction? _onMouseEvent(MouseEvent it) {
+  //...snip...
+  if (isOnTitlebar(it)) {
+    sendMessage(("raise-window", this));
+    return MoveWindowAction(this, it, sendMessage);
+  }
+  //...snip...
+}
+
+class MoveWindowAction extends OngoingMouseAction {
+  late final AbsolutePosition _basePosition;
+
+  MoveWindowAction(super.window, super.event, super.sendMessage) {
+    _basePosition = window.position.toAbsolute(window._desktopSize(), window.size.current);
+  }
+
+  @override
+  onMouseEvent(MouseEvent event) {
+    final dx = event.xAbs - this.event.xAbs;
+    final dy = event.yAbs - this.event.yAbs;
+    window.position = _basePosition.moved(dx, dy);
+    if (event.isUp) _done = true;
+  }
+}
+```
+
+Now, of course there is more going on. I mentioned above: "existing code base". There is already the mouse event
+dispatching implemented. And of course the entire window drawing and positioning. But my point is this: Adding
+resize and move via mouse was actually kind of simple enough. Did not expect this tbh after the first few days of Dart.
+
+This being said, it's far from being all gold... :-D I find the class modifiers (not shown in these example
+snippets) super weird to use. Like... it's too much of them, isn't? :-D
+
+Idk... probably need more time with Dart... ‾\_('')_/‾
+
+Just for some context and closure, here's the mouse event handling (at the time of this writing):
+
+```dart
+void _handleMouseEvent(MouseEvent event) {
+  final ongoing = _ongoingMouseAction;
+  if (ongoing != null) {
+    final p = ongoing.window.decoratedPosition(size);
+    final relative = event.relativeTo(p);
+    ongoing.onMouseEvent(relative);
+    if (ongoing.done) _ongoingMouseAction = null;
+    return;
+  }
+
+  final decorators = _windows.mapNotNull((it) => _decorators[it]);
+  for (final it in decorators.reversed) {
+    final p = it.decoratedPosition(size);
+    final relative = event.relativeTo(p);
+    final action = it.onMouseEvent(relative);
+    if (action == null) continue;
+
+    // some actions are done immediately. must not be assigned to _ongoingMouseAction.
+    if (!action.done) _ongoingMouseAction = action;
+
+    // if we have an ongoing action now, stop searching.
+    break;
+  }
+}
+```
+
+This is fine, isn't it? Of course this is a rather trivial "desktop system". So there's that...
+
 #### To Do
 
 The essentials I want to be done for a "Version 1":
