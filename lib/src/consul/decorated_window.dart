@@ -34,7 +34,9 @@ class DecoratedWindow with _WindowDecoration implements Window {
 
     // check for inside click:
     if (it.x >= 0 && it.x < width && it.y > 0 && it.y < height) {
-      // TODO handle inner handler ^^
+      final consumed = _window.onMouseEvent(it);
+      if (consumed != null) return consumed;
+
       if (isLmbDown) return RaiseWindowAction(this, it, sendMessage);
     }
 
