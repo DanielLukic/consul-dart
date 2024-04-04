@@ -62,7 +62,7 @@ class CloseWindowAction extends OngoingMouseAction {
 
   @override
   onMouseEvent(MouseEvent event) {
-    if (event is MouseButtonEvent && event.kind.isUp) {
+    if (event.isUp) {
       _done = true;
       if (event.x == event.x && event.y == event.y) {
         sendMessage(("close-window", window));
@@ -76,7 +76,7 @@ class MaximizeWindowAction extends OngoingMouseAction {
 
   @override
   onMouseEvent(MouseEvent event) {
-    if (event is MouseButtonEvent && event.kind.isUp) {
+    if (event.isUp) {
       _done = true;
       if (event.x == event.x && event.y == event.y) {
         sendMessage(("maximize-window", window));
@@ -90,7 +90,7 @@ class MinimizeWindowAction extends OngoingMouseAction {
 
   @override
   onMouseEvent(MouseEvent event) {
-    if (event is MouseButtonEvent && event.kind.isUp) {
+    if (event.isUp) {
       _done = true;
       if (event.x == event.x && event.y == event.y) {
         sendMessage(("minimize-window", window));
@@ -123,7 +123,7 @@ class ResizeWindowAction extends OngoingMouseAction {
     eventDebugLog.add("max: ${window.size.max}");
     sendMessage(("resize-window", window, _baseSize.plus(dx, dy)));
 
-    if (event is MouseButtonEvent && event.kind.isUp) _done = true;
+    if (event.isUp) _done = true;
   }
 }
 
