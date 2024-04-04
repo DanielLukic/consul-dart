@@ -125,6 +125,9 @@ class Size {
   /// Auto fill the available space (desktop). Useful really only for max size.
   static const Size autoFill = Size(-2, -2);
 
+  /// Create new size, with [width] and [height] modified by [dx] and [dy].
+  Size plus(int dx, int dy) => Size(width + dx, height + dy);
+
   @override
   String toString() => "Size(${width}x$height)";
 }
