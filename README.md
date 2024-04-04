@@ -148,6 +148,7 @@ Maybes:
 
 #### Bugs
 
+- [ ] *MAJOR* Focus does not skip minimized windows properly.
 - [X] *CRITICAL* One off bug for resize control. Applies only for some `Position` type it seems?
 - [ ] Move overlay shown when window is too small.
 - [ ] Drawing a buffer into a buffer breaks ansi in the replaced area.
