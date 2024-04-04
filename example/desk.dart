@@ -50,11 +50,23 @@ Future createDesktop(ConIO conIO) async {
 
   // desktop.interceptSigInt = true;
   desktop.setDefaultKeys();
-  desktop.onKey("q", confirmQuit);
-  desktop.onKey("d", () => desktop.toast("Single key press handled!"));
-  desktop.onKey("dd", () => desktop.toast("Double key press handled!"));
-  desktop.onKey("<C-c>", () => desktop.toast("<C-c> intercepted!"));
-  // desktop.onKey("n", () => desktop.notify("Desktop notification"));
+  desktop.onKey("q", description: "Quit", action: confirmQuit);
+  desktop.onKey(
+    "d",
+    description: "Demo single key toast",
+    action: () => desktop.toast("Single key   press handled!"),
+  );
+  desktop.onKey(
+    "dd",
+    description: "Demo double key toast",
+    action: () => desktop.toast("Double key press handled!"),
+  );
+  desktop.onKey(
+    "<C-c>",
+    description: "Demo <C-c> intercept",
+    action: () => desktop.toast("<C-c> intercepted!"),
+  );
+  // desktop.onKey("n", action: () => desktop.notify("Desktop notification"));
 
   gameOfLife(desktop);
   starfield(desktop);

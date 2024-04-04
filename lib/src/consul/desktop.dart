@@ -102,13 +102,13 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
 
   /// Handle <Tab> and <S-Tab> for window switching, <C-w> plus <some-key> for window manipulation.
   void setDefaultKeys() {
-    onKey("<Tab>", focusNext);
-    onKey("<S-Tab>", focusPrevious);
-    onKey("<C-w>_", minimizeFocusedWindow);
-    onKey("<C-w>m", moveFocusedWindow);
-    onKey("<C-w>o", toggleMaximizeFocusedWindow);
-    onKey("<C-w>r", resizeFocusedWindow);
-    onKey("<C-w>x", closeFocusedWindow);
+    onKey("<Tab>", description: "Focus next window", action: focusNext);
+    onKey("<S-Tab>", description: "Focus previous window", action: focusPrevious);
+    onKey("<C-w>_", description: "Minimize focused window", action: minimizeFocusedWindow);
+    onKey("<C-w>m", description: "Move focused window", action: moveFocusedWindow);
+    onKey("<C-w>o", description: "Toggle maximize window", action: toggleMaximizeFocusedWindow);
+    onKey("<C-w>r", description: "Resize focused window", action: resizeFocusedWindow);
+    onKey("<C-w>x", description: "Close focused window", action: closeFocusedWindow);
   }
 
   /// Change the background character. Does not redraw the desktop. Call [_redrawDesktop] as

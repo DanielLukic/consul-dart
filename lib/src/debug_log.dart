@@ -15,7 +15,7 @@ addDebugLog(
     position: position,
   );
   window.redrawBuffer = () => eventDebugLog.reversed.take(window.height - 1).join("\n");
-  desktop.onKey(key, () {
+  desktop.onKey(key, description: "Toggle showing debug log", action: () {
     final it = desktop.findWindow("debug");
     switch (it?.state) {
       case null:

@@ -82,31 +82,32 @@ mixin KeyHandling {
     }
   }
 
-  Disposable onKey(String pattern, Function handler) {
-    var it = _Matcher(pattern, handler);
+  Disposable onKey(String pattern, {required String description, required Function action}) {
+    var it = _Matcher(pattern, description, action);
     _matchers.add(it);
     return Disposable(() => _matchers.remove(it));
   }
 }
 
 class _Matcher {
-  final String _pattern;
+  final String pattern;
+  final String description;
   final Function _handler;
 
   String _buffer = "";
 
-  _Matcher(this._pattern, this._handler);
+  _Matcher(this.pattern, this.description, this._handler);
 
   void consume(KeyEvent it) => _buffer = _buffer + it.printable;
 
-  bool isPartialMatch() => !isMatch() && _pattern.startsWith(_buffer);
+  bool isPartialMatch() => !isMatch() && pattern.startsWith(_buffer);
 
-  bool isMatch() => _pattern == _buffer;
+  bool isMatch() => pattern == _buffer;
 
   void trigger() => _handler();
 
   void reset() => _buffer = "";
 
   @override
-  String toString() => "$_pattern <=> $_buffer";
+  String toString() => "$pattern <=> $_buffer";
 }

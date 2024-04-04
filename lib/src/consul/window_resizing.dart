@@ -5,19 +5,19 @@ class _WindowResizing with KeyHandling implements WindowOverlay {
   final Function _onDone;
 
   _WindowResizing(this._window, this._onDone) {
-    onKey("<Enter>", done);
-    onKey("<Escape>", done);
-    onKey("<Return>", done);
-    onKey("q", done);
+    onKey("<Enter>", description: "Finish window resizing", action: done);
+    onKey("<Escape>", description: "Finish window resizing", action: done);
+    onKey("<Return>", description: "Finish window resizing", action: done);
+    onKey("q", description: "Finish window resizing", action: done);
 
-    onKey("<Down>", () => resize(0, 1));
-    onKey("<Left>", () => resize(-1, 0));
-    onKey("<Right>", () => resize(1, 0));
-    onKey("<Up>", () => resize(0, -1));
-    onKey("h", () => resize(-1, 0));
-    onKey("j", () => resize(0, 1));
-    onKey("k", () => resize(0, -1));
-    onKey("l", () => resize(1, 0));
+    onKey("<Down>", description: "Extend one down", action: () => resize(0, 1));
+    onKey("<Left>", description: "Extend one left", action: () => resize(-1, 0));
+    onKey("<Right>", description: "Extend one right", action: () => resize(1, 0));
+    onKey("<Up>", description: "Extend one up", action: () => resize(0, -1));
+    onKey("h", description: "Extend one left", action: () => resize(-1, 0));
+    onKey("j", description: "Extend one down", action: () => resize(0, 1));
+    onKey("k", description: "Extend one up", action: () => resize(0, -1));
+    onKey("l", description: "Extend one right", action: () => resize(1, 0));
 
     _window.addOverlay(this);
   }
