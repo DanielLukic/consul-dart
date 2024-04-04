@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:consul/consul.dart';
 import 'package:consul/src/consul/con_io/mad_con_io.dart';
-import 'package:consul/src/consul/desktop.dart';
+import 'package:consul/src/debug_log.dart';
 
 import 'gol.dart';
 import 'starfield.dart';
@@ -58,18 +59,12 @@ Future createDesktop(ConIO conIO) async {
 
   gameOfLife(desktop);
   starfield(desktop);
-  debug(desktop);
+
+  addDebugLog(
+    desktop,
+    key: "<C-w>l",
+    position: RelativePosition.fromBottom(yOffset: -1),
+  );
 
   return await desktop.run();
-}
-
-debug(Desktop desktop) {
-  final window = Window(
-    "debug",
-    "Event Debug Log",
-    size: WindowSize.defaultMinMax(Size(160, 18)),
-    position: RelativePosition.fromBottom(yOffset: -10),
-  );
-  window.redrawBuffer = () => eventDebugLog.reversed.take(window.height - 1).join("\n");
-  desktop.openWindow(window);
 }
