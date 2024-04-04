@@ -1,10 +1,17 @@
 part of 'desktop.dart';
 
+/// Sealed type representing the various mouse events. Fields [x] and [y] are potentially relative
+/// to the target object ([Window] only for now). [xAbs] and [yAbs] will hold the original event
+/// position.
 sealed class MouseEvent {
   final int x;
   final int y;
+  final int xAbs;
+  final int yAbs;
 
-  const MouseEvent(this.x, this.y);
+  const MouseEvent(this.x, this.y, [int? xAbs, int? yAbs])
+      : xAbs = xAbs ?? x,
+        yAbs = yAbs ?? y;
 
   MouseEvent relativeTo(AbsolutePosition p);
 
@@ -22,13 +29,14 @@ enum MouseWheelKind {
 class MouseWheelEvent extends MouseEvent {
   final MouseWheelKind kind;
 
-  const MouseWheelEvent(this.kind, super.x, super.y);
+  const MouseWheelEvent(this.kind, int x, int y, [int? xAbs, int? yAbs]) : super(x, y, xAbs, yAbs);
 
   @override
-  MouseEvent relativeTo(AbsolutePosition p) => MouseWheelEvent(kind, x - p.x, y - p.y);
+  MouseEvent relativeTo(AbsolutePosition p) =>
+      MouseWheelEvent(kind, xAbs - p.x, yAbs - p.y, xAbs, yAbs);
 
   @override
-  String toString() => "$kind,$x,$y";
+  String toString() => "$kind,$x,$y,$xAbs,$yAbs";
 }
 
 enum MouseButtonKind {
@@ -49,13 +57,14 @@ enum MouseButtonKind {
 class MouseButtonEvent extends MouseEvent {
   final MouseButtonKind kind;
 
-  const MouseButtonEvent(this.kind, super.x, super.y);
+  const MouseButtonEvent(this.kind, int x, int y, [int? xAbs, int? yAbs]) : super(x, y, xAbs, yAbs);
 
   @override
-  MouseEvent relativeTo(AbsolutePosition p) => MouseButtonEvent(kind, x - p.x, y - p.y);
+  MouseEvent relativeTo(AbsolutePosition p) =>
+      MouseButtonEvent(kind, xAbs - p.x, yAbs - p.y, xAbs, yAbs);
 
   @override
-  String toString() => "$kind,$x,$y";
+  String toString() => "$kind,$x,$y,$xAbs,$yAbs";
 }
 
 enum MouseMotionKind {
@@ -67,13 +76,14 @@ enum MouseMotionKind {
 class MouseMotionEvent extends MouseEvent {
   final MouseMotionKind kind;
 
-  const MouseMotionEvent(this.kind, super.x, super.y);
+  const MouseMotionEvent(this.kind, int x, int y, [int? xAbs, int? yAbs]) : super(x, y, xAbs, yAbs);
 
   @override
-  MouseEvent relativeTo(AbsolutePosition p) => MouseMotionEvent(kind, x - p.x, y - p.y);
+  MouseEvent relativeTo(AbsolutePosition p) =>
+      MouseMotionEvent(kind, xAbs - p.x, yAbs - p.y, xAbs, yAbs);
 
   @override
-  String toString() => "$kind,$x,$y";
+  String toString() => "$kind,$x,$y,$xAbs,$yAbs";
 }
 
 typedef MouseHandler = Function(MouseEvent);
