@@ -70,3 +70,21 @@ abstract mixin class _WindowHandling {
     }
   }
 }
+
+// TODO Is there a better way to make the somewhat internal WindowHandling testable?
+// TODO What would be the Dart equivalent of Kotlin `internal`?
+class MockWindowHandling with _WindowHandling {
+  final lines = <int, String>{};
+
+  String get background => String.fromCharCode(_background);
+
+  void drawFrame() => _redrawDesktop(columns: 40, rows: 10);
+
+  void addWindow(Window it) => _windows.add(it);
+
+  @override
+  void _updateRow(int row, String data) => lines[row] = data;
+
+  @override
+  Window? _focused;
+}
