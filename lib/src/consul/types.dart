@@ -135,6 +135,14 @@ class Size {
   /// Auto fill the available space (desktop). Useful really only for max size.
   static const Size autoFill = Size(-2, -2);
 
+  /// Limit `this` to the given [width] and [height]. Returns `this` if within these limits.
+  Size limit(int width, int height) {
+    if (this.width == width && this.height == height) return this;
+    final w = min(this.width, width);
+    final h = min(this.height, height);
+    return Size(w, h);
+  }
+
   /// Create new size, with [width] and [height] modified by [dx] and [dy].
   Size plus(int dx, int dy) => Size(width + dx, height + dy);
 
