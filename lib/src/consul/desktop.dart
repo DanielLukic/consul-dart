@@ -287,6 +287,16 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
         callback(event);
       });
 
+  KeyMap keyMap() {
+    final result = KeyMap();
+    result["Desktop"] = _matchers.map((e) => (e.pattern, e.description));
+    for (final window in _windows) {
+      var mapping = window._matchers.map((e) => (e.pattern, e.description));
+      if (mapping.isNotEmpty) result[window.name] = mapping;
+    }
+    return result;
+  }
+
   @override
   void _updateRow(int row, String data) {
     _conIO.moveCursor(0, row);

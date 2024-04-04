@@ -1,5 +1,7 @@
 part of 'desktop.dart';
 
+typedef KeyMap = Map<String,Iterable<(String,String)>>;
+
 extension type FPS(int fps) {
   Duration get milliseconds => Duration(milliseconds: 1000 ~/ fps);
 }
