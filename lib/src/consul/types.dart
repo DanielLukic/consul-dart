@@ -117,7 +117,13 @@ class Size {
 
   const Size(this.width, this.height);
 
-  static const Size zero = Size(0,0);
+  const Size.autoHeight(this.width) : height = autoSize;
+
+  const Size.autoWidth(this.height) : width = autoSize;
+
+  static const int autoSize = -1;
+
+  static const Size zero = Size(0, 0);
 
   /// Special size to auto-limit (either min or max). Effectively same as [autoFill] for max. But
   /// for min will make sure titlebar and resize control is visible. However, these minimums are

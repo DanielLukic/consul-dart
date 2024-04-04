@@ -50,9 +50,10 @@ abstract mixin class _WindowHandling {
 
   void _layoutWindow(Window window) {
     var size = window.size.current;
-    if (size == Size.autoFill) {
-      window._resize(_buffer.width, _buffer.height);
-    }
+    if (size == Size.autoFill) window._resize(_buffer.width, _buffer.height);
+    if (size.height == Size.autoSize) window._resize(window.width, _buffer.height);
+    if (size.width == Size.autoSize) window._resize(_buffer.width, window.height);
+
     if (window.position == Position.unsetInitially) {
       window.position = RelativePosition.autoCentered();
     }
