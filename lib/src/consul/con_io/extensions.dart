@@ -16,6 +16,7 @@ extension on int {
     if (this == 13) return "<RETURN>";
     if (this == 27) return "<ESC>";
     if (this == 127) return "<BACKSPACE>";
+    if (this == 31) return "<C-?>";
     if (this < 32) return "<C-${String.fromCharCode(this + 96)}>";
     return String.fromCharCode(this);
   }

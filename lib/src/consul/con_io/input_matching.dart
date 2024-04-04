@@ -93,6 +93,10 @@ mixin _InputMatching {
           break;
         }
 
+      case [0x1F]:
+        event = InputKey('?', 0x1F, ctrl: true);
+        skip = 1;
+
       case [var key] when key < 32:
         event = _matchControlKey(printable, alt: false);
         event = event ?? InputKey(key.alphaChar, key, ctrl: true);
