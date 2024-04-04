@@ -30,17 +30,8 @@ class _WindowResizing with KeyHandling implements WindowOverlay {
     eventDebugLog.add("min: ${_window.size.min}");
     eventDebugLog.add("max: ${_window.size.max}");
 
-    final fixPosition = _window.position.toAbsolute(_desktop, _window.size.current);
-    _window.position = fixPosition;
-
     final current = _window.size.current;
-    final w = current.width + dx;
-    final h = current.height + dy;
-    final minSize = _window.size.min.ifAutoFill(_desktop);
-    final maxSize = _window.size.max.ifAutoFill(_desktop);
-    final ww = w.clamp(minSize.width, maxSize.width);
-    final hh = h.clamp(minSize.height, maxSize.height);
-    _window._resize(max(16, ww), max(2, hh)); // 16 for titlebar, 2 for titlebar + resize control
+    _window._resizeClamped(current.width + dx, current.height + dy, _desktop);
   }
 
   done() {

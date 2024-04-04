@@ -118,6 +118,20 @@ extension WindowExtensions on Window {
 
   int get height => size.current.height;
 
+  /// Keeping this private for now, too. It handles restricting to min/max now, but still to
+  /// fiddly to expose imho.
+  _resizeClamped(int width, int height, Size desktop) {
+    // fix the current position because it is the origin against which the resize happens:
+    final fixPosition = position.toAbsolute(desktop, size.current);
+    position = fixPosition;
+
+    final minSize = size.min.ifAutoFill(desktop);
+    final maxSize = size.max.ifAutoFill(desktop);
+    final ww = width.clamp(minSize.width, maxSize.width);
+    final hh = height.clamp(minSize.height, maxSize.height);
+    _resize(max(16, ww), max(2, hh)); // 16 for titlebar, 2 for titlebar + resize control
+  }
+
   /// Keeping this private for now as it directly manipulates without restricting. Restricting has
   /// to happen in [Desktop] instead for now.
   _resize(int width, int height) {
