@@ -76,6 +76,7 @@ Maybes:
 
 #### Bugs
 
+- [ ] *CRITICAL* One off bug for resize control. Applies only for some `Position` type it seems?
 - [ ] Move overlay shown when window is too small.
 - [ ] Drawing a buffer into a buffer breaks ansi in the replaced area.
   Potential fix: collect ansi sequences being replaced and add to `Cell.after` of the last cell.

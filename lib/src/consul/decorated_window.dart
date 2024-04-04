@@ -27,13 +27,14 @@ class DecoratedWindow with _WindowDecoration implements Window {
 
     // check for resize control click:
     if (isLmbDown && it.y == height - 1 && it.x == width - 1 && resizable) {
+      sendMessage(("raise-window", this));
       return ResizeWindowAction(this, it, sendMessage);
     }
 
     // check for inside click:
     if (it.x >= 0 && it.x < width && it.y > 0 && it.y < height) {
       // TODO handle inner handler ^^
-      return RaiseWindowAction(this, it, sendMessage);
+      if (isLmbDown) return RaiseWindowAction(this, it, sendMessage);
     }
 
     // no action here, pass on null to let someone else handle it:

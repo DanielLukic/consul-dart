@@ -90,6 +90,9 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
         minimizeWindow(it);
       case ("raise-window", Window it):
         raiseWindow(it);
+      case ("resize-window", Window it, Size size_):
+        final titlebar = it is DecoratedWindow ? 1 : 0;
+        it._resizeClamped(size_.width, size_.height - titlebar, size);
       default:
         eventDebugLog.add("unhandled: $msg");
     }

@@ -107,10 +107,24 @@ class MoveWindowAction extends OngoingMouseAction {
 }
 
 class ResizeWindowAction extends OngoingMouseAction {
-  ResizeWindowAction(super.window, super.event, super.sendMessage);
+  final Size _baseSize;
+
+  ResizeWindowAction(super.window, super.event, super.sendMessage)
+      : _baseSize = window.size.current;
 
   @override
-  onMouseEvent(MouseEvent event) {}
+  onMouseEvent(MouseEvent event) {
+    final dx = event.x - this.event.x;
+    final dy = event.y - this.event.y;
+    eventDebugLog.clear();
+    eventDebugLog.add("resize: $event => $dx $dy");
+    eventDebugLog.add("current: ${window.size.current}");
+    eventDebugLog.add("min: ${window.size.min}");
+    eventDebugLog.add("max: ${window.size.max}");
+    sendMessage(("resize-window", window, _baseSize.plus(dx, dy)));
+
+    if (event is MouseButtonEvent && event.kind.isUp) _done = true;
+  }
 }
 
 class RaiseWindowAction extends OngoingMouseAction {
