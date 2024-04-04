@@ -28,10 +28,12 @@ part 'window_resizing.dart';
 /// Pseudo desktop environment for the console.
 /// Requires an implementation of [ConIO] for rendering.
 /// Functions only during awaited execution of the [run] function.
-class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _WindowHandling {
+class Desktop
+    with AutoDispose, FocusHandling, KeyHandling, ToastHandling, _MouseActions, _WindowHandling {
   final ConIO _conIO;
   final _subscriptions = StreamController<dynamic>.broadcast();
   final _invalidated = StreamController<DateTime>.broadcast();
+  final _sizeChange = StreamController<Size>.broadcast();
 
   FPS _maxFPS;
   StreamSubscription? _tick;
@@ -47,6 +49,9 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
   /// Currently available width and height for the desktop.
   @override
   Size get size => Size(columns, rows);
+
+  /// Stream for watching desktop size changes.
+  late Stream<Size> Function() onSizeChange;
 
   /// Is <Ctrl-c> intercepted? Or auto-handled by the console to stop the program? Note that if you
   /// loop in your code, <Ctrl-c> will not be handled either way!
@@ -65,6 +70,14 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     _conIO.onKeyEvent = _handleKeyEvent;
     _conIO.onMouseEvent = _handleMouseEvent;
     _subscriptions.stream.listen(_onMessage);
+    onSizeChange = () => _sizeChange.stream;
+    autoDispose(
+      "sigwinch",
+      ProcessSignal.sigwinch.watch().listen((event) {
+        eventDebugLog.add("terminal resized: $columns x $rows");
+        _sizeChange.add(Size(columns, rows));
+      }),
+    );
   }
 
   void _handleKeyEvent(KeyEvent it) {
@@ -136,6 +149,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
       rethrow;
     } finally {
       logWarn("exiting");
+      disposeAll();
       _tick?.cancel();
       _invalidated.close();
       _subscriptions.close();

@@ -23,9 +23,6 @@ class MadConIO with _InputMatching implements ConIO {
     _console.cursor = false;
     _console.rawMode = true;
     _console.mouseMode = true;
-    _subscriptions.add(ProcessSignal.sigwinch.watch().listen((event) {
-      eventDebugLog.add("terminal resized: ${columns()} x ${rows()}");
-    }));
   }
 
   _onStdIn(List<int> bytes) {
