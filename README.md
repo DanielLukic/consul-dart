@@ -7,10 +7,10 @@ Seriously, ignore this. Look at this instead: https://charm.sh/libs/ Not Dart. B
 
 #### What is this?
 
-A very basic, limited, rudimentary, and weird "desktop windowing" system for the console/terminal. Currently tested 
+A very basic, limited, rudimentary, and weird "desktop windowing" system for the console/terminal. Currently tested
 only on my one linux machine. Will most probably not work on Windows or macOS. Feel free to test and report back.
 
-And it is written in Dart. Because I'm currently learning Dart to get into Flutter (and Flutter Flame) at some 
+And it is written in Dart. Because I'm currently learning Dart to get into Flutter (and Flutter Flame) at some
 point. I think. We'll see.
 
 #### Sorry, what?
@@ -24,6 +24,7 @@ Well, it works on my machine... :-D
 You can try the included `example/desk.dart` and see for yourself.
 
 The basic idea is:
+
 ```
 final desktop = Desktop(...);
 desktop.onKey('k', () => doSomething());
@@ -54,8 +55,10 @@ The essentials I want to be done for a "Version 1":
 
 Maybes:
 
+- [ ] Blink(?) active (move or resize) window title (or indicate somehow else for small windows especially)
 - [ ] Menubar system
 - [ ] Basic dialog system
+- [ ] Improve handling of terminal resize
 
 #### Done
 
@@ -73,6 +76,7 @@ Maybes:
 
 #### Bugs
 
+- [ ] Move overlay shown when window is too small.
 - [ ] Drawing a buffer into a buffer breaks ansi in the replaced area.
   Potential fix: collect ansi sequences being replaced and add to `Cell.after` of the last cell.
   Related: should `Cell.reset` happen before `Cell.after`? seems to make more sense now.
