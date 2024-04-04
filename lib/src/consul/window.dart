@@ -23,6 +23,7 @@ class Window with AutoDispose, KeyHandling {
     onStateChanged();
   }
 
+  Size Function() _desktopSize = () => Size.zero;
   bool Function(Window) _isFocused = (_) => false;
 
   /// Implement this to provide the data to be shown for your window.

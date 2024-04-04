@@ -248,6 +248,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
   openWindow(Window window) {
     if (window is DecoratedWindow) window = window._window;
 
+    window._desktopSize = () => size;
     window._isFocused = (it) => it == _focused;
     window.sendMessage = sendMessage;
     window.requestRedraw = redraw;
@@ -269,6 +270,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     window.requestRedraw = () {};
     window.sendMessage = (_) {};
     window._isFocused = (_) => false;
+    window._desktopSize = () => Size.zero;
     window.disposeAll();
     _removeWindow(window);
     _updateFocus();

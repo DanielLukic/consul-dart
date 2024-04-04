@@ -68,6 +68,7 @@ class DecoratedWindow with _WindowDecoration implements Window {
     final symbol = invocation.memberName.toString();
     final name = symbol.split('"')[1];
     final result = switch (name) {
+      "_desktopSize" => _window._desktopSize,
       "flags" => _window.flags,
       "height" => _window.height,
       "id" => _window.id,
