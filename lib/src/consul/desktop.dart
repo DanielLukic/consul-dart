@@ -164,6 +164,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     if (window is DecoratedWindow) window = window._window;
     if (window.state == WindowState.minimized) return;
     if (!window.flags.contains(WindowFlag.minimizable)) return;
+    window._restoreState = window.state;
     window.state = WindowState.minimized;
     _updateFocus();
     redraw();
@@ -238,7 +239,8 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
   raiseWindow(Window window) {
     if (window is DecoratedWindow) window = window._window;
     if (window.state == WindowState.minimized) {
-      window.state = WindowState.normal;
+      window.state = window._restoreState ?? WindowState.normal;
+      window._restoreState = null;
     }
     openWindow(window);
   }

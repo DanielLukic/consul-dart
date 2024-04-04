@@ -16,6 +16,10 @@ class Window with AutoDispose, KeyHandling {
 
   WindowState _state;
 
+  /// Used to restore back from [WindowState.minimized] when state before minimize was
+  /// [WindowState.maximized].
+  WindowState? _restoreState;
+
   WindowState get state => _state;
 
   set state(WindowState value) {
