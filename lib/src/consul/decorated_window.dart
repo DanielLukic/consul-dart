@@ -1,5 +1,6 @@
 part of 'desktop.dart';
 
+/// Wraps a [Window], addindg a titlebar and resize control depending on the [Window.flags].
 class DecoratedWindow with _WindowDecoration implements Window {
   final Window _window;
 
@@ -45,6 +46,7 @@ class DecoratedWindow with _WindowDecoration implements Window {
   @override
   late OngoingMouseAction? Function(MouseEvent) onMouseEvent;
 
+  /// Maps a potentially relative position onto an [AbsolutePosition] on the desktop screen space.
   AbsolutePosition decoratedPosition(Size desktop) {
     if (_window.isMaximized) {
       return Position.topLeft;

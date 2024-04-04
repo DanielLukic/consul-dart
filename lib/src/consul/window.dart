@@ -1,7 +1,14 @@
 part of 'desktop.dart';
 
+/// Basic window abstraction for the [Desktop] system. Boils down to a [String] as the "buffer".
+/// May contain ansi control sequences. Buffer can be smaller or bigger than the window size.
+/// Will be restricted properly when drawn. Return the data to be shown via [redrawBuffer].
+///
+/// Various hooks available to react to changes: [onSizeChanged], [onStateChanged] and
+/// [onMouseEvent] for now.
 class Window with AutoDispose, KeyHandling {
-  String id;
+  final String id;
+
   String name;
   Set<WindowFlag> flags = {};
   Position position;
@@ -18,6 +25,7 @@ class Window with AutoDispose, KeyHandling {
 
   bool Function(Window) _isFocused = (_) => false;
 
+  /// Implement this to provide the data to be shown for your window.
   String? Function() redrawBuffer = () => null;
 
   /// Override this to intercept/receive mouse events. It is important to return true here as long
@@ -25,7 +33,10 @@ class Window with AutoDispose, KeyHandling {
   /// returning false here, another consumer and/or new action is allowed to start.
   OngoingMouseAction? Function(MouseEvent) onMouseEvent = (event) => null;
 
+  /// Install hook to get notified on size changes.
   void Function() onSizeChanged = () {};
+
+  /// Install hook to get notified on state changes.
   void Function() onStateChanged = () {};
 
   /// Call this to request a redraw. Note that it will be a nop until the window is actually opened
@@ -37,6 +48,9 @@ class Window with AutoDispose, KeyHandling {
   /// client code.
   Function(dynamic) sendMessage = (_) {};
 
+  /// Construct a new window with potentially many default settings. Note that only the [id] is
+  /// fixed for now. Everything else can be changed after construction. Note also that windows
+  /// are not shown unless [Desktop.openWindow] is called.
   Window(
     this.id,
     this.name, {
@@ -63,8 +77,11 @@ class Window with AutoDispose, KeyHandling {
 
   final _overlays = <WindowOverlay>[];
 
+  /// Used primarily to draw "system" overlays when moving or resizing windows. But can be used
+  /// for anything really. Like additional layers per window.
   void addOverlay(WindowOverlay it) => _overlays.add(it);
 
+  /// Counterpart to [addOverlay] for removing an overlay.
   void removeOverlay(WindowOverlay it) => _overlays.remove(it);
 
   @override
@@ -101,11 +118,14 @@ extension WindowExtensions on Window {
 
   int get height => size.current.height;
 
-  resize(int width, int height) {
-    // TODO restrict min/max
+  /// Keeping this private for now as it directly manipulates without restricting. Restricting has
+  /// to happen in [Desktop] instead for now.
+  _resize(int width, int height) {
     size = WindowSize(Size(width, height), size.min, size.max);
     onSizeChanged();
   }
 
-  resize_(Size size) => resize(size.width, size.height);
+  /// Keeping this private for now as it directly manipulates without restricting. Restricting has
+  /// to happen in [Desktop] instead for now.
+  _resize_(Size size) => _resize(size.width, size.height);
 }

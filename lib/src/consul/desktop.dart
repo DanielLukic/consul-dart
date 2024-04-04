@@ -95,7 +95,7 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     }
   }
 
-  /// Handle <TAB> and <S-TAB> for window switching.
+  /// Handle <Tab> and <S-Tab> for window switching, <C-w> plus <some-key> for window manipulation.
   void setDefaultKeys() {
     onKey("<Tab>", focusNext);
     onKey("<S-Tab>", focusPrevious);
@@ -137,13 +137,13 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
 
     if (window.state == WindowState.maximized) {
       window.state = WindowState.normal;
-      window.resize_(_restoreSizes[window] ?? window.size.max);
+      window._resize_(_restoreSizes[window] ?? window.size.max);
     } else {
       // horrible.. :-D but will it do for now?
       _restoreSizes[window] = window.size.current;
 
       window.state = WindowState.maximized;
-      window.resize(columns, rows - (window.undecorated ? 0 : 1 /*titlebar*/));
+      window._resize(columns, rows - (window.undecorated ? 0 : 1 /*titlebar*/));
     }
 
     redraw();

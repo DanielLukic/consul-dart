@@ -40,7 +40,7 @@ class _WindowResizing with KeyHandling implements WindowOverlay {
     final maxSize = _window.size.max.ifAutoFill(_desktop);
     final ww = w.clamp(minSize.width, maxSize.width);
     final hh = h.clamp(minSize.height, maxSize.height);
-    _window.resize(max(16, ww), max(2, hh)); // 16 for titlebar, 2 for titlebar + resize control
+    _window._resize(max(16, ww), max(2, hh)); // 16 for titlebar, 2 for titlebar + resize control
   }
 
   done() {
