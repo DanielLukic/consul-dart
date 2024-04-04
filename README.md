@@ -3,14 +3,14 @@
 There is no good reason why this exists. Another fun/joke project I picked up to learn me some more Dart. Did not mean
 to take it as far as it has gotten. But will probably not take this any further... :-D ‾\_('')_/‾
 
-Seriously, ignore this. Look at this instead: https://charm.sh/libs/
+Seriously, ignore this. Look at this instead: https://charm.sh/libs/ Not Dart. But makes much more sense.
 
 #### What is this?
 
 A very basic, limited, rudimentary, and weird "desktop windowing" system for the console/terminal. Currently tested 
 only on my one linux machine. Will most probably not work on Windows or macOS. Feel free to test and report back.
 
-And it is written in Dart. Because I'm currently learning to Dart to get into Flutter and Flutter Flame at some 
+And it is written in Dart. Because I'm currently learning Dart to get into Flutter (and Flutter Flame) at some 
 point. I think. We'll see.
 
 #### Sorry, what?
@@ -26,7 +26,7 @@ You can try the included `example/desk.dart` and see for yourself.
 The basic idea is:
 ```
 final desktop = Desktop(...);
-desktop.onKey('q', () => exit(0));
+desktop.onKey('k', () => doSomething());
 
 final window = Window(
   "some-id",
@@ -42,14 +42,20 @@ It does support a "braille" characters based "canvas". This way you can do somet
 
 ![Screenshot](images/consul-example.gif)
 
-However, there is far too much to do to call this useful in any way...
-
 #### To Do
 
-* Dialog
-* Menu Bar
-* Mouse Event Hierarchy
-* Taskbar
+The essentials I want to be done for a "Version 1":
+
+- [ ] Move window with mouse
+- [ ] Resize window with mouse
+- [ ] Taskbar showing all (including minimized) windows
+- [ ] Taskbar overflow with all remaining windows
+- [ ] Help (?) button to show key configuration
+
+Maybes:
+
+- [ ] Menubar system
+- [ ] Basic dialog system
 
 #### Done
 
@@ -63,9 +69,13 @@ However, there is far too much to do to call this useful in any way...
 - [X] Move windows via key
 - [X] Resize window via keys
 - [X] Window hooks (state & size for now)
+- [X] Basic mouse actions (raise, minimize, maximize, close)
 
 #### Bugs
 
-- [X] moving window out left side breaks ansi.
-  potential fix: collect all ansi sequences cut off and combine into one.
-  placing this one into the first visible cell.
+- [ ] Drawing a buffer into a buffer breaks ansi in the replaced area.
+  Potential fix: collect ansi sequences being replaced and add to `Cell.after` of the last cell.
+  Related: should `Cell.reset` happen before `Cell.after`? seems to make more sense now.
+- [X] Moving window out left side breaks ansi.
+  Potential fix: collect all ansi sequences cut off and combine into one.
+  Placing this one into the first visible cell.
