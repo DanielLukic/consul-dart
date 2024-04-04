@@ -154,6 +154,7 @@ Maybes:
 - [ ] Drawing a buffer into a buffer breaks ansi in the replaced area.
   Potential fix: collect ansi sequences being replaced and add to `Cell.after` of the last cell.
   Related: should `Cell.reset` happen before `Cell.after`? seems to make more sense now.
+- [ ] Related to the previous one: ansi sequences leak into the drawn parts.
 - [X] Moving window out left side breaks ansi.
   Potential fix: collect all ansi sequences cut off and combine into one.
   Placing this one into the first visible cell.
