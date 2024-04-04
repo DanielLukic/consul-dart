@@ -1,6 +1,6 @@
 part of 'desktop.dart';
 
-/// Wraps a [Window], addindg a titlebar and resize control depending on the [Window.flags].
+/// Wraps a [Window], adding a titlebar and resize control depending on the [Window.flags].
 class DecoratedWindow with _WindowDecoration implements Window {
   final Window _window;
 
