@@ -82,32 +82,40 @@ mixin KeyHandling {
     }
   }
 
-  Disposable onKey(String pattern, {required String description, required Function action}) {
-    var it = _Matcher(pattern, description, action);
+  /// Add a key handler matching the given [pattern] or any of the given [aliases], if any.
+  /// [description] is used when showing the current keymap configuration. [action] will be
+  /// executed when the [pattern] or one of the [aliases] is matched to user input.
+  Disposable onKey(
+    String pattern, {
+    List<String> aliases = const [],
+    required String description,
+    required Function action,
+  }) {
+    var it = _Matcher([pattern, ...aliases], description, action);
     _matchers.add(it);
     return Disposable(() => _matchers.remove(it));
   }
 }
 
 class _Matcher {
-  final String pattern;
+  final List<String> patterns;
   final String description;
   final Function _handler;
 
   String _buffer = "";
 
-  _Matcher(this.pattern, this.description, this._handler);
+  _Matcher(this.patterns, this.description, this._handler);
 
   void consume(KeyEvent it) => _buffer = _buffer + it.printable;
 
-  bool isPartialMatch() => !isMatch() && pattern.startsWith(_buffer);
+  bool isPartialMatch() => !isMatch() && patterns.any((it) => it.startsWith(_buffer));
 
-  bool isMatch() => pattern == _buffer;
+  bool isMatch() => patterns.any((it) => it == _buffer);
 
   void trigger() => _handler();
 
   void reset() => _buffer = "";
 
   @override
-  String toString() => "$pattern <=> $_buffer";
+  String toString() => "$patterns <=> $_buffer";
 }
