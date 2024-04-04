@@ -41,6 +41,12 @@ class DecoratedWindow with _WindowDecoration implements Window {
   }
 
   @override
+  set position(it) => _window.position = it;
+
+  @override
+  set size(it) => _window.size = it;
+
+  @override
   Function(dynamic) get sendMessage => _window.sendMessage;
 
   @override
