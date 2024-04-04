@@ -20,7 +20,8 @@ mixin _WindowDecoration {
       lines = [titlebar, ...buffer.split("\n").take(window.height)];
     }
 
-    final extraLines = List.filled(max(0, window.height - lines.length), "");
+    final height = window.undecorated ? window.height : window.height + 1;
+    final extraLines = List.filled(max(0, height - lines.length), "");
     var fitted = (lines + extraLines).map((line) => _fitLineWidth(line, window.width)).toList();
 
     if (window.resizable && !window.undecorated) {

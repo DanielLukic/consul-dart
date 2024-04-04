@@ -48,7 +48,6 @@ It does support a "braille" characters based "canvas". This way you can do somet
 The essentials I want to be done for a "Version 1":
 
 - [ ] Move window with mouse
-- [ ] Resize window with mouse
 - [ ] Taskbar showing all (including minimized) windows
 - [ ] Taskbar overflow with all remaining windows
 - [ ] Help (?) button to show key configuration
@@ -73,10 +72,11 @@ Maybes:
 - [X] Resize window via keys
 - [X] Window hooks (state & size for now)
 - [X] Basic mouse actions (raise, minimize, maximize, close)
+- [X] Resize window with mouse
 
 #### Bugs
 
-- [ ] *CRITICAL* One off bug for resize control. Applies only for some `Position` type it seems?
+- [X] *CRITICAL* One off bug for resize control. Applies only for some `Position` type it seems?
 - [ ] Move overlay shown when window is too small.
 - [ ] Drawing a buffer into a buffer breaks ansi in the replaced area.
   Potential fix: collect ansi sequences being replaced and add to `Cell.after` of the last cell.
