@@ -45,12 +45,12 @@ abstract mixin class _MouseActions {
 
 abstract class OngoingMouseAction {
   final DecoratedWindow window;
-  final MouseEvent _event;
-  final Function(dynamic) _sendMessage;
+  final MouseEvent event;
+  final Function(dynamic) sendMessage;
 
   var _done = false;
 
-  OngoingMouseAction(this.window, this._event, this._sendMessage);
+  OngoingMouseAction(this.window, this.event, this.sendMessage);
 
   bool get done => _done;
 
@@ -64,8 +64,8 @@ class CloseWindowAction extends OngoingMouseAction {
   onMouseEvent(MouseEvent event) {
     if (event is MouseButtonEvent && event.kind.isUp) {
       _done = true;
-      if (event.x == _event.x && event.y == _event.y) {
-        _sendMessage(("close-window", window));
+      if (event.x == event.x && event.y == event.y) {
+        sendMessage(("close-window", window));
       }
     }
   }
@@ -78,8 +78,8 @@ class MaximizeWindowAction extends OngoingMouseAction {
   onMouseEvent(MouseEvent event) {
     if (event is MouseButtonEvent && event.kind.isUp) {
       _done = true;
-      if (event.x == _event.x && event.y == _event.y) {
-        _sendMessage(("maximize-window", window));
+      if (event.x == event.x && event.y == event.y) {
+        sendMessage(("maximize-window", window));
       }
     }
   }
@@ -92,8 +92,8 @@ class MinimizeWindowAction extends OngoingMouseAction {
   onMouseEvent(MouseEvent event) {
     if (event is MouseButtonEvent && event.kind.isUp) {
       _done = true;
-      if (event.x == _event.x && event.y == _event.y) {
-        _sendMessage(("minimize-window", window));
+      if (event.x == event.x && event.y == event.y) {
+        sendMessage(("minimize-window", window));
       }
     }
   }
@@ -115,7 +115,7 @@ class ResizeWindowAction extends OngoingMouseAction {
 
 class RaiseWindowAction extends OngoingMouseAction {
   RaiseWindowAction(super.window, super.event, super.sendMessage) {
-    _sendMessage(("raise-window", window));
+    sendMessage(("raise-window", window));
     _done = true;
   }
 
