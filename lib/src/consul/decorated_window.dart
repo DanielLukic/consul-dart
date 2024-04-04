@@ -21,6 +21,7 @@ class DecoratedWindow with _WindowDecoration implements Window {
       } else if (it.x >= width - 9) {
         return MinimizeWindowAction(this, it, sendMessage);
       } else {
+        sendMessage(("raise-window", this));
         return MoveWindowAction(this, it, sendMessage);
       }
     }

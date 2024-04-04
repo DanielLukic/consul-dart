@@ -47,7 +47,6 @@ It does support a "braille" characters based "canvas". This way you can do somet
 
 The essentials I want to be done for a "Version 1":
 
-- [ ] Move window with mouse
 - [ ] Taskbar showing all (including minimized) windows
 - [ ] Taskbar overflow with all remaining windows
 - [ ] Help (?) button to show key configuration
@@ -73,6 +72,7 @@ Maybes:
 - [X] Window hooks (state & size for now)
 - [X] Basic mouse actions (raise, minimize, maximize, close)
 - [X] Resize window with mouse
+- [X] Move window with mouse
 
 #### Bugs
 

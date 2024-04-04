@@ -100,10 +100,24 @@ class MinimizeWindowAction extends OngoingMouseAction {
 }
 
 class MoveWindowAction extends OngoingMouseAction {
-  MoveWindowAction(super.window, super.event, super.sendMessage);
+  late final AbsolutePosition _basePosition;
+
+  MoveWindowAction(super.window, super.event, super.sendMessage) {
+    _basePosition = window.position.toAbsolute(window._desktopSize(), window.size.current);
+  }
 
   @override
-  onMouseEvent(MouseEvent event) {}
+  onMouseEvent(MouseEvent event) {
+    final dx = event.xAbs - this.event.xAbs;
+    final dy = event.yAbs - this.event.yAbs;
+    eventDebugLog.clear();
+    eventDebugLog.add("move: $event => $dx $dy");
+    eventDebugLog.add("base: $_basePosition");
+    eventDebugLog.add("current: ${window.position}");
+    window.position = _basePosition.moved(dx, dy);
+
+    if (event.isUp) _done = true;
+  }
 }
 
 class ResizeWindowAction extends OngoingMouseAction {
