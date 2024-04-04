@@ -109,6 +109,28 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
     onKey("<C-w>x", closeFocusedWindow);
   }
 
+  /// Run the desktop "main loop".
+  run() async {
+    try {
+      _redraw(0);
+      _startTicking();
+      await listen("exit").first;
+    } catch (it, trace) {
+      logError(it.toString(), trace);
+      rethrow;
+    } finally {
+      logWarn("exiting");
+      _tick?.cancel();
+      _invalidated.close();
+      _subscriptions.close();
+    }
+  }
+
+  void _startTicking() {
+    _tick?.cancel();
+    _tick = _invalidated.stream.throttleTime(_maxFPS.milliseconds, trailing: true).listen(_redraw);
+  }
+
   /// Resize currently focused window via keyboard. Nop if no window focused. Nop if window is not
   /// [WindowFlag.resizable].
   void resizeFocusedWindow() {
@@ -181,28 +203,6 @@ class Desktop with FocusHandling, KeyHandling, ToastHandling, _MouseActions, _Wi
   void _updateRow(int row, String data) {
     _conIO.moveCursor(0, row);
     _conIO.write(data + _ansiReset);
-  }
-
-  /// Run the desktop "main loop".
-  run() async {
-    try {
-      _redraw(0);
-      _startTicking();
-      await listen("exit").first;
-    } catch (it, trace) {
-      logError(it.toString(), trace);
-      rethrow;
-    } finally {
-      logWarn("exiting");
-      _tick?.cancel();
-      _invalidated.close();
-      _subscriptions.close();
-    }
-  }
-
-  void _startTicking() {
-    _tick?.cancel();
-    _tick = _invalidated.stream.throttleTime(_maxFPS.milliseconds, trailing: true).listen(_redraw);
   }
 
   /// Change the background character. Does not redraw the desktop. Call [_redrawDesktop] as
