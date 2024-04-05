@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:dart_consul/dart_consul.dart';
 
-import 'demo_keys.dart';
-import 'gol.dart';
-import 'starfield.dart';
+import 'src/demo_keys.dart';
+import 'src/gol.dart';
+import 'src/starfield.dart';
 
 void main(List<String> args) async {
   final conIO = MadConIO();
