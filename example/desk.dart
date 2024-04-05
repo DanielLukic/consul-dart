@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'dart:async';
 import 'dart:io';
 
@@ -8,6 +6,7 @@ import 'package:consul/src/auto_help.dart';
 import 'package:consul/src/consul/con_io/mad_con_io.dart';
 import 'package:consul/src/debug_log.dart';
 
+import 'demo_keys.dart';
 import 'gol.dart';
 import 'starfield.dart';
 
@@ -54,23 +53,8 @@ Future createDesktop(ConIO conIO) async {
   // desktop.interceptSigInt = true;
   desktop.setDefaultKeys();
   desktop.onKey("q", description: "Quit", action: confirmQuit);
-  desktop.onKey(
-    "d",
-    description: "Demo single key toast",
-    action: () => desktop.toast("Single key   press handled!"),
-  );
-  desktop.onKey(
-    "dd",
-    description: "Demo double key toast",
-    action: () => desktop.toast("Double key press handled!"),
-  );
-  desktop.onKey(
-    "<C-c>",
-    description: "Demo <C-c> intercept",
-    action: () => desktop.toast("<C-c> intercepted!"),
-  );
-  // desktop.onKey("n", action: () => desktop.notify("Desktop notification"));
 
+  addDemoKeys(desktop);
   gameOfLife(desktop);
   starfield(desktop);
 
