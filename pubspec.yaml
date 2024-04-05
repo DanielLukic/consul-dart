@@ -1,8 +1,8 @@
 name: consul
 description: Basic console windowing system (TUI). Because why not.
-version: 0.0.0
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-repository: https://github.com/DanielLukic/dart-kraken-api
+version: 0.0.1
+homepage: https://github.com/DanielLukic/consul-dart
+repository: https://github.com/DanielLukic/consul-dart
 topics: [ console, terminal, tui ]
 
 environment:
