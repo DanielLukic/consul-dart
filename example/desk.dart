@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:ansi/ansi.dart';
 import 'package:consul/consul.dart';
 import 'package:consul/src/auto_help.dart';
 import 'package:consul/src/consul/con_io/mad_con_io.dart';
@@ -54,6 +55,7 @@ Future createDesktop(ConIO conIO) async {
   desktop.setDefaultKeys();
   desktop.onKey("q", description: "Quit", action: confirmQuit);
 
+  addAnsiDemo(desktop);
   addDemoKeys(desktop);
   gameOfLife(desktop);
   starfield(desktop);
@@ -71,4 +73,19 @@ Future createDesktop(ConIO conIO) async {
   );
 
   return await desktop.run();
+}
+
+void addAnsiDemo(Desktop desktop) {
+  desktop.openWindow(Window("ansi-demo", "ANSI Demo",
+      size: WindowSize.fixed(Size(20, 10)),
+      position: RelativePosition.autoCentered(),
+      redraw: () =>
+          "some red\n".red() +
+          "some blue\n".bgBlue() +
+          "some invers\n".inverse() +
+          "some bold\n".bold() +
+          "some italic\n".italic() +
+          "some underline\n".underline() +
+          "some dim\n".dim() +
+          "some strike-through\n".strikeThrough()));
 }
