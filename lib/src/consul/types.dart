@@ -73,6 +73,9 @@ class RelativePosition extends Position {
   const RelativePosition.fromBottom({int xOffset = 0, int yOffset = 0})
       : this(RelativePositionMode.autoCentered, RelativePositionMode.fromEnd, xOffset, yOffset);
 
+  const RelativePosition.fromTop({int xOffset = 0, int yOffset = 0})
+      : this(RelativePositionMode.autoCentered, RelativePositionMode.fromStart, xOffset, yOffset);
+
   @override
   AbsolutePosition toAbsolute(Size desktop, Size window) {
     final x = _applyMode(xMode, desktop.width, window.width, xOffset);
