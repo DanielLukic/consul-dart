@@ -34,9 +34,10 @@ class _WindowMoving with KeyHandling implements WindowOverlay {
 
   @override
   void decorate(OverlayBuffer buffer) {
+    if (_window.height < 8) return;
     final x = buffer.width ~/ 2;
     final y = buffer.height ~/ 2;
-    buffer.draw(x - 2, y - 2, cross);
+    buffer.draw(x - 3, y - 3, cross);
   }
 
   final cross = ""
