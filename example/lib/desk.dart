@@ -1,11 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:ansi/ansi.dart';
 import 'package:consul/consul.dart';
-import 'package:consul/src/auto_help.dart';
-import 'package:consul/src/consul/con_io/mad_con_io.dart';
-import 'package:consul/src/debug_log.dart';
 
 import 'demo_keys.dart';
 import 'gol.dart';
@@ -31,19 +27,19 @@ Future createDesktop(ConIO conIO) async {
   // built in simple mechanism that is available for such trivial setups.
 
   confirmQuit() => notify("quit");
-  showGameOfLife() => notify("show-gol");
-  showStarfield() => notify("show-starfield");
-  changeFps() => notify("change-fps");
+  // showGameOfLife() => notify("show-gol");
+  // showStarfield() => notify("show-starfield");
+  // changeFps() => notify("change-fps");
 
   // TODO Remove setMenu and make Menu an undecorated Window instead. Handled like any other Window.
-  desktop.setMenu(//
-      Menu("Menu" /*key: 'M' == default*/)
-        ..add(Menu("File")..entry("Quit", confirmQuit))
-        ..add(Menu("Window")
-          ..entry("Game Of Life", showGameOfLife)
-          ..entry("Starfield", showStarfield))
-        ..add(Menu("Command")..entry("Change FPS", changeFps)) //
-      );
+  // desktop.setMenu(//
+  //     Menu("Menu" /*key: 'M' == default*/)
+  //       ..add(Menu("File")..entry("Quit", confirmQuit))
+  //       ..add(Menu("Window")
+  //         ..entry("Game Of Life", showGameOfLife)
+  //         ..entry("Starfield", showStarfield))
+  //       ..add(Menu("Command")..entry("Change FPS", changeFps)) //
+  //     );
 
   // Note the use of "exit" as message to end [Desktop.run].
   desktop.subscribe("quit", (_) => desktop.exit()); // TODO confirm dialog

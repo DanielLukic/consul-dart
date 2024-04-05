@@ -15,7 +15,6 @@ part 'decorated_window.dart';
 part 'focus_handling.dart';
 part 'key_event.dart';
 part 'key_handling.dart';
-part 'menu.dart';
 part 'mouse_actions.dart';
 part 'mouse_event.dart';
 part 'toast.dart';
@@ -286,9 +285,6 @@ class Desktop
     if (current == null) return;
     closeWindow(current);
   }
-
-  /// TODO Change the displayed menu.
-  setMenu(Menu menu) {}
 
   /// Forward [msg] to all subscribers.
   sendMessage(msg) => _subscriptions.sink.add(msg);
