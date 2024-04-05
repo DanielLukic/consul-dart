@@ -1,3 +1,7 @@
+## 0.0.2
+
+- [X] Fix example name
+
 ## 0.0.1
 
 Basic functionality implemented:
