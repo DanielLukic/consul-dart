@@ -53,7 +53,6 @@ class MadConIO with _InputMatching implements ConIO {
     skip = bytes.length;
 
     final line = "${event.toString().padRight(80)} RAW: $debug";
-    if (eventDebugLog.length == 100) eventDebugLog.removeAt(0);
     eventDebugLog.add(line);
 
     if (event is KeyEvent) _keyEventHandler?.let((it) => it(event));
