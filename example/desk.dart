@@ -55,10 +55,10 @@ Future createDesktop(ConIO conIO) async {
   desktop.setDefaultKeys();
   desktop.onKey("q", description: "Quit", action: confirmQuit);
 
-  addAnsiDemo(desktop);
-  addDemoKeys(desktop);
   gameOfLife(desktop);
   starfield(desktop);
+  addDemoKeys(desktop);
+  addAnsiDemo(desktop);
 
   addDebugLog(
     desktop,

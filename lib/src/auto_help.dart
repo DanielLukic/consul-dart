@@ -35,6 +35,8 @@ OngoingMouseAction? _showKeymapOnClick(MouseEvent it, Desktop desktop, Window wi
 }
 
 void _showKeymap(Desktop desktop, Window window) {
+  _y = 0;
+
   final it = desktop.findWindow("keymap");
   switch (it?.state) {
     case null:
@@ -77,6 +79,13 @@ Window _prepareKeymapWindow(Desktop desktop) {
     final bottom = "╚" + "".padRight(maxWidth + 2, "═") + "╝";
     return [...formatted, bottom].join("\n");
   };
+
+  window.onKey(
+    "x",
+    aliases: ["<Escape>", "q"],
+    description: "Close the keymap window",
+    action: () => desktop.closeWindow(window),
+  );
 
   window.onKey(
     "k",
