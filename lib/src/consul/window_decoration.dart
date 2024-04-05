@@ -34,7 +34,7 @@ mixin _WindowDecoration {
   }
 
   String _fitLineWidth(String line, int width) {
-    final stripped = _ansiStripped(line);
+    final stripped = ansiStripped(line);
     if (stripped.length == width) return line; // nothing to do
 
     final pad = (width - stripped.length).clamp(0, width);
@@ -44,7 +44,7 @@ mixin _WindowDecoration {
     // in that case, skip the entire escape in one step. otherwise, remove a single character. then
     // repeat.
     var result = line;
-    while (_ansiStripped(result).length > width) {
+    while (ansiStripped(result).length > width) {
       final lastAnsi = _ansiMatcher.allMatches(result).lastOrNull;
       if (lastAnsi?.end == result.length) {
         result = result.substring(0, lastAnsi!.start);

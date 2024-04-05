@@ -314,6 +314,6 @@ class Desktop
   @override
   void _updateRow(int row, String data) {
     _conIO.moveCursor(0, row);
-    _conIO.write(data + _ansiReset);
+    _conIO.write(data + ansiReset);
   }
 }
