@@ -42,55 +42,86 @@ class Buffer {
 
       final target = _buffer[y + i];
       final cells = lines[i].asCells();
-      final ansi = StringBuffer();
+
+      // determine if end of replaced area is visible. if so, we need to "continue" any potential
+      // ansi sequences "underneath".
+      _preserveAnsi(target, x + cells.length);
+
+      final newAnsi = StringBuffer(x > 0 ? ansiReset : "");
 
       for (var j = 0; j < cells.length; j++) {
+        var cell = cells[j];
+
         // collect all ansi codes outside the left boundary:
-        if (x + j < 0) {
-          ansi.write(cells[j].before);
-          ansi.write(cells[j].after);
-        }
+        if (x + j < 0) newAnsi.write(cell.toAnsiOnly());
 
         // after the right boundary just ignore everything:
         if (x + j < 0 || x + j >= target.length) continue;
 
+        // copy the new cell now, but note the potential modifications below!
+        target[x + j] = cell;
+
         // for the first visible cell, add all collected ansi codes:
-        if (ansi.isNotEmpty) {
-          target[x + j] = cells[j].withBeforeExtended(ansi.toString());
-          ansi.clear();
-        } else
-        // for all following cells just copy:
-        {
-          target[x + j] = cells[j];
+        if (newAnsi.isNotEmpty) {
+          target[x + j] = cell.withBeforePrepended(newAnsi.toString());
+          newAnsi.clear();
         }
 
         // for the last cell enforce an ansi reset always:
         if (j == cells.length - 1) {
           target[x + j] = target[x + j].withReset();
         }
+
+        // note that both above modifications may apply to the same cell if the copied are is
+        // only one char wide.
       }
     }
+  }
+
+  void _preserveAnsi(List<Cell> line, int upUntil) {
+    // nothing to do if line is replaced until the end:
+    if (upUntil >= line.length) return;
+
+    // collect the ansi that is about to be broken. it will be placed at the end of the
+    // replaced area to have it "continue" underneath.
+    final oldAnsi = StringBuffer();
+    for (var o = 0; o < upUntil; o++) {
+      oldAnsi.write(line[o].toAnsiOnly());
+    }
+    line[upUntil] = line[upUntil].withBeforePrepended(oldAnsi.toString());
   }
 
   /// Return this buffer as a String with '\n' as line separator for dumping into the console.
   String frame() => _buffer.map((line) => line.join()).join('\n');
 }
 
+/// Represents an ansi cell: A character, plus an optional ansi sequence before it and a "reset
+/// ansi after me" flag.
 class Cell {
   final int charCode;
   final String before;
-  final String after;
   final bool reset;
 
-  Cell(this.charCode, {this.before = '', this.after = '', this.reset = false});
+  Cell(this.charCode, {this.before = '', this.reset = false});
 
+  /// Add more ansi sequence to this cell, before any existing.
+  Cell withBeforePrepended(String moreBefore) =>
+      Cell(charCode, before: moreBefore + before, reset: reset);
+
+  /// Add more ansi sequence to this cell, after any existing.
   Cell withBeforeExtended(String moreBefore) =>
-      Cell(charCode, before: before + moreBefore, after: after, reset: reset);
+      Cell(charCode, before: before + moreBefore, reset: reset);
 
-  Cell withReset() => Cell(charCode, before: before, after: after, reset: true);
+  /// Mark this cell to reset any ansi style after it.
+  Cell withReset() => Cell(charCode, before: before, reset: true);
 
+  /// Provide the ansi of this cell only.
+  String toAnsiOnly() => before + (reset ? ansiReset : "");
+
+  /// Provide the actual representation of this cell for on-screen display: any ansi sequence,
+  /// the character, and a potential reset after it.
   @override
-  String toString() => before + String.fromCharCode(charCode) + after + (reset ? ansiReset : "");
+  String toString() => before + String.fromCharCode(charCode) + (reset ? ansiReset : "");
 }
 
 extension on String {
