@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:consul/src/consul/desktop.dart';
-import 'package:dart_console/dart_console.dart';
+import 'package:dart_console2/dart_console2.dart' as dc;
 
 import '../../../consul.dart';
 import '../../util/common.dart';
@@ -13,7 +13,7 @@ part 'input_matching.dart';
 
 /// A [ConIO] implementation using [dart_console] for "raw mode" handling.
 class MadConIO with _InputMatching implements ConIO {
-  final _console = Console();
+  final _console = dc.Console();
   final _subscriptions = <StreamSubscription>[];
 
   MadConIO() {
@@ -108,7 +108,7 @@ class MadConIO with _InputMatching implements ConIO {
   void clear() => _console.clearScreen();
 
   @override
-  void moveCursor(int column, int row) => _console.cursorPosition = Coordinate(row, column);
+  void moveCursor(int column, int row) => _console.cursorPosition = dc.Coordinate(row, column);
 
   @override
   void write(String buffer) => _console.write(buffer);

@@ -28,7 +28,7 @@ extension on int {
   String get alphaChar => String.fromCharCode(96 + this);
 }
 
-extension on Console {
+extension on dc.Console {
   set cursor(bool enabled) {
     if (enabled) {
       showCursor();
