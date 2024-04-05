@@ -72,44 +72,47 @@ Example animated gif:
 
 The essentials I want to be done for a "Version 1":
 
-- [ ] Taskbar showing all (including minimized) windows
-- [ ] Taskbar overflow with all remaining windows
+- Taskbar showing all (including minimized) windows
+- Taskbar overflow with all remaining windows
 
-Maybes:
+Some other things on my mind:
 
-- [ ] Blink(?) active (move or resize) window title (or indicate somehow else for small windows especially)
-- [ ] Menubar system
-- [ ] Basic dialog system
-- [ ] Improve handling of terminal resize
+- *MAYBE* Blink(?) active (move or resize) window title (or indicate somehow else for small windows especially)
+- *MAYBE* Menubar system
+- *MAYBE* Basic dialog system
+- *MAYBE* Improve handling of terminal resize
 
 #### Done
 
-- [X] Draw windows
-- [X] Window title bar with controls
-- [X] Console input handling (keys only for now)
-- [X] Tab switching
-- [X] Console mouse input handling
-- [X] Minimize/maximize/close windows via key
-- [X] Nested key handling
-- [X] Move windows via key
-- [X] Resize window via keys
-- [X] Window hooks (state & size for now)
-- [X] Basic mouse actions (raise, minimize, maximize, close)
-- [X] Resize window with mouse
-- [X] Move window with mouse
-- [X] Help (?) button to show key configuration
+- Draw windows
+- Window title bar with controls
+- Console input handling (keys only for now)
+- Tab switching
+- Console mouse input handling
+- Minimize/maximize/close windows via key
+- Nested key handling
+- Move windows via key
+- Resize window via keys
+- Window hooks (state & size for now)
+- Basic mouse actions (raise, minimize, maximize, close)
+- Resize window with mouse
+- Move window with mouse
+- Help (?) button to show key configuration
 
 #### Bugs
 
-- [X] *MAJOR* Titlebar controls do not respect window flags.
-- [ ] *MAJOR* Moving window fast, then moving another window, moves the first one again.
-- [ ] *MAJOR* Focus does not skip minimized windows properly.
-- [X] *CRITICAL* One off bug for resize control. Applies only for some `Position` type it seems?
-- [X] Move overlay shown when window is too small.
-- [X] Drawing a buffer into a buffer breaks ansi in the replaced area.
+- *MAJOR* Moving window fast, then moving another window, moves the first one again.
+- *MAJOR* Focus does not skip minimized windows properly.
+
+#### Fixed Bugs
+
+- *CRITICAL* One off bug for resize control. Applies only for some `Position` type it seems?
+- *MAJOR* Titlebar controls do not respect window flags.
+- Move overlay shown when window is too small.
+- Drawing a buffer into a buffer breaks ansi in the replaced area.
   Potential fix: collect ansi sequences being replaced and add to `Cell.after` of the last cell.
   Related: should `Cell.reset` happen before `Cell.after`? seems to make more sense now.
-- [X] Related to the previous one: ansi sequences leak into the drawn parts.
-- [X] Moving window out left side breaks ansi.
+- Related to the previous one: ansi sequences leak into the drawn parts.
+- Moving window out left side breaks ansi.
   Potential fix: collect all ansi sequences cut off and combine into one.
   Placing this one into the first visible cell.
