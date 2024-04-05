@@ -1,3 +1,7 @@
+## 0.0.5 / 0.0.4 / 0.0.3
+
+- [X] Try showing animation on pub.dev
+
 ## 0.0.2
 
 - [X] Fix example name

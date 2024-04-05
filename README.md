@@ -5,6 +5,12 @@ to take it as far as it has gotten. But will probably not take this any further.
 
 Seriously, ignore this. Look at this instead: https://charm.sh/libs/ Not Dart. But makes much more sense.
 
+#### Example Screenshot
+
+Screenshot of the `example.dart` running:
+
+![Screenshot](https://github.com/DanielLukic/consul-dart/raw/main/images/example.gif)
+
 #### Credits
 
 Besides some obvious dart dependencies, these dependencies are used:
@@ -32,7 +38,7 @@ No, I'm sorry... ‾\_('')_/‾
 
 Well, it works on my machine... :-D
 
-You can try the included `example/desk.dart` and see for yourself.
+You can try the included `example.dart` and see for yourself.
 
 The basic idea is:
 
@@ -50,11 +56,17 @@ final window = Window(
 desktop.openWindow(window);
 ```
 
-It does support a "braille" characters based "canvas". This way you can do something like the `example/desk.dart`:
+It does support a "braille" characters based "canvas". This way you can do something like the `example.dart`.
 
-![Screenshot](images/consul-example.gif)
+Note that this canvas functionality comes from https://pub.dev/packages/console.
 
-Note that this functionality comes from https://pub.dev/packages/console.
+Example mp4 video:
+
+<video src="https://github.com/DanielLukic/consul-dart/assets/94672/9cc601e4-7232-497d-8c98-c7a6008a5e37"></video>
+
+Example animated gif:
+
+![Screenshot](https://github.com/DanielLukic/consul-dart/raw/main/images/consul-example.gif)
 
 #### To Do
 
