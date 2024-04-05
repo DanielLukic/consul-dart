@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:consul/consul.dart';
+import 'package:dart_consul/dart_consul.dart';
 
 var _y = 0;
 

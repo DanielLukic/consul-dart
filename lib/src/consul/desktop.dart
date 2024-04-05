@@ -3,9 +3,9 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:ansi/ansi.dart';
-import 'package:consul/src/util/auto_dispose.dart';
-import 'package:consul/src/util/common.dart';
-import 'package:consul/src/util/log.dart';
+import 'package:dart_consul/src/util/auto_dispose.dart';
+import 'package:dart_consul/src/util/common.dart';
+import 'package:dart_consul/src/util/log.dart';
 import 'package:rxdart/transformers.dart';
 
 part 'buffer.dart';

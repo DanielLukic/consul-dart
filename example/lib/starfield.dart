@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:console/console.dart';
-import 'package:consul/consul.dart';
+import 'package:dart_consul/dart_consul.dart';
 
 /// Draw a horizontally moving starfield in a window.
 starfield(Desktop desktop) {

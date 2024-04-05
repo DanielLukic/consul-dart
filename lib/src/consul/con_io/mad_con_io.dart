@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:consul/src/consul/desktop.dart';
 import 'package:dart_console2/dart_console2.dart' as dc;
+import 'package:dart_consul/src/consul/desktop.dart';
 
-import '../../../consul.dart';
+import '../../../dart_consul.dart';
 import '../../util/common.dart';
 
 part 'extensions.dart';

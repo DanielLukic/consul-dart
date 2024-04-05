@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:console/console.dart';
-import 'package:consul/consul.dart';
+import 'package:dart_consul/dart_consul.dart';
 
 /// Create or restore a Game Of Life window.
 gameOfLife(Desktop desktop) {

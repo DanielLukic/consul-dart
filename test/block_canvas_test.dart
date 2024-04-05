@@ -1,4 +1,4 @@
-import 'package:consul/src/block_canvas.dart';
+import 'package:dart_consul/src/block_canvas.dart';
 import 'package:test/test.dart';
 
 void main() {

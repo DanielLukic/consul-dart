@@ -1,5 +1,4 @@
-import 'package:ansi/ansi.dart';
-import 'package:consul/consul.dart';
+import 'package:dart_consul/dart_consul.dart';
 import 'package:test/test.dart';
 
 final reset = ansiReset;

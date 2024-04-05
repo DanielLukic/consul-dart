@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:consul/consul.dart';
+import 'package:dart_consul/dart_consul.dart';
 
 import 'demo_keys.dart';
 import 'gol.dart';

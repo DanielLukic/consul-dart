@@ -1,4 +1,4 @@
-name: consul
+name: dart_consul
 description: Basic console windowing system (TUI). Because why not.
 version: 0.0.1
 homepage: https://github.com/DanielLukic/consul-dart

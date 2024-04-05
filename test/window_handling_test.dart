@@ -1,5 +1,4 @@
-import 'package:consul/consul.dart';
-import 'package:consul/src/consul/desktop.dart';
+import 'package:dart_consul/dart_consul.dart';
 import 'package:test/test.dart';
 
 extension on MockWindowHandling {

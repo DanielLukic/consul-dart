@@ -1,4 +1,4 @@
-import 'package:consul/consul.dart';
+import 'package:dart_consul/dart_consul.dart';
 
 void addDemoKeys(Desktop desktop) {
   final window = Window(

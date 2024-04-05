@@ -1,4 +1,4 @@
-import '../consul.dart';
+import '../dart_consul.dart';
 
 addDebugLog(
   Desktop desktop, {
