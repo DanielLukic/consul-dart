@@ -7,7 +7,7 @@ enum _MatchResult {
 }
 
 mixin KeyHandling {
-  var _keyTimeoutMillis = 1000;
+  var _keyTimeoutMillis = 600;
 
   int get keyTimeoutMillis => _keyTimeoutMillis;
 
