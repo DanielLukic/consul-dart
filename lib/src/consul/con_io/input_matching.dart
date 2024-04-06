@@ -131,7 +131,7 @@ mixin _InputMatching {
 
     MouseEvent? event;
     if (wheeling) {
-      final kind = wheelingDown ? MouseWheelKind.wheelDown : MouseWheelKind.wheelUp;
+      final kind = mouseWheelKind(wheelingDown);
       event = MouseWheelEvent(kind, x, y);
     } else if (moving) {
       final kind = MouseMotionKind.lmb.takeIf(lmb) ??

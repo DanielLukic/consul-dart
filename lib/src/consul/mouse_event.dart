@@ -21,6 +21,9 @@ sealed class MouseEvent {
   }
 }
 
+MouseWheelKind mouseWheelKind(bool down) =>
+    down ? MouseWheelKind.wheelDown : MouseWheelKind.wheelUp;
+
 enum MouseWheelKind {
   wheelDown,
   wheelUp,
