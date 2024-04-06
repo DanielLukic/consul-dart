@@ -28,6 +28,21 @@ part 'window_resizing.dart';
 /// Pseudo desktop environment for the console.
 /// Requires an implementation of [ConIO] for rendering.
 /// Functions only during awaited execution of the [run] function.
+///
+/// Note on [sendMessage] method: besides passing all the messages on to any
+/// subscribers, the [Desktop] understands a few messages itself. At the time
+/// of this writing, the following messages are supported.
+///
+/// ```
+/// ("close-window", Window)
+/// ("maximize-window", Window)
+/// ("minimize-window", Window)
+/// ("raise-window", Window)
+/// ("resize-window", Window, Size)
+/// ```
+///
+/// These are records with the message id as a [String], plus the required
+/// parameters.
 class Desktop
     with
         AutoDispose,
