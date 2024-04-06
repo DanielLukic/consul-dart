@@ -3,6 +3,7 @@ part of 'desktop.dart';
 abstract mixin class FocusHandling {
   abstract final List<Window> _windows;
 
+  void redraw();
   Window? _focused;
 
   _updateFocus() {
@@ -12,6 +13,7 @@ abstract mixin class FocusHandling {
     
     current?.onStateChanged();
     _focused?.onStateChanged();
+    redraw();
   }
 
   void focusNext() {

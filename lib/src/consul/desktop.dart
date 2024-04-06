@@ -164,7 +164,8 @@ class Desktop
   }
 
   /// Trigger an (async) redraw.
-  redraw() {
+  @override
+  void redraw() {
     // ignore broken windows still sending after shutdown:
     if (_invalidated.isClosed) return;
 
