@@ -315,7 +315,7 @@ class Desktop
   void closeFocusedWindow() {
     final current = _focused;
     if (current == null) return;
-    closeWindow(current);
+    if (current.closeable) closeWindow(current);
   }
 
   /// Forward [msg] to all subscribers.
