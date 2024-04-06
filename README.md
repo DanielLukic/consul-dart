@@ -1,11 +1,11 @@
-### Dart Consul - CLI "Desktop" System
+## Dart Consul - CLI "Desktop" System
 
 There is no good reason why this exists. Another fun/joke project I picked up to learn me some more Dart. Did not mean
 to take it as far as it has gotten. But will probably not take this any further... 🙃 🤷 ☯
 
 Seriously, ignore this. Look at this instead: https://charm.sh/libs/ Not Dart. But makes much more sense.
 
-#### What is this?
+### What is this?
 
 A very basic, limited, rudimentary, and weird "desktop windowing" system for the console/terminal. Currently tested
 only on my one linux machine. Will most probably not work on Windows or macOS. Feel free to test and report back.
@@ -13,17 +13,17 @@ only on my one linux machine. Will most probably not work on Windows or macOS. F
 And it is written in Dart. Because I'm currently learning Dart to get into Flutter (and Flutter Flame) at some
 point. I think. We'll see.
 
-#### Sorry, what?
+### Sorry, what?
 
 No, I'm sorry... 🤷
 
-#### Example Screenshot
+### Example Screenshot
 
 Screenshot of the `example.dart` running:
 
 ![Screenshot](https://github.com/DanielLukic/consul-dart/raw/main/images/example.gif)
 
-#### Credits
+### Credits
 
 Besides some obvious dart dependencies, these dependencies are used:
 
@@ -34,7 +34,7 @@ Besides some obvious dart dependencies, these dependencies are used:
 
 This fun project would not exist without these dependencies!
 
-#### So... Does it work?
+### So... Does it work?
 
 Well, it works on my machine... 🙃
 
@@ -68,7 +68,7 @@ Example animated gif:
 
 ![Screenshot](https://github.com/DanielLukic/consul-dart/raw/main/images/consul-example.gif)
 
-#### To Do
+### To Do
 
 The essentials I want to be done for a "Version 1":
 
@@ -84,7 +84,7 @@ Some other things on my mind:
 - *MAYBE* Use the table/border functionality of the included dependencies
 - *MAYBE* Make scroll view, border view, etc first class concepts to use "transparently" inside windows
 
-#### Done
+### Done
 
 - Draw windows
 - Window title bar with controls
@@ -101,12 +101,12 @@ Some other things on my mind:
 - Move window with mouse
 - Help (?) button to show key configuration
 
-#### Bugs
+### Bugs
 
 - *MAJOR* Moving window fast, then moving another window, moves the first one again.
 - *MAJOR* Focus does not skip minimized windows properly.
 
-#### Fixed Bugs
+### Fixed Bugs
 
 - *CRITICAL* One off bug for resize control. Applies only for some `Position` type it seems?
 - *MAJOR* Titlebar controls do not respect window flags.
