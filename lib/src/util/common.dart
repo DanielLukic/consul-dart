@@ -137,4 +137,12 @@ extension StringExtensions on String {
     }
     return it.toString();
   }
+
+  /// Removes all embedded ANSI sequences.
+  String stripped() => ansiStripped(this);
+
+  /// Length without ANSI sequences.
+  int get ansiLength => stripped().length;
+
+  // TODO Revisit this naming madness.. :-D
 }
