@@ -33,7 +33,8 @@ mixin _WindowDecoration {
 
     if (window.resizable && !window.undecorated) {
       var bottom = fitted.takeLast(1).single;
-      bottom = bottom.replaceRange(bottom.length - 1, bottom.length, "◢");
+      bottom = bottom.ansiTake(window.width - 1);
+      bottom += "◢".reset();
       fitted = fitted.dropLast(1) + [bottom];
     }
 
