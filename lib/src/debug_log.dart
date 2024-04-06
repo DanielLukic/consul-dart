@@ -7,8 +7,6 @@ addDebugLog(
   Size size = const Size.autoWidth(10),
   Position position = const RelativePosition.fromBottom(yOffset: -1),
 }) {
-  eventDebugLog.redraw = () => desktop.redraw();
-
   final window = Window(
     "debug",
     "Event Debug Log",
@@ -16,7 +14,15 @@ addDebugLog(
     size: WindowSize.min(size),
     position: position,
   );
-  window.redrawBuffer = () => eventDebugLog.reversed(window.height).join("\n");
+
+  eventDebugLog.redraw = () => window.requestRedraw();
+
+  scrolled(
+    window,
+    () => eventDebugLog.allReversed().join("\n"),
+    ellipsize: true,
+  );
+
   desktop.onKey(key, description: "Toggle showing debug log", action: () {
     final it = desktop.findWindow("debug");
     switch (it?.state) {
@@ -30,5 +36,6 @@ addDebugLog(
         desktop.minimizeWindow(window);
     }
   });
+
   desktop.openWindow(window);
 }
