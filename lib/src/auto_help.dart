@@ -22,12 +22,20 @@ void addAutoHelp(
 
   final window = _prepareKeymapWindow(desktop);
   button.onMouseEvent = (it) => _showKeymapOnClick(it, desktop, window);
-  desktop.onKey(key, description: "Show help screen", action: () => _showKeymap(desktop, window));
+  desktop.onKey(
+    key,
+    description: "Show help screen",
+    action: () => _showKeymap(desktop, window),
+  );
 
   desktop.openWindow(button);
 }
 
-OngoingMouseAction? _showKeymapOnClick(MouseEvent it, Desktop desktop, Window window) {
+OngoingMouseAction? _showKeymapOnClick(
+  MouseEvent it,
+  Desktop desktop,
+  Window window,
+) {
   if (it.x >= 0 && it.x < 3 && it.y == 0 && it.isUp) {
     _showKeymap(desktop, window);
   }
