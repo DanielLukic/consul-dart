@@ -46,7 +46,8 @@ logInfo(Object? message) => log(message, LogLevel.info);
 
 logWarn(Object? message) => log(message, LogLevel.warn);
 
-logError(Object? message, [StackTrace? trace]) => log(message, LogLevel.error, trace);
+logError(Object? message, [StackTrace? trace]) =>
+    log(message, LogLevel.error, trace);
 
 logDebug(Object? message) => log(message, LogLevel.debug);
 
