@@ -63,7 +63,7 @@ mixin _WindowDecoration {
 
   String _buildControls(Window window) {
     final controls = StringBuffer();
-    if (window.resizable) controls.write("[_]");
+    if (window.minimizable) controls.write("[_]");
     if (window.maximizable) controls.write("[O]");
     if (window.closeable) controls.write("[X]");
     if (controls.isNotEmpty) return " $controls";
