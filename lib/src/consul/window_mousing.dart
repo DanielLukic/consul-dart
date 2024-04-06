@@ -42,7 +42,6 @@ extension WindowMousing on Window {
         // lovely... :-D
         final x = (it.x - _controlsOffset) ~/ 3 * 3 + _controlsOffset + 1;
         final control = ansiStripped(_titlebar).substring(x, x + 1);
-        eventDebugLog.add("$control / $_titlebar / $x / ${it.x}");
         return switch (control) {
           "X" => CloseWindowAction(this, it, sendMessage),
           "O" => MaximizeWindowAction(this, it, sendMessage),
