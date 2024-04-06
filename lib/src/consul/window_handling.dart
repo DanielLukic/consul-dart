@@ -85,7 +85,10 @@ class MockWindowHandling with _WindowHandling {
 
   String get background => String.fromCharCode(_background);
 
-  void drawFrame() => _redrawDesktop(columns: 40, rows: 10);
+  void drawFrame() {
+    _redrawDesktop(columns: 40, rows: 10);
+    dump();
+  }
 
   void addWindow(Window it) => _windows.add(it);
 
@@ -94,4 +97,11 @@ class MockWindowHandling with _WindowHandling {
 
   @override
   Window? _focused;
+
+  String line(int row) => ansiStripped(lines[row]!);
+
+  void dump() {
+    print(lines.values.join("\n"));
+    print("");
+  }
 }
