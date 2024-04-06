@@ -32,7 +32,8 @@ enum MouseWheelKind {
 class MouseWheelEvent extends MouseEvent {
   final MouseWheelKind kind;
 
-  const MouseWheelEvent(this.kind, int x, int y, [int? xAbs, int? yAbs]) : super(x, y, xAbs, yAbs);
+  const MouseWheelEvent(this.kind, int x, int y, [int? xAbs, int? yAbs])
+      : super(x, y, xAbs, yAbs);
 
   @override
   MouseEvent relativeTo(AbsolutePosition p) =>
@@ -60,7 +61,8 @@ enum MouseButtonKind {
 class MouseButtonEvent extends MouseEvent {
   final MouseButtonKind kind;
 
-  const MouseButtonEvent(this.kind, int x, int y, [int? xAbs, int? yAbs]) : super(x, y, xAbs, yAbs);
+  const MouseButtonEvent(this.kind, int x, int y, [int? xAbs, int? yAbs])
+      : super(x, y, xAbs, yAbs);
 
   @override
   MouseEvent relativeTo(AbsolutePosition p) =>
@@ -79,7 +81,8 @@ enum MouseMotionKind {
 class MouseMotionEvent extends MouseEvent {
   final MouseMotionKind kind;
 
-  const MouseMotionEvent(this.kind, int x, int y, [int? xAbs, int? yAbs]) : super(x, y, xAbs, yAbs);
+  const MouseMotionEvent(this.kind, int x, int y, [int? xAbs, int? yAbs])
+      : super(x, y, xAbs, yAbs);
 
   @override
   MouseEvent relativeTo(AbsolutePosition p) =>
