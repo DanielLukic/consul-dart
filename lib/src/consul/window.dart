@@ -127,7 +127,8 @@ extension WindowExtensions on Window {
 
   /// Ensure the window [position] is an [AbsolutePosition]. This is required for many operations.
   /// At least for now.
-  void fixPosition() => position = position.toAbsolute(_desktopSize(), size.current);
+  void fixPosition() =>
+      position = position.toAbsolute(_desktopSize(), size.current);
 
   /// Keeping this private for now, too. It handles restricting to min/max now, but still to
   /// fiddly to expose imho.
@@ -141,7 +142,15 @@ extension WindowExtensions on Window {
     final maxSize = size.max.ifAutoFill(desktop);
     final ww = width.clamp(minSize.width, maxSize.width);
     final hh = height.clamp(minSize.height, maxSize.height);
-    _resize(max(16, ww), max(2, hh)); // 16 for titlebar, 2 for titlebar + resize control
+
+    // 16 for titlebar, 2 for titlebar + resize control
+    var minWidth = 16;
+    if (!flags.contains(WindowFlag.closeable)) minWidth -= 3;
+    if (!flags.contains(WindowFlag.maximizable)) minWidth -= 3;
+    if (!flags.contains(WindowFlag.minimizable)) minWidth -= 3;
+    var minHeight = 2;
+    if (!flags.contains(WindowFlag.resizable)) minWidth -= 1;
+    _resize(max(minWidth, ww), max(minHeight, hh));
   }
 
   /// Keeping this private for now as it directly manipulates without restricting. Restricting has
