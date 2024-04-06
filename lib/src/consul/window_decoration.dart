@@ -3,6 +3,9 @@ part of 'desktop.dart';
 /// Helper for keeping [DecoratedWindow] focused more on the logic, while this mixin contains the
 /// text mangling.
 mixin _WindowDecoration {
+  int _controlsOffset = 0;
+  String _titlebar = "";
+
   /// Put the titlebar above the window content and put a resize control in the bottom right
   /// corner. Unless the window is [WindowFlag.undecorated], in which case the window buffer is
   /// returned without any decoration.
@@ -16,9 +19,10 @@ mixin _WindowDecoration {
     } else {
       final controls = _buildControls(window);
       final title = _buildTitle(window, controls);
-      var titlebar = "$title$controls";
-      if (window.isFocused) titlebar = titlebar.inverse();
-      lines = [titlebar, ...buffer.split("\n").take(window.height)];
+      _controlsOffset = title.length + 1;
+      _titlebar = "$title$controls";
+      if (window.isFocused) _titlebar = _titlebar.inverse();
+      lines = [_titlebar, ...buffer.split("\n").take(window.height)];
     }
 
     final height = window.undecorated ? window.height : window.height + 1;

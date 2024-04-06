@@ -19,28 +19,19 @@ class DecoratedWindow with _WindowDecoration implements Window {
 
     // check for titlebar click:
     if (isLmbDown && it.y == 0 && it.x >= 0 && it.x < width) {
-      // lovely... :-D
-      var check = width - 3;
-      if (_window.closeable) {
-        if (it.x >= check && it.x < check + 3) {
-          return CloseWindowAction(this, it, sendMessage);
-        }
-        check -= 3;
-      }
-      if (_window.maximizable) {
-        if (it.x >= check && it.x < check + 3) {
-          return MaximizeWindowAction(this, it, sendMessage);
-        }
-        check -= 3;
-      }
-      if (_window.minimizable) {
-        if (it.x >= check && it.x < check + 3) {
-          return MinimizeWindowAction(this, it, sendMessage);
-        }
-        check -= 3;
-      }
-      if (_window.movable) {
-        sendMessage(("raise-window", this));
+      sendMessage(("raise-window", this));
+      if (it.x >= _controlsOffset) {
+        // lovely... :-D
+        final x = (it.x - _controlsOffset) ~/ 3 * 3 + _controlsOffset + 1;
+        final control = ansiStripped(_titlebar).substring(x, x + 1);
+        eventDebugLog.add("$control / $_titlebar / $x / ${it.x}");
+        return switch (control) {
+          "X" => CloseWindowAction(this, it, sendMessage),
+          "O" => MaximizeWindowAction(this, it, sendMessage),
+          "_" => MinimizeWindowAction(this, it, sendMessage),
+          _ => null,
+        };
+      } else if (_window.movable) {
         return MoveWindowAction(this, it, sendMessage);
       }
       return null;
