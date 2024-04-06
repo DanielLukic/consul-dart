@@ -91,13 +91,23 @@ mixin KeyHandling {
     required String description,
     required Function action,
   }) {
-    var it = _Matcher([pattern, ...aliases], description, action);
+    final patterns = [pattern, ...aliases];
+    if (_matchers.any((m) => m.overlaps(patterns))) {
+      final found = _matchers.map((e) => (e.patterns, e.description));
+      throw ArgumentError("pattern overlap: $found", patterns.toString());
+    }
+    var it = _Matcher(patterns, description, action);
     _matchers.add(it);
     return Disposable(() => _matchers.remove(it));
   }
 
   Iterable<(String, String)> keyMapEntries() =>
       _matchers.map((e) => (e.patterns.toString(), e.description));
+}
+
+extension on _Matcher {
+  bool overlaps(List<String> patterns) =>
+      this.patterns.any((e) => patterns.contains(e));
 }
 
 class _Matcher {
