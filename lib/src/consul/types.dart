@@ -12,6 +12,8 @@ enum RelativePositionMode {
   fromEnd,
 }
 
+/// Represents the various types available for positioning items. For now
+/// this is used for [Window]s only.
 sealed class Position {
   const Position();
 
@@ -19,11 +21,17 @@ sealed class Position {
 
   static const unsetInitially = UnsetInitially();
 
+  /// Turn any kind of position into an [AbsolutePosition]. This is used in many
+  /// places in which a defined reference position is required.
   AbsolutePosition toAbsolute(Size desktop, Size window);
 
+  /// Create a new [Position], with the given [dx] and [dy] added.
   Position moved(int dx, int dy);
 }
 
+/// Special position to represent "not positioned, yet". Will be resolved
+/// dynamically when needed. By default, falls back to "center" in
+/// [toAbsolute] and to "zero" in [moved].
 class UnsetInitially extends Position {
   const UnsetInitially();
 
@@ -41,6 +49,8 @@ class UnsetInitially extends Position {
   String toString() => "Unset";
 }
 
+/// Position relative to "something". Uses [RelativePositionMode] and offsets
+/// to position elements somewhat dynamically.
 class RelativePosition extends Position {
   final RelativePositionMode xMode;
   final RelativePositionMode yMode;
@@ -50,31 +60,40 @@ class RelativePosition extends Position {
   const RelativePosition(this.xMode, this.yMode, this.xOffset, this.yOffset);
 
   const RelativePosition.autoCentered()
-      : this(RelativePositionMode.autoCentered, RelativePositionMode.autoCentered, 0, 0);
+      : this(RelativePositionMode.autoCentered,
+            RelativePositionMode.autoCentered, 0, 0);
 
-  const RelativePosition.autoCenterX(RelativePositionMode yMode, {int yOffset = 0})
+  const RelativePosition.autoCenterX(RelativePositionMode yMode,
+      {int yOffset = 0})
       : this(RelativePositionMode.autoCentered, yMode, 0, yOffset);
 
-  const RelativePosition.autoCenterY(RelativePositionMode xMode, {int xOffset = 0})
+  const RelativePosition.autoCenterY(RelativePositionMode xMode,
+      {int xOffset = 0})
       : this(xMode, RelativePositionMode.autoCentered, xOffset, 0);
 
   const RelativePosition.fromTopRight({int xOffset = 0, int yOffset = 0})
-      : this(RelativePositionMode.fromEnd, RelativePositionMode.fromStart, xOffset, yOffset);
+      : this(RelativePositionMode.fromEnd, RelativePositionMode.fromStart,
+            xOffset, yOffset);
 
   const RelativePosition.fromTopLeft({int xOffset = 0, int yOffset = 0})
-      : this(RelativePositionMode.fromStart, RelativePositionMode.fromStart, xOffset, yOffset);
+      : this(RelativePositionMode.fromStart, RelativePositionMode.fromStart,
+            xOffset, yOffset);
 
   const RelativePosition.fromBottomRight({int xOffset = 0, int yOffset = 0})
-      : this(RelativePositionMode.fromEnd, RelativePositionMode.fromEnd, xOffset, yOffset);
+      : this(RelativePositionMode.fromEnd, RelativePositionMode.fromEnd,
+            xOffset, yOffset);
 
   const RelativePosition.fromBottomLeft({int xOffset = 0, int yOffset = 0})
-      : this(RelativePositionMode.fromStart, RelativePositionMode.fromEnd, xOffset, yOffset);
+      : this(RelativePositionMode.fromStart, RelativePositionMode.fromEnd,
+            xOffset, yOffset);
 
   const RelativePosition.fromBottom({int xOffset = 0, int yOffset = 0})
-      : this(RelativePositionMode.autoCentered, RelativePositionMode.fromEnd, xOffset, yOffset);
+      : this(RelativePositionMode.autoCentered, RelativePositionMode.fromEnd,
+            xOffset, yOffset);
 
   const RelativePosition.fromTop({int xOffset = 0, int yOffset = 0})
-      : this(RelativePositionMode.autoCentered, RelativePositionMode.fromStart, xOffset, yOffset);
+      : this(RelativePositionMode.autoCentered, RelativePositionMode.fromStart,
+            xOffset, yOffset);
 
   @override
   AbsolutePosition toAbsolute(Size desktop, Size window) {
@@ -84,9 +103,11 @@ class RelativePosition extends Position {
   }
 
   @override
-  Position moved(int dx, int dy) => RelativePosition(xMode, yMode, xOffset + dx, yOffset + dy);
+  Position moved(int dx, int dy) =>
+      RelativePosition(xMode, yMode, xOffset + dx, yOffset + dy);
 
-  int _applyMode(RelativePositionMode mode, int desktop, int window, int offset) {
+  int _applyMode(
+      RelativePositionMode mode, int desktop, int window, int offset) {
     return switch (mode) {
       RelativePositionMode.autoCentered => (desktop - window) ~/ 2 + offset,
       RelativePositionMode.fromStart => offset,
@@ -95,7 +116,8 @@ class RelativePosition extends Position {
   }
 
   @override
-  String toString() => "Relative(${xMode.name}:$xOffset,${yMode.name}:$yOffset)";
+  String toString() =>
+      "Relative(${xMode.name}:$xOffset,${yMode.name}:$yOffset)";
 }
 
 class AbsolutePosition extends Position {
@@ -116,6 +138,10 @@ class AbsolutePosition extends Position {
   String toString() => "Absolute($x,$y)";
 }
 
+/// Somewhat generic size type. Uses [autoSize] constant to represent
+/// adaptive sizes.
+///
+/// TODO Revisit: Sealed instead
 class Size {
   final int width;
   final int height;
@@ -153,6 +179,8 @@ class Size {
   String toString() => "Size(${width}x$height)";
 }
 
+/// [Window]s can have any combination of these flags set to change their
+/// behavior.
 enum WindowFlag {
   closeable,
   maximizable,
@@ -162,6 +190,8 @@ enum WindowFlag {
   undecorated,
 }
 
+/// Somewhat over-engineered class for representing current, min and max size
+/// of a [Window].
 class WindowSize {
   final Size current;
   final Size min;
@@ -191,6 +221,7 @@ class WindowSize {
         max = Size.autoFill;
 }
 
+/// Primary window state. [Window]s can be in exactly one primary state only.
 enum WindowState {
   closed,
   maximized,
@@ -198,10 +229,12 @@ enum WindowState {
   normal,
 }
 
+/// Low-ceremony interface for drawing overlays into [Window]s.
 abstract interface class WindowOverlay {
   void decorate(OverlayBuffer buffer);
 }
 
+/// TODO Why not [VirtualBuffer] only? Or [OverlayBuffer] only? Revisit!
 abstract class OverlayBuffer {
   int get height;
 
