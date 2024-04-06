@@ -60,7 +60,8 @@ class MadConIO with _InputMatching implements ConIO {
 
     final next = bytes.drop(skip);
     if (next.isNotEmpty) {
-      eventDebugLog.add("skip $skip => ${next.toByteHexString(delimiter: ' ')}");
+      final hex = next.toByteHexString(delimiter: ' ');
+      eventDebugLog.add("skip $skip => $hex");
       _onStdIn(next);
     }
   }
@@ -107,7 +108,8 @@ class MadConIO with _InputMatching implements ConIO {
   void clear() => _console.clearScreen();
 
   @override
-  void moveCursor(int column, int row) => _console.cursorPosition = dc.Coordinate(row, column);
+  void moveCursor(int column, int row) =>
+      _console.cursorPosition = dc.Coordinate(row, column);
 
   @override
   void write(String buffer) => _console.write(buffer);
