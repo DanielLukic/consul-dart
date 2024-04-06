@@ -2,6 +2,11 @@ import 'dart:math';
 
 import 'log.dart';
 
+final ansiReset = '\u001B[0m';
+final ansiMatcher = RegExp(r'\u001B\[[^m]+m');
+
+String ansiStripped(String it) => it.replaceAll(ansiMatcher, '');
+
 /// Throw an [ArgumentError] with [message] and [value] if [check] is false.
 require(bool check, String message, String value) {
   if (!check) {
@@ -105,4 +110,13 @@ extension StringExtensions on String {
   /// Take the last [count] characters from this. Ignoring special unicode character handling.
   /// This operates on the "pure bytes" only.
   String takeLast(int count) => substring(max(length - count, 0), length);
+
+  /// Pad string to the right, ignoring embedded ansi sequences.
+  String ansiPad(int length, {String pad = " "}) {
+    final it = StringBuffer(this);
+    while (ansiStripped(it.toString()).length < length) {
+      it.write(pad);
+    }
+    return it.toString();
+  }
 }

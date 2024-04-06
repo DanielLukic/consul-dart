@@ -49,7 +49,7 @@ mixin _WindowDecoration {
     // repeat.
     var result = line;
     while (ansiStripped(result).length > width) {
-      final lastAnsi = _ansiMatcher.allMatches(result).lastOrNull;
+      final lastAnsi = ansiMatcher.allMatches(result).lastOrNull;
       if (lastAnsi?.end == result.length) {
         result = result.substring(0, lastAnsi!.start);
       } else {

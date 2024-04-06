@@ -1,10 +1,5 @@
 part of 'desktop.dart';
 
-final ansiReset = '\u001B[0m';
-final _ansiMatcher = RegExp(r'\u001B\[[^m]+m');
-
-String ansiStripped(String it) => it.replaceAll(_ansiMatcher, '');
-
 /// Generic char code buffer for pre-rendering a "screen" before dumping it into the console.
 class Buffer {
   int width;
@@ -133,7 +128,7 @@ extension on String {
     var scan = 0;
     String ansi = '';
     while (scan < length) {
-      final open = _ansiMatcher.matchAsPrefix(this, scan);
+      final open = ansiMatcher.matchAsPrefix(this, scan);
       if (open != null) {
         ansi += open.group(0) ?? '';
         scan = open.end;
