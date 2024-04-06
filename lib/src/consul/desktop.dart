@@ -11,7 +11,6 @@ import 'package:rxdart/transformers.dart';
 part 'buffer.dart';
 part 'con_io.dart';
 part 'debug_log.dart';
-part 'decorated_window.dart';
 part 'focus_handling.dart';
 part 'key_event.dart';
 part 'key_handling.dart';
@@ -125,8 +124,7 @@ class Desktop
       case ("raise-window", Window it):
         raiseWindow(it);
       case ("resize-window", Window it, Size size_):
-        final titlebar = it is DecoratedWindow ? 1 : 0;
-        it._resizeClamped(size_.width, size_.height - titlebar);
+        it._resizeClamped(size_.width, size_.height);
       default:
         eventDebugLog.add("unhandled: $msg");
     }
@@ -208,7 +206,6 @@ class Desktop
 
   /// Ensure [window] is not minimized.
   raiseWindow(Window window) {
-    if (window is DecoratedWindow) window = window._window;
     if (window.state == WindowState.minimized) {
       window.state = window._restoreState ?? WindowState.normal;
       window._restoreState = null;
@@ -219,8 +216,6 @@ class Desktop
   /// Start displaying the [window] on this "desktop".
   @override
   openWindow(Window window) {
-    if (window is DecoratedWindow) window = window._window;
-
     window._desktopSize = () => size;
     window._isFocused = (it) => it == _focused;
     window.sendMessage = sendMessage;
@@ -237,8 +232,6 @@ class Desktop
   /// Remove [window] from this "desktop".
   @override
   closeWindow(Window window) {
-    if (window is DecoratedWindow) window = window._window;
-
     window.state = WindowState.closed;
     window.requestRedraw = () {};
     window.sendMessage = (_) {};
@@ -276,7 +269,6 @@ class Desktop
 
   /// Toggle maximized state of [window].
   void toggleMaximizeWindow(Window window) {
-    if (window is DecoratedWindow) window = window._window;
     if (!window.flags.contains(WindowFlag.maximizable)) return;
 
     if (window.state == WindowState.maximized) {
@@ -302,7 +294,6 @@ class Desktop
 
   /// Minimize [window].
   void minimizeWindow(Window window) {
-    if (window is DecoratedWindow) window = window._window;
     if (window.state == WindowState.minimized) return;
     if (!window.flags.contains(WindowFlag.minimizable)) return;
     window._restoreState = window.state;

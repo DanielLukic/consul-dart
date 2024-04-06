@@ -5,7 +5,6 @@ abstract mixin class _WindowHandling {
   final _buffer = Buffer(0, 0);
   final _differ = Buffer(0, 0);
 
-  final _decorators = <Window, DecoratedWindow>{};
   final _restoreSizes = <Window, Size>{};
 
   int _background = '░'.codeUnits.first;
@@ -16,7 +15,6 @@ abstract mixin class _WindowHandling {
 
   _removeWindow(Window window) {
     _windows.remove(window);
-    _decorators.remove(window);
     _restoreSizes.remove(window);
   }
 
@@ -31,15 +29,12 @@ abstract mixin class _WindowHandling {
   _drawBackground() => _buffer.fill(_background);
 
   _drawWindows(int columns, int rows) {
-    final desktop = Size(columns, rows);
     for (var window in _windows) {
       if (window.state == WindowState.minimized) continue;
       _layoutWindow(window);
 
-      final decorated = _decorators.putIfAbsent(
-          window, () => DecoratedWindow.decorate(window),);
-      final decoratedPosition = decorated.decoratedPosition(desktop);
-      final buffer = decorated.redrawBuffer();
+      final decoratedPosition = window.decoratedPosition();
+      final buffer = window._decorateBuffer(window);
       if (buffer != null) {
         _buffer.drawBuffer(decoratedPosition.x, decoratedPosition.y, buffer);
       }
@@ -48,7 +43,7 @@ abstract mixin class _WindowHandling {
         final inside = VirtualBuffer(
           _buffer,
           decoratedPosition,
-          decorated.size.current,
+          window.size.current,
         );
         overlay.decorate(inside);
       }
@@ -95,7 +90,10 @@ class MockWindowHandling with _WindowHandling {
     dump();
   }
 
-  void addWindow(Window it) => _windows.add(it);
+  void addWindow(Window it) {
+    _windows.add(it);
+    it._desktopSize = () => Size(40, 10);
+  }
 
   @override
   void _updateRow(int row, String data) => lines[row] = data;

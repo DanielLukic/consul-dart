@@ -29,8 +29,8 @@ class _WindowMoving with KeyHandling implements WindowOverlay {
   }
 
   moveWindow(int dx, int dy) {
-    final moved = _window.position.moved(dx, dy);
-    _window.position = moved;
+    _window.fixPosition();
+    _window.position = _window.position.moved(dx, dy);
     _window.requestRedraw();
   }
 

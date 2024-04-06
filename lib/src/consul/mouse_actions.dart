@@ -9,33 +9,22 @@ abstract mixin class _MouseActions {
 
   List<Window> get _windows;
 
-  Map<Window, DecoratedWindow> get _decorators;
-
   OngoingMouseAction? _ongoingMouseAction;
-
-  DecoratedWindow _window(OngoingMouseAction it) {
-    final w = it.window;
-    if (w is DecoratedWindow) return w;
-    final dw = _decorators[w];
-    if (dw != null) return dw;
-    throw StateError("mouse event for unknown window: $it");
-  }
 
   void _handleMouseEvent(MouseEvent event) {
     final ongoing = _ongoingMouseAction;
     if (ongoing != null) {
-      final p = _window(ongoing).decoratedPosition(size);
+      final p = ongoing.window.decoratedPosition();
       final relative = event.relativeTo(p);
       ongoing.onMouseEvent(relative);
       if (ongoing.done) _ongoingMouseAction = null;
       return;
     }
 
-    final decorators = _windows.mapNotNull((it) => _decorators[it]);
-    for (final it in decorators.reversed) {
-      final p = it.decoratedPosition(size);
+    for (final it in _windows.reversed) {
+      final p = it.decoratedPosition();
       final relative = event.relativeTo(p);
-      final action = it.onMouseEvent(relative);
+      final action = it._onMouseEvent(relative);
       if (action == null) continue;
 
       eventDebugLog.add(

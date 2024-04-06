@@ -36,6 +36,7 @@ class _WindowResizing with KeyHandling implements WindowOverlay {
     eventDebugLog.add("max: ${_window.size.max}");
 
     final current = _window.size.current;
+    _window.fixPosition();
     _window._resizeClamped(current.width + dx, current.height + dy);
     _window.requestRedraw();
   }

@@ -6,7 +6,7 @@ part of 'desktop.dart';
 ///
 /// Various hooks available to react to changes: [onSizeChanged], [onStateChanged] and
 /// [onMouseEvent] for now.
-class Window with AutoDispose, KeyHandling {
+class Window with AutoDispose, KeyHandling, _WindowDecoration {
   final String id;
 
   String name;
@@ -95,6 +95,50 @@ class Window with AutoDispose, KeyHandling {
     final f = flags.map((e) => e.name.take(2)).join(",");
     return "Window(name=$name,id=$id,position=$position,size=$s,flags=$f,state=${state.name}))";
   }
+
+  OngoingMouseAction? _onMouseEvent(MouseEvent it) {
+    final isLmbDown =
+        it is MouseButtonEvent && it.kind == MouseButtonKind.lmbDown;
+
+    // check for titlebar click:
+    if (isLmbDown && it.y == 0 && it.x >= 0 && it.x < width) {
+      sendMessage(("raise-window", this));
+      if (it.x >= _controlsOffset) {
+        // lovely... :-D
+        final x = (it.x - _controlsOffset) ~/ 3 * 3 + _controlsOffset + 1;
+        final control = ansiStripped(_titlebar).substring(x, x + 1);
+        eventDebugLog.add("$control / $_titlebar / $x / ${it.x}");
+        return switch (control) {
+          "X" => CloseWindowAction(this, it, sendMessage),
+          "O" => MaximizeWindowAction(this, it, sendMessage),
+          "_" => MinimizeWindowAction(this, it, sendMessage),
+          _ => null,
+        };
+      } else if (movable) {
+        return MoveWindowAction(this, it, sendMessage);
+      }
+      return null;
+    }
+
+    final height = _decoratedSize(this).current.height;
+
+    // check for resize control click:
+    if (isLmbDown && it.y == height - 1 && it.x == width - 1 && resizable) {
+      sendMessage(("raise-window", this));
+      return ResizeWindowAction(this, it, sendMessage);
+    }
+
+    // check for inside click:
+    if (it.x >= 0 && it.x < width && it.y > 0 && it.y < height) {
+      final consumed = onMouseEvent(it);
+      if (consumed != null) return consumed;
+
+      if (isLmbDown) return RaiseWindowAction(this, it, sendMessage);
+    }
+
+    // no action here, pass on null to let someone else handle it:
+    return null;
+  }
 }
 
 extension WindowExtensions on Window {
@@ -125,17 +169,25 @@ extension WindowExtensions on Window {
 
   int get height => size.current.height;
 
-  /// Ensure the window [position] is an [AbsolutePosition]. This is required for many operations.
-  /// At least for now.
-  void fixPosition() =>
-      position = position.toAbsolute(_desktopSize(), size.current);
+  /// Ensure the window [position] is an [AbsolutePosition]. This is required
+  /// for some operations.
+  void fixPosition() => position = decoratedPosition();
 
-  /// Keeping this private for now, too. It handles restricting to min/max now, but still to
-  /// fiddly to expose imho.
+  /// Maps a potentially relative position onto an [AbsolutePosition] on the
+  /// desktop screen space.
+  AbsolutePosition decoratedPosition() {
+    if (isMaximized) {
+      return Position.topLeft;
+    } else {
+      return position.toAbsolute(_desktopSize(), _decoratedSize(this).current);
+    }
+  }
+
   _resizeClamped(int width, int height) {
     final desktop = _desktopSize();
 
-    // fix the current position because it is the origin against which the resize happens:
+    // fix the current position because it is the origin against which the
+    // resize happens:
     fixPosition();
 
     final minSize = size.min.ifAutoFill(desktop);
@@ -153,15 +205,11 @@ extension WindowExtensions on Window {
     _resize(max(minWidth, ww), max(minHeight, hh));
   }
 
-  /// Keeping this private for now as it directly manipulates without restricting. Restricting has
-  /// to happen in [Desktop] instead for now.
   _resize(int width, int height) {
     size = WindowSize(Size(width, height), size.min, size.max);
     onSizeChanged();
   }
 
-  /// Keeping this private for now as it directly manipulates without restricting. Restricting has
-  /// to happen in [Desktop] instead for now.
   _resize_(Size size) => _resize(size.width, size.height);
 
   /// Shortcut for installing a chained mouse event handler. Replaces the

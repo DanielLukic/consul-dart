@@ -1,6 +1,6 @@
 part of 'desktop.dart';
 
-/// Helper for keeping [DecoratedWindow] focused more on the logic, while this mixin contains the
+/// Helper for keeping [Window] focused more on the logic, while this mixin contains the
 /// text mangling.
 mixin _WindowDecoration {
   int _controlsOffset = 0;
@@ -9,9 +9,9 @@ mixin _WindowDecoration {
   /// Put the titlebar above the window content and put a resize control in the bottom right
   /// corner. Unless the window is [WindowFlag.undecorated], in which case the window buffer is
   /// returned without any decoration.
-  OnRedraw _decorateBuffer(Window window) {
+  String? _decorateBuffer(Window window) {
     var buffer = window.redrawBuffer();
-    if (buffer == null) return () => buffer;
+    if (buffer == null) return buffer;
 
     final List<String> lines;
     if (window.undecorated) {
@@ -38,7 +38,7 @@ mixin _WindowDecoration {
       fitted = fitted.dropLast(1) + [bottom];
     }
 
-    return () => fitted.join("\n");
+    return fitted.join("\n");
   }
 
   String _fitLineWidth(String line, int width) {
