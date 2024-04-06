@@ -20,7 +20,11 @@ starfield(Desktop desktop) {
     window.onStateChanged = () => _update(window);
     window.onStateChanged();
 
-    window.onKey("q", description: "Close window", action: () => desktop.closeWindow(window));
+    window.onKey(
+      "q",
+      description: "Close window",
+      action: () => desktop.closeWindow(window),
+    );
 
     desktop.openWindow(window);
   }
