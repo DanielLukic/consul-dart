@@ -17,7 +17,8 @@ class DebugLog {
     redraw();
   }
 
-  Iterable<String> get reversed => _entries.reversed.map((e) {
+  Iterable<String> reversed(int count) =>
+      _entries.reversed.take(count).map((e) {
         // lovely :-D
         final timestamp = e.$1.toIso8601String().split("T").last;
         return "$timestamp: ${e.$2}";
