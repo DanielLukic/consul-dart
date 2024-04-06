@@ -111,7 +111,8 @@ class _Matcher {
 
   void consume(KeyEvent it) => _buffer = _buffer + it.printable;
 
-  bool isPartialMatch() => !isMatch() && patterns.any((it) => it.startsWith(_buffer));
+  bool isPartialMatch() =>
+      !isMatch() && patterns.any((it) => it.startsWith(_buffer));
 
   bool isMatch() => patterns.any((it) => it == _buffer);
 
