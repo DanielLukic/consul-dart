@@ -290,6 +290,9 @@ class Desktop
   /// Forward [msg] to all subscribers.
   sendMessage(msg) => _subscriptions.sink.add(msg);
 
+  /// Stream of all messages going through the desktop.
+  Stream<dynamic> stream() => _subscriptions.stream;
+
   /// Receive notifications of [msg] via [Stream].
   Stream<dynamic> listen(msg) => _subscriptions.stream.where((event) => event == msg);
 
