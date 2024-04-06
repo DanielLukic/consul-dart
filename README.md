@@ -70,6 +70,7 @@ The essentials I want to be done for a "Version 1":
 
 - Taskbar showing all (including minimized) windows
 - Taskbar overflow with all remaining windows
+- Mouse event modifiers
 
 Some other things on my mind:
 

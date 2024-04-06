@@ -13,10 +13,18 @@ abstract mixin class _MouseActions {
 
   OngoingMouseAction? _ongoingMouseAction;
 
+  DecoratedWindow _window(OngoingMouseAction it) {
+    final w = it.window;
+    if (w is DecoratedWindow) return w;
+    final dw = _decorators[w];
+    if (dw != null) return dw;
+    throw StateError("mouse event for unknown window: $it");
+  }
+
   void _handleMouseEvent(MouseEvent event) {
     final ongoing = _ongoingMouseAction;
     if (ongoing != null) {
-      final p = ongoing.window.decoratedPosition(size);
+      final p = _window(ongoing).decoratedPosition(size);
       final relative = event.relativeTo(p);
       ongoing.onMouseEvent(relative);
       if (ongoing.done) _ongoingMouseAction = null;
@@ -43,13 +51,42 @@ abstract mixin class _MouseActions {
   }
 }
 
-/// Base class for handling "ongoing" mouse actions. [Window]s can return an
+/// Interface for handling "ongoing" mouse actions. [Window]s can return an
 /// [OngoingMouseAction] from their [Window.onMouseEvent] to intercept mouse
 /// events until [done] returns true. This way moving/dragging, resizing, etc
 /// can be implemented.
-abstract class OngoingMouseAction {
+abstract interface class OngoingMouseAction {
   /// The window this [OngoingMouseAction] originated from.
-  final DecoratedWindow window;
+  Window get window;
+
+  /// Must return `true` as long as mouse events should be delivered into
+  /// [onMouseEvent].
+  bool get done;
+
+  /// Will be called by the [Desktop] until after [done] returns `false`.
+  void onMouseEvent(MouseEvent event);
+}
+
+/// Immediately done. Use this to block duplicate event handling in chained
+/// mouse event handlers.
+class NopMouseAction extends OngoingMouseAction {
+  NopMouseAction(this.window);
+
+  @override
+  final Window window;
+
+  @override
+  bool get done => true;
+
+  @override
+  void onMouseEvent(MouseEvent event) {}
+}
+
+/// Base class for [OngoingMouseAction]s that require access to the
+/// originating [window], and/or [event], and/or [sendMessage] shortcut.
+abstract class BaseOngoingMouseAction implements OngoingMouseAction {
+  @override
+  final Window window;
 
   /// The initial [MouseEvent] that triggered this [OngoingMouseAction].
   final MouseEvent event;
@@ -58,28 +95,22 @@ abstract class OngoingMouseAction {
   /// actions can be kept simple. Side effects can be mere messages.
   final Function(dynamic) sendMessage;
 
-  var _done = false;
+  @override
+  var done = false;
 
-  OngoingMouseAction(this.window, this.event, this.sendMessage);
-
-  /// Must return `true` as long as mouse events should be delivered into
-  /// [onMouseEvent].
-  bool get done => _done;
-
-  /// Will be called by the [Desktop] until after [done] returns `false`.
-  void onMouseEvent(MouseEvent event);
+  BaseOngoingMouseAction(this.window, this.event, this.sendMessage);
 }
 
 /// Predefined action to close the window that generates this action.
 /// Triggers on button release. Uses the [Desktop] built-in "close-window"
 /// message.
-class CloseWindowAction extends OngoingMouseAction {
+class CloseWindowAction extends BaseOngoingMouseAction {
   CloseWindowAction(super.window, super.event, super.sendMessage);
 
   @override
   onMouseEvent(MouseEvent event) {
     if (event.isUp) {
-      _done = true;
+      done = true;
       if (event.x == event.x && event.y == event.y) {
         sendMessage(("close-window", window));
       }
@@ -89,13 +120,13 @@ class CloseWindowAction extends OngoingMouseAction {
 
 /// Predefined action to toggle maximize the window that generates this action.
 /// Triggers on button release.
-class MaximizeWindowAction extends OngoingMouseAction {
+class MaximizeWindowAction extends BaseOngoingMouseAction {
   MaximizeWindowAction(super.window, super.event, super.sendMessage);
 
   @override
   onMouseEvent(MouseEvent event) {
     if (event.isUp) {
-      _done = true;
+      done = true;
       if (event.x == event.x && event.y == event.y) {
         sendMessage(("maximize-window", window));
       }
@@ -105,13 +136,13 @@ class MaximizeWindowAction extends OngoingMouseAction {
 
 /// Predefined action to minimize the window that generates this action.
 /// Triggers on button release.
-class MinimizeWindowAction extends OngoingMouseAction {
+class MinimizeWindowAction extends BaseOngoingMouseAction {
   MinimizeWindowAction(super.window, super.event, super.sendMessage);
 
   @override
   onMouseEvent(MouseEvent event) {
     if (event.isUp) {
-      _done = true;
+      done = true;
       if (event.x == event.x && event.y == event.y) {
         sendMessage(("minimize-window", window));
       }
@@ -120,7 +151,7 @@ class MinimizeWindowAction extends OngoingMouseAction {
 }
 
 /// Predefined action to move/drag the window that generates this action.
-class MoveWindowAction extends OngoingMouseAction {
+class MoveWindowAction extends BaseOngoingMouseAction {
   late final AbsolutePosition _basePosition;
 
   MoveWindowAction(super.window, super.event, super.sendMessage) {
@@ -135,13 +166,13 @@ class MoveWindowAction extends OngoingMouseAction {
     final dx = event.xAbs - this.event.xAbs;
     final dy = event.yAbs - this.event.yAbs;
     window.position = _basePosition.moved(dx, dy);
-    if (event.isUp) _done = true;
+    if (event.isUp) done = true;
   }
 }
 
 /// Predefined action to resize the window that generates this action. Uses the
 /// "resize-window" message to handle resize via the [Desktop] built-in resize.
-class ResizeWindowAction extends OngoingMouseAction {
+class ResizeWindowAction extends BaseOngoingMouseAction {
   final Size _baseSize;
 
   ResizeWindowAction(super.window, super.event, super.sendMessage)
@@ -152,15 +183,15 @@ class ResizeWindowAction extends OngoingMouseAction {
     final dx = event.x - this.event.x;
     final dy = event.y - this.event.y;
     sendMessage(("resize-window", window, _baseSize.plus(dx, dy)));
-    if (event.isUp) _done = true;
+    if (event.isUp) done = true;
   }
 }
 
 /// Predefined action to raise/restore the window that generates this action.
-class RaiseWindowAction extends OngoingMouseAction {
+class RaiseWindowAction extends BaseOngoingMouseAction {
   RaiseWindowAction(super.window, super.event, super.sendMessage) {
     sendMessage(("raise-window", window));
-    _done = true;
+    done = true;
   }
 
   @override
