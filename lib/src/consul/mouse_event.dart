@@ -1,5 +1,7 @@
 part of 'desktop.dart';
 
+typedef MouseHandler = Function(MouseEvent);
+
 /// Sealed type representing the various mouse events. Fields [x] and [y] are potentially relative
 /// to the target object ([Window] only for now). [xAbs] and [yAbs] will hold the original event
 /// position.
@@ -91,5 +93,3 @@ class MouseMotionEvent extends MouseEvent {
   @override
   String toString() => "$kind,$x,$y,$xAbs,$yAbs";
 }
-
-typedef MouseHandler = Function(MouseEvent);
