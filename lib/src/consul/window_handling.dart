@@ -37,15 +37,19 @@ abstract mixin class _WindowHandling {
       _layoutWindow(window);
 
       final decorated = _decorators.putIfAbsent(
-          window, () => DecoratedWindow.decorate(window));
+          window, () => DecoratedWindow.decorate(window),);
       final decoratedPosition = decorated.decoratedPosition(desktop);
       final buffer = decorated.redrawBuffer();
-      if (buffer != null)
+      if (buffer != null) {
         _buffer.drawBuffer(decoratedPosition.x, decoratedPosition.y, buffer);
+      }
 
       for (final overlay in window._overlays) {
-        final inside =
-            VirtualBuffer(_buffer, decoratedPosition, decorated.size.current);
+        final inside = VirtualBuffer(
+          _buffer,
+          decoratedPosition,
+          decorated.size.current,
+        );
         overlay.decorate(inside);
       }
     }
@@ -54,11 +58,12 @@ abstract mixin class _WindowHandling {
   void _layoutWindow(Window window) {
     var size = window.size.current;
     if (size == Size.autoFill) window._resize(_buffer.width, _buffer.height);
-    if (size.height == Size.autoSize)
+    if (size.height == Size.autoSize) {
       window._resize(window.width, _buffer.height);
-    if (size.width == Size.autoSize)
+    }
+    if (size.width == Size.autoSize) {
       window._resize(_buffer.width, window.height);
-
+    }
     if (window.position == Position.unsetInitially) {
       window.position = RelativePosition.autoCentered();
     }
