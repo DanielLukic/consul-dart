@@ -7,6 +7,8 @@ typedef KeyMap = Map<String, Iterable<(String, String)>>;
 /// indicate "no content atm". This typedef captures the function signature.
 typedef OnRedraw = String? Function();
 
+typedef OnMouseEvent = OngoingMouseAction? Function(MouseEvent);
+
 extension type FPS(int fps) {
   Duration get milliseconds => Duration(milliseconds: 1000 ~/ fps);
 }

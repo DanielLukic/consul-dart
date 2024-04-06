@@ -65,7 +65,7 @@ class DecoratedWindow with _WindowDecoration implements Window {
   Function(dynamic) get sendMessage => _window.sendMessage;
 
   @override
-  late OngoingMouseAction? Function(MouseEvent) onMouseEvent;
+  late OnMouseEvent onMouseEvent;
 
   /// Maps a potentially relative position onto an [AbsolutePosition] on the desktop screen space.
   AbsolutePosition decoratedPosition(Size desktop) {
