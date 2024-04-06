@@ -46,7 +46,7 @@ mixin AutoDispose {
     } else if (something is Disposable) {
       it = something;
     } else {
-      throw ArgumentError("${something.runtimeType} not supported (yet)", "something");
+      throw ArgumentError("${something.runtimeType} not supported (yet)");
     }
     _disposables.remove(tag)?.dispose();
     _disposables[tag] = it;
