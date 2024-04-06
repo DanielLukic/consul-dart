@@ -54,8 +54,10 @@ class GOL {
   final Random _random = Random();
   final int width;
   final int height;
-  final List<List<int>> _grid;
   final DrawingCanvas _canvas;
+
+  List<List<int>> _grid;
+  List<List<int>> _next;
 
   // start pattern to be placed at center:
   final _start = [
@@ -69,6 +71,7 @@ class GOL {
 
   GOL(this.width, this.height)
       : _grid = List.generate(height, (i) => List.filled(width, 0)),
+        _next = List.generate(height, (i) => List.filled(width, 0)),
         _canvas = DrawingCanvas(width, height) {
     initStartPatternAtCenter();
   }
@@ -107,31 +110,23 @@ class GOL {
     _grid[y][x] = 1;
 
     // compute the next generation:
-    var next = List.generate(_grid.length, (i) => List.filled(_grid[0].length, 0));
     for (var i = 0; i < _grid.length; i++) {
       for (var j = 0; j < _grid[0].length; j++) {
         var neighbors = _countNeighbors(i, j);
 
+        _next[i][j] = 0;
         if (_grid[i][j] == 1) {
-          if (neighbors < 2 || neighbors > 3) {
-            next[i][j] = 0;
-          } else {
-            next[i][j] = 1;
-          }
-        } else {
-          if (neighbors == 3) {
-            next[i][j] = 1;
-          }
+          if (neighbors >= 2 && neighbors <= 3) _next[i][j] = 1;
+        } else if (neighbors == 3) {
+          _next[i][j] = 1;
         }
       }
     }
 
-    // copy next into grid:
-    for (var i = 0; i < _grid.length; i++) {
-      for (var j = 0; j < _grid[0].length; j++) {
-        _grid[i][j] = next[i][j];
-      }
-    }
+    // swap next into grid:
+    final swap = _grid;
+    _grid = _next;
+    _next = swap;
 
     // draw into buffer once per iteration:
     _canvas.clear();
