@@ -1,3 +1,7 @@
+## 0.0.7
+
+- Fix missing minimize button when window not resizable
+
 ## 0.0.6
 
 - Minor clean up and pub.dev fixes
