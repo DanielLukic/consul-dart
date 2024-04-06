@@ -14,7 +14,8 @@ class DecoratedWindow with _WindowDecoration implements Window {
       return _window.onMouseEvent(it);
     }
 
-    final isLmbDown = it is MouseButtonEvent && it.kind == MouseButtonKind.lmbDown;
+    final isLmbDown =
+        it is MouseButtonEvent && it.kind == MouseButtonKind.lmbDown;
 
     // check for titlebar click:
     if (isLmbDown && it.y == 0 && it.x >= 0 && it.x < width) {
