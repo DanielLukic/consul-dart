@@ -29,7 +29,13 @@ part 'window_resizing.dart';
 /// Requires an implementation of [ConIO] for rendering.
 /// Functions only during awaited execution of the [run] function.
 class Desktop
-    with AutoDispose, FocusHandling, KeyHandling, ToastHandling, _MouseActions, _WindowHandling {
+    with
+        AutoDispose,
+        FocusHandling,
+        KeyHandling,
+        ToastHandling,
+        _MouseActions,
+        _WindowHandling {
   final ConIO _conIO;
   final _subscriptions = StreamController<dynamic>.broadcast();
   final _invalidated = StreamController<DateTime>.broadcast();
@@ -116,12 +122,19 @@ class Desktop
   /// Handle <Tab> and <S-Tab> for window switching, <C-w> plus <some-key> for window manipulation.
   void setDefaultKeys() {
     onKey("<Tab>", description: "Focus next window", action: focusNext);
-    onKey("<S-Tab>", description: "Focus previous window", action: focusPrevious);
-    onKey("<C-w>_", description: "Minimize focused window", action: minimizeFocusedWindow);
-    onKey("<C-w>m", description: "Move focused window", action: moveFocusedWindow);
-    onKey("<C-w>o", description: "Toggle maximize window", action: toggleMaximizeFocusedWindow);
-    onKey("<C-w>r", description: "Resize focused window", action: resizeFocusedWindow);
-    onKey("<C-w>x", description: "Close focused window", action: closeFocusedWindow);
+    onKey("<S-Tab>",
+        description: "Focus previous window", action: focusPrevious);
+    onKey("<C-w>_",
+        description: "Minimize focused window", action: minimizeFocusedWindow);
+    onKey("<C-w>m",
+        description: "Move focused window", action: moveFocusedWindow);
+    onKey("<C-w>o",
+        description: "Toggle maximize window",
+        action: toggleMaximizeFocusedWindow);
+    onKey("<C-w>r",
+        description: "Resize focused window", action: resizeFocusedWindow);
+    onKey("<C-w>x",
+        description: "Close focused window", action: closeFocusedWindow);
   }
 
   /// Change the background character. Does not redraw the desktop. Call [_redrawDesktop] as
@@ -160,7 +173,9 @@ class Desktop
 
   void _startTicking() {
     _tick?.cancel();
-    _tick = _invalidated.stream.throttleTime(_maxFPS.milliseconds, trailing: true).listen(_redraw);
+    _tick = _invalidated.stream
+        .throttleTime(_maxFPS.milliseconds, trailing: true)
+        .listen(_redraw);
   }
 
   /// Trigger an (async) redraw.
@@ -173,7 +188,8 @@ class Desktop
   }
 
   /// Lookup a window by [id].
-  Window? findWindow(String id) => _windows.where((it) => it.id == id).firstOrNull;
+  Window? findWindow(String id) =>
+      _windows.where((it) => it.id == id).firstOrNull;
 
   /// Ensure [window] is not minimized.
   raiseWindow(Window window) {
@@ -294,7 +310,8 @@ class Desktop
   Stream<dynamic> stream() => _subscriptions.stream;
 
   /// Receive notifications of [msg] via [Stream].
-  Stream<dynamic> listen(msg) => _subscriptions.stream.where((event) => event == msg);
+  Stream<dynamic> listen(msg) =>
+      _subscriptions.stream.where((event) => event == msg);
 
   /// Receive notifications of [msg] via callback function.
   StreamSubscription<dynamic> subscribe(msg, Function(dynamic) callback) =>
@@ -304,9 +321,12 @@ class Desktop
 
   KeyMap keyMap() {
     final result = KeyMap();
-    result["Desktop"] = _matchers.map((e) => (e.patterns.toString(), e.description));
+    result["Desktop"] =
+        _matchers.map((e) => (e.patterns.toString(), e.description));
+
     for (final window in _windows) {
-      var mapping = window._matchers.map((e) => (e.patterns.toString(), e.description));
+      var mapping =
+          window._matchers.map((e) => (e.patterns.toString(), e.description));
       if (mapping.isNotEmpty) result[window.name] = mapping;
     }
     return result;

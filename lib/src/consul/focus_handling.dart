@@ -8,9 +8,10 @@ abstract mixin class FocusHandling {
 
   _updateFocus() {
     final current = _focused;
-    _focused = _windows.lastWhereOrNull((it) => it.focusable && !it.isMinimized);
+    _focused =
+        _windows.lastWhereOrNull((it) => it.focusable && !it.isMinimized);
     if (current == _focused) return;
-    
+
     current?.onStateChanged();
     _focused?.onStateChanged();
     redraw();
