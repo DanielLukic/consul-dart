@@ -59,8 +59,10 @@ extension WindowMousing on Window {
 
     // check for resize control click:
     if (isLmbDown && it.y == height - 1 && it.x == width - 1 && resizable) {
-      sendMessage(("raise-window", this));
-      return ResizeWindowAction(this, it, sendMessage);
+      if (!isMaximized) {
+        sendMessage(("raise-window", this));
+        return ResizeWindowAction(this, it, sendMessage);
+      }
     }
 
     // check for inside click:

@@ -31,7 +31,7 @@ mixin _WindowDecoration {
         .map((line) => _fitLineWidth(line, window.width))
         .toList();
 
-    if (window.resizable && !window.undecorated) {
+    if (window.resizable && !window.undecorated && !window.isMaximized) {
       var bottom = fitted.takeLast(1).single;
       bottom = bottom.ansiTake(window.width - 1);
       bottom += "◢".reset();
