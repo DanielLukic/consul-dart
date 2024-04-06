@@ -25,15 +25,18 @@ class _WindowMoving with KeyHandling implements WindowOverlay {
     onKey("l", description: "Move right", action: () => moveWindow(1, 0));
 
     _window.addOverlay(this);
+    _window.requestRedraw();
   }
 
   moveWindow(int dx, int dy) {
     final moved = _window.position.moved(dx, dy);
     _window.position = moved;
+    _window.requestRedraw();
   }
 
   stopMoving() {
     _window.removeOverlay(this);
+    _window.requestRedraw();
     _onStopMoving();
   }
 
