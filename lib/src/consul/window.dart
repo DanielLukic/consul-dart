@@ -163,4 +163,16 @@ extension WindowExtensions on Window {
   /// Keeping this private for now as it directly manipulates without restricting. Restricting has
   /// to happen in [Desktop] instead for now.
   _resize_(Size size) => _resize(size.width, size.height);
+
+  /// Shortcut for installing a chained mouse event handler. Replaces the
+  /// currently installed handler. But forwards all unprocessed events to
+  /// this handler. To avoid duplicate event handling, return [
+  void chainOnMouseEvent(OnMouseEvent handler) {
+    final next = onMouseEvent;
+    onMouseEvent = (it) {
+      final handled = handler(it);
+      if (handled != null) return handled;
+      return next(it);
+    };
+  }
 }
