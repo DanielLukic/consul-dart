@@ -13,7 +13,7 @@ class Buffer {
 
   /// Create a new buffer with the given [width] and [height] as initial size.
   Buffer(this.width, this.height)
-      : _buffer = List.generate(height, (index) => List.filled(width, Cell(0), growable: true));
+      : _buffer = List.generate(height, (it) => List.filled(width, Cell(0)));
 
   /// Resize the buffer to the given [width] and [height], dropping all content if the size actually
   /// changed.
@@ -21,7 +21,7 @@ class Buffer {
     if (this.width == width && this.height == height) return;
     this.width = width;
     this.height = height;
-    _buffer = List.generate(height, (index) => List.filled(width, Cell(0), growable: true));
+    _buffer = List.generate(height, (it) => List.filled(width, Cell(0)));
   }
 
   /// Fill the buffer with the given character code.
@@ -115,13 +115,16 @@ class Cell {
   /// Mark this cell to reset any ansi style after it.
   Cell withReset() => Cell(charCode, before: before, reset: true);
 
+  /// The character in this cell, without any ansi.
+  String get char => String.fromCharCode(charCode);
+
   /// Provide the ansi of this cell only.
   String toAnsiOnly() => before + (reset ? ansiReset : "");
 
   /// Provide the actual representation of this cell for on-screen display: any ansi sequence,
   /// the character, and a potential reset after it.
   @override
-  String toString() => before + String.fromCharCode(charCode) + (reset ? ansiReset : "");
+  String toString() => before + char + (reset ? ansiReset : "");
 }
 
 extension on String {
@@ -144,6 +147,7 @@ extension on String {
   }
 }
 
+/// Helper for drawing [WindowOverlay]s.
 class VirtualBuffer extends OverlayBuffer {
   final Buffer _targetBuffer;
   final AbsolutePosition _offset;
