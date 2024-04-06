@@ -111,6 +111,24 @@ extension StringExtensions on String {
   /// This operates on the "pure bytes" only.
   String takeLast(int count) => substring(max(length - count, 0), length);
 
+  /// ANSI aware take variant. Includes all ANSI sequences without counting
+  /// them towards [count].
+  String ansiTake(int count) {
+    var at = 0;
+    final it = StringBuffer();
+    while (ansiStripped(it.toString()).length < count) {
+      var match = ansiMatcher.matchAsPrefix(this, at);
+      if (match != null) {
+        it.write(match.group(0));
+        at = match.end;
+      } else {
+        it.write(this[at]);
+        at++;
+      }
+    }
+    return it.toString();
+  }
+
   /// Pad string to the right, ignoring embedded ansi sequences.
   String ansiPad(int length, {String pad = " "}) {
     final it = StringBuffer(this);
