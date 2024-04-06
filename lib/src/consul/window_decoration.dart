@@ -16,13 +16,16 @@ mixin _WindowDecoration {
     } else {
       final controls = _buildControls(window);
       final title = _buildTitle(window, controls);
-      final titlebar = window.isFocused ? "$title$controls".inverse() : "$title$controls";
+      var titlebar = "$title$controls";
+      if (window.isFocused) titlebar = titlebar.inverse();
       lines = [titlebar, ...buffer.split("\n").take(window.height)];
     }
 
     final height = window.undecorated ? window.height : window.height + 1;
     final extraLines = List.filled(max(0, height - lines.length), "");
-    var fitted = (lines + extraLines).map((line) => _fitLineWidth(line, window.width)).toList();
+    var fitted = (lines + extraLines)
+        .map((line) => _fitLineWidth(line, window.width))
+        .toList();
 
     if (window.resizable && !window.undecorated) {
       var bottom = fitted.takeLast(1).single;
@@ -37,8 +40,9 @@ mixin _WindowDecoration {
     final stripped = ansiStripped(line);
     if (stripped.length == width) return line; // nothing to do
 
+    // simply extend to fill window width
     final pad = (width - stripped.length).clamp(0, width);
-    if (pad > 0) return (line + "".padRight(pad)); // simply extend to fill window width
+    if (pad > 0) return (line + "".padRight(pad));
 
     // if the line is too long, remove from the end. but check first if the end is an ansi escape.
     // in that case, skip the entire escape in one step. otherwise, remove a single character. then
@@ -69,11 +73,10 @@ mixin _WindowDecoration {
   String _buildTitle(Window window, String controls) {
     final left = "≡ ";
     var right = " ≡";
-    final available = window.width - controls.length - left.length - right.length;
-    if (window.name.length > available) {
-      right = "…≡";
-    }
-    final snip = window.name.take(available);
+    final avail = window.width - controls.length - left.length - right.length;
+    if (window.name.length > avail) right = "…≡";
+
+    final snip = window.name.take(avail);
     final title = "$left$snip$right";
     return title.padRight(window.width - controls.length, "≡");
   }
