@@ -1,9 +1,21 @@
 ### Dart Consul - CLI "Desktop" System
 
 There is no good reason why this exists. Another fun/joke project I picked up to learn me some more Dart. Did not mean
-to take it as far as it has gotten. But will probably not take this any further... :-D ‾\_('')_/‾
+to take it as far as it has gotten. But will probably not take this any further... 🙃 🤷 ☯
 
 Seriously, ignore this. Look at this instead: https://charm.sh/libs/ Not Dart. But makes much more sense.
+
+#### What is this?
+
+A very basic, limited, rudimentary, and weird "desktop windowing" system for the console/terminal. Currently tested
+only on my one linux machine. Will most probably not work on Windows or macOS. Feel free to test and report back.
+
+And it is written in Dart. Because I'm currently learning Dart to get into Flutter (and Flutter Flame) at some
+point. I think. We'll see.
+
+#### Sorry, what?
+
+No, I'm sorry... 🤷
 
 #### Example Screenshot
 
@@ -22,21 +34,9 @@ Besides some obvious dart dependencies, these dependencies are used:
 
 This fun project would not exist without these dependencies!
 
-#### What is this?
-
-A very basic, limited, rudimentary, and weird "desktop windowing" system for the console/terminal. Currently tested
-only on my one linux machine. Will most probably not work on Windows or macOS. Feel free to test and report back.
-
-And it is written in Dart. Because I'm currently learning Dart to get into Flutter (and Flutter Flame) at some
-point. I think. We'll see.
-
-#### Sorry, what?
-
-No, I'm sorry... ‾\_('')_/‾
-
 #### So... Does it work?
 
-Well, it works on my machine... :-D
+Well, it works on my machine... 🙃
 
 You can try the included `example.dart` and see for yourself.
 
@@ -81,6 +81,8 @@ Some other things on my mind:
 - *MAYBE* Menubar system
 - *MAYBE* Basic dialog system
 - *MAYBE* Improve handling of terminal resize
+- *MAYBE* Use the table/border functionality of the included dependencies
+- *MAYBE* Make scroll view, border view, etc first class concepts to use "transparently" inside windows
 
 #### Done
 
