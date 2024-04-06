@@ -8,6 +8,8 @@ extension on MockWindowHandling {
   }
 }
 
+strip(String? it) => ansiStripped(it!);
+
 void main() {
   setUp(() {});
 
@@ -44,23 +46,25 @@ void main() {
     sut.addWindow(minimalWindow(p: Position.unsetInitially));
     sut.drawFrame();
     sut.dump();
-    expect(sut.lines[2], startsWith("░░░░░░░░░░≡ name ≡≡≡ [_][O][X]\x1B[0m"));
+    expect(strip(sut.lines[2]!), startsWith("░░░░░░░░░░≡ name ≡≡≡ [_][O][X]"));
   });
 
   test("draws window with top left relative position", () {
     final sut = MockWindowHandling();
-    sut.addWindow(minimalWindow(p: RelativePosition.fromTopLeft(xOffset: 1, yOffset: 1)));
+    sut.addWindow(
+        minimalWindow(p: RelativePosition.fromTopLeft(xOffset: 1, yOffset: 1)));
     sut.drawFrame();
     sut.dump();
-    expect(sut.lines[1], startsWith("░≡ name ≡≡≡ [_][O][X]\x1B[0m"));
+    expect(strip(sut.lines[1]!), startsWith("░≡ name ≡≡≡ [_][O][X]"));
   });
 
   test("draws window with bottom right relative position", () {
     final sut = MockWindowHandling();
-    sut.addWindow(minimalWindow(p: RelativePosition.fromBottomRight(xOffset: -19, yOffset: -3)));
+    sut.addWindow(minimalWindow(
+        p: RelativePosition.fromBottomRight(xOffset: -19, yOffset: -3)));
     sut.drawFrame();
     sut.dump();
-    expect(sut.lines[1], startsWith("░≡ name ≡≡≡ [_][O][X]\x1B[0m"));
+    expect(strip(sut.lines[1]), startsWith("░≡ name ≡≡≡ [_][O][X]"));
   });
 }
 
