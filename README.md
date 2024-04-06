@@ -60,10 +60,6 @@ It does support a "braille" characters based "canvas". This way you can do somet
 
 Note that this canvas functionality comes from https://pub.dev/packages/console.
 
-Example mp4 video:
-
-<video src="https://github.com/DanielLukic/consul-dart/assets/94672/9cc601e4-7232-497d-8c98-c7a6008a5e37"></video>
-
 Example animated gif:
 
 ![Screenshot](https://github.com/DanielLukic/consul-dart/raw/main/images/consul-example.gif)
