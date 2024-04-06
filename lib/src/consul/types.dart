@@ -2,6 +2,11 @@ part of 'desktop.dart';
 
 typedef KeyMap = Map<String, Iterable<(String, String)>>;
 
+/// Window buffers are simply [String]s with newlines after every row.
+/// Windows can return `null` in their [Window.redrawBuffer] method to
+/// indicate "no content atm". This typedef captures the function signature.
+typedef OnRedraw = String? Function();
+
 extension type FPS(int fps) {
   Duration get milliseconds => Duration(milliseconds: 1000 ~/ fps);
 }

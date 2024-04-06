@@ -31,7 +31,7 @@ class Window with AutoDispose, KeyHandling {
   bool Function(Window) _isFocused = (_) => false;
 
   /// Implement this to provide the data to be shown for your window.
-  String? Function() redrawBuffer = () => null;
+  OnRedraw redrawBuffer = () => null;
 
   /// Override this to intercept/receive mouse events. It is important to return true here as long
   /// as mouse events are consumed. Then end with a false after some action is done. Only after
@@ -63,7 +63,7 @@ class Window with AutoDispose, KeyHandling {
     this.size = const WindowSize.defaultMinMax(Size(40, 20)),
     WindowState state = WindowState.normal,
     Set<WindowFlag>? flags,
-    String? Function()? redraw,
+    OnRedraw? redraw,
   }) : _state = state {
     this.flags = flags ??
         {

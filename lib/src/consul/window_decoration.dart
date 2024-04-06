@@ -9,7 +9,7 @@ mixin _WindowDecoration {
   /// Put the titlebar above the window content and put a resize control in the bottom right
   /// corner. Unless the window is [WindowFlag.undecorated], in which case the window buffer is
   /// returned without any decoration.
-  String? Function() _decorateBuffer(Window window) {
+  OnRedraw _decorateBuffer(Window window) {
     var buffer = window.redrawBuffer();
     if (buffer == null) return () => buffer;
 
