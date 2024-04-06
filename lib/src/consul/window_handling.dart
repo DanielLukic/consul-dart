@@ -36,13 +36,16 @@ abstract mixin class _WindowHandling {
       if (window.state == WindowState.minimized) continue;
       _layoutWindow(window);
 
-      final decorated = _decorators.putIfAbsent(window, () => DecoratedWindow.decorate(window));
+      final decorated = _decorators.putIfAbsent(
+          window, () => DecoratedWindow.decorate(window));
       final decoratedPosition = decorated.decoratedPosition(desktop);
       final buffer = decorated.redrawBuffer();
-      if (buffer != null) _buffer.drawBuffer(decoratedPosition.x, decoratedPosition.y, buffer);
+      if (buffer != null)
+        _buffer.drawBuffer(decoratedPosition.x, decoratedPosition.y, buffer);
 
       for (final overlay in window._overlays) {
-        final inside = VirtualBuffer(_buffer, decoratedPosition, decorated.size.current);
+        final inside =
+            VirtualBuffer(_buffer, decoratedPosition, decorated.size.current);
         overlay.decorate(inside);
       }
     }
@@ -51,8 +54,10 @@ abstract mixin class _WindowHandling {
   void _layoutWindow(Window window) {
     var size = window.size.current;
     if (size == Size.autoFill) window._resize(_buffer.width, _buffer.height);
-    if (size.height == Size.autoSize) window._resize(window.width, _buffer.height);
-    if (size.width == Size.autoSize) window._resize(_buffer.width, window.height);
+    if (size.height == Size.autoSize)
+      window._resize(window.width, _buffer.height);
+    if (size.width == Size.autoSize)
+      window._resize(_buffer.width, window.height);
 
     if (window.position == Position.unsetInitially) {
       window.position = RelativePosition.autoCentered();
@@ -62,7 +67,8 @@ abstract mixin class _WindowHandling {
   void _updateOutput() {
     for (final (index, line) in _differ._buffer.indexed) {
       final now = _buffer._buffer[index];
-      final same = now.indexed.every((element) => line[element.$1] == element.$2);
+      final same =
+          now.indexed.every((element) => line[element.$1] == element.$2);
       if (same) continue;
       for (var x = 0; x < now.length; x++) {
         line[x] = now[x];
