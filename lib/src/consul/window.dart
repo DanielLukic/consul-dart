@@ -175,4 +175,22 @@ extension WindowExtensions on Window {
       return next(it);
     };
   }
+
+  /// Shortcut for the common functionality of handling a mouse wheel up
+  /// event in a window.
+  void onWheelUp(void Function() quickAction) {
+    chainOnMouseEvent((e) => e.onWheelUp((it) {
+          quickAction();
+          return NopMouseAction(this);
+        }));
+  }
+
+  /// Shortcut for the common functionality of handling a mouse wheel down
+  /// event in a window.
+  void onWheelDown(void Function() quickAction) {
+    chainOnMouseEvent((e) => e.onWheelDown((it) {
+          quickAction();
+          return NopMouseAction(this);
+        }));
+  }
 }

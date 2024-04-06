@@ -93,3 +93,25 @@ class MouseMotionEvent extends MouseEvent {
   @override
   String toString() => "$kind,$x,$y,$xAbs,$yAbs";
 }
+
+extension MouseEventExtensions on MouseEvent {
+  /// Shortcut to handle a wheel up event without triggering an
+  /// [OngoingMouseAction].
+  OngoingMouseAction? onWheelUp(OnMouseEvent handler) {
+    final it = this;
+    if (it is MouseWheelEvent && it.kind == MouseWheelKind.wheelUp) {
+      return handler(it);
+    }
+    return null;
+  }
+
+  /// Shortcut to handle a wheel down event without triggering an
+  /// [OngoingMouseAction].
+  OngoingMouseAction? onWheelDown(OnMouseEvent handler) {
+    final it = this;
+    if (it is MouseWheelEvent && it.kind == MouseWheelKind.wheelDown) {
+      return handler(it);
+    }
+    return null;
+  }
+}
