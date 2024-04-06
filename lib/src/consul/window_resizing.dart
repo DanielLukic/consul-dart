@@ -10,14 +10,19 @@ class _WindowResizing with KeyHandling implements WindowOverlay {
     onKey("<Return>", description: "Finish window resizing", action: done);
     onKey("q", description: "Finish window resizing", action: done);
 
-    onKey("<Down>", description: "Extend one down", action: () => resize(0, 1));
-    onKey("<Left>", description: "Extend one left", action: () => resize(-1, 0));
-    onKey("<Right>", description: "Extend one right", action: () => resize(1, 0));
-    onKey("<Up>", description: "Extend one up", action: () => resize(0, -1));
-    onKey("h", description: "Extend one left", action: () => resize(-1, 0));
-    onKey("j", description: "Extend one down", action: () => resize(0, 1));
-    onKey("k", description: "Extend one up", action: () => resize(0, -1));
-    onKey("l", description: "Extend one right", action: () => resize(1, 0));
+    onKey("<Down>", description: "Extend down", action: () => resize(0, 1));
+    onKey("<Left>", description: "Extend left", action: () => resize(-1, 0));
+    onKey("<Right>", description: "Extend right", action: () => resize(1, 0));
+    onKey("<Up>", description: "Extend up", action: () => resize(0, -1));
+
+    onKey("<S-h>", description: "Extend left", action: () => resize(-10, 0));
+    onKey("<S-j>", description: "Extend down", action: () => resize(0, 5));
+    onKey("<S-k>", description: "Extend up", action: () => resize(0, -5));
+    onKey("<S-l>", description: "Extend right", action: () => resize(10, 0));
+    onKey("h", description: "Extend left", action: () => resize(-1, 0));
+    onKey("j", description: "Extend down", action: () => resize(0, 1));
+    onKey("k", description: "Extend up", action: () => resize(0, -1));
+    onKey("l", description: "Extend right", action: () => resize(1, 0));
 
     _window.addOverlay(this);
   }

@@ -10,14 +10,19 @@ class _WindowMoving with KeyHandling implements WindowOverlay {
     onKey("<Return>", description: "Finish moving window", action: stopMoving);
     onKey("q", description: "Finish moving window", action: stopMoving);
 
-    onKey("<Down>", description: "Move one down", action: () => moveWindow(0, 1));
-    onKey("<Left>", description: "Move one left", action: () => moveWindow(-1, 0));
-    onKey("<Right>", description: "Move one right", action: () => moveWindow(1, 0));
-    onKey("<Up>", description: "Move one up", action: () => moveWindow(0, -1));
-    onKey("h", description: "Move one left", action: () => moveWindow(-1, 0));
-    onKey("j", description: "Move one down", action: () => moveWindow(0, 1));
-    onKey("k", description: "Move one up", action: () => moveWindow(0, -1));
-    onKey("l", description: "Move one right", action: () => moveWindow(1, 0));
+    onKey("<Down>", description: "Move down", action: () => moveWindow(0, 1));
+    onKey("<Left>", description: "Move left", action: () => moveWindow(-1, 0));
+    onKey("<Right>", description: "Move right", action: () => moveWindow(1, 0));
+    onKey("<Up>", description: "Move up", action: () => moveWindow(0, -1));
+
+    onKey("<S-h>", description: "Jump left", action: () => moveWindow(-10, 0));
+    onKey("<S-j>", description: "Jump down", action: () => moveWindow(0, 5));
+    onKey("<S-k>", description: "Jump up", action: () => moveWindow(0, -5));
+    onKey("<S-l>", description: "Jump right", action: () => moveWindow(10, 0));
+    onKey("h", description: "Move left", action: () => moveWindow(-1, 0));
+    onKey("j", description: "Move down", action: () => moveWindow(0, 1));
+    onKey("k", description: "Move up", action: () => moveWindow(0, -1));
+    onKey("l", description: "Move right", action: () => moveWindow(1, 0));
 
     _window.addOverlay(this);
   }
