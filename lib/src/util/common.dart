@@ -79,10 +79,14 @@ extension ListExtensions<E> on List<E> {
 extension HexList on List<int> {
   /// Convert the given `List<int>` into a hex string representation of the low 8 bits of each int.
   String toByteHexString({String delimiter = ""}) =>
-      map((e) => e.toRadixString(16).padLeft(2).take(2).toUpperCase()).join(delimiter);
+      map((e) => e.toHex(2).toUpperCase()).join(delimiter);
 }
 
 extension IntExtensions on int {
+  // Turn this int into a hex string, limiting to the given [length]. For
+  // bytes the length would be 2 etc.
+  String toHex(int length) => toRadixString(16).padLeft(length).take(length);
+
   /// Turn this int into a [Duration] of milliseconds.
   Duration get millis => Duration(milliseconds: this);
 
