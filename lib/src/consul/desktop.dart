@@ -20,7 +20,9 @@ part 'toast.dart';
 part 'types.dart';
 part 'window.dart';
 part 'window_decoration.dart';
+part 'window_extensions.dart';
 part 'window_handling.dart';
+part 'window_mousing.dart';
 part 'window_moving.dart';
 part 'window_resizing.dart';
 
