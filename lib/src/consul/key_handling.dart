@@ -95,6 +95,9 @@ mixin KeyHandling {
     _matchers.add(it);
     return Disposable(() => _matchers.remove(it));
   }
+
+  Iterable<(String, String)> keyMapEntries() =>
+      _matchers.map((e) => (e.patterns.toString(), e.description));
 }
 
 class _Matcher {

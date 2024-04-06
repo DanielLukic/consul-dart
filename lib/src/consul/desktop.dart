@@ -321,12 +321,9 @@ class Desktop
 
   KeyMap keyMap() {
     final result = KeyMap();
-    result["Desktop"] =
-        _matchers.map((e) => (e.patterns.toString(), e.description));
-
+    result["Desktop"] = keyMapEntries();
     for (final window in _windows) {
-      var mapping =
-          window._matchers.map((e) => (e.patterns.toString(), e.description));
+      var mapping = window.keyMapEntries();
       if (mapping.isNotEmpty) result[window.name] = mapping;
     }
     return result;
