@@ -5,6 +5,8 @@ part of 'desktop.dart';
 class DebugLog {
   final _entries = <(DateTime, String)>[];
 
+  void Function() redraw = () {};
+
   void clear() => _entries.clear();
 
   void add(message) {
@@ -12,6 +14,7 @@ class DebugLog {
       _entries.removeAt(0);
     }
     _entries.add((DateTime.now(), message.toString()));
+    redraw();
   }
 
   Iterable<String> get reversed => _entries.reversed.map((e) {

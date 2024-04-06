@@ -7,6 +7,8 @@ addDebugLog(
   Size size = const Size.autoWidth(10),
   Position position = const RelativePosition.fromBottom(yOffset: -1),
 }) {
+  eventDebugLog.redraw = () => desktop.redraw();
+
   final window = Window(
     "debug",
     "Event Debug Log",
