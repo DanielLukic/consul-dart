@@ -47,7 +47,7 @@ mixin KeyHandling {
     final matches = _matchers.where((element) => element.isMatch());
     final partials = _matchers.where((element) => element.isPartialMatch());
 
-    eventDebugLog.add("matchers: $_matchers");
+    // eventDebugLog.add("matchers: $_matchers");
 
     // if match found, but no partials, reset matching, trigger first match, and be done here:
     if (matches.isNotEmpty && partials.isEmpty) {
