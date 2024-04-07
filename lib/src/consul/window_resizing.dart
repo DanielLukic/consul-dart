@@ -25,7 +25,6 @@ class _WindowResizing with KeyHandling implements WindowOverlay {
     onKey("l", description: "Extend right", action: () => resize(1, 0));
 
     _window.addOverlay(this);
-    _window.requestRedraw();
   }
 
   resize(int dx, int dy) {
@@ -38,12 +37,10 @@ class _WindowResizing with KeyHandling implements WindowOverlay {
     final current = _window.size.current;
     _window.fixPosition();
     _window._resizeClamped(current.width + dx, current.height + dy);
-    _window.requestRedraw();
   }
 
   done() {
     _window.removeOverlay(this);
-    _window.requestRedraw();
     _onDone();
   }
 
