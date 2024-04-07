@@ -27,9 +27,9 @@ abstract mixin class _MouseActions {
       final action = it._onMouseEvent(relative);
       if (action == null) continue;
 
-      eventDebugLog.add(
-        "on $event <-> ${it.id} - win pos: $p - relative: $relative - action? $action",
-      );
+      // eventDebugLog.add(
+      //   "on $event <-> ${it.id} - win pos: $p - relative: $relative - action? $action",
+      // );
 
       // some actions are done immediately. must not be assigned to _ongoingMouseAction.
       if (!action.done) _ongoingMouseAction = action;
