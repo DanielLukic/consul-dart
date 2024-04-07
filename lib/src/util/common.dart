@@ -129,8 +129,20 @@ extension StringExtensions on String {
     return it.toString();
   }
 
+  /// Pad string to the left, ignoring embedded ansi sequences.
+  String ansiPadLeft(int length, {String pad = " "}) {
+    final it = StringBuffer(this);
+    while (ansiStripped(it.toString()).length < length) {
+      final swap = it.toString();
+      it.clear();
+      it.write(pad);
+      it.write(swap);
+    }
+    return it.toString();
+  }
+
   /// Pad string to the right, ignoring embedded ansi sequences.
-  String ansiPad(int length, {String pad = " "}) {
+  String ansiPadRight(int length, {String pad = " "}) {
     final it = StringBuffer(this);
     while (ansiStripped(it.toString()).length < length) {
       it.write(pad);
