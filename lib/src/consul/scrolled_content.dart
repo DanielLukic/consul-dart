@@ -8,7 +8,7 @@ ScrolledContent scrolled(
   bool extendName = true,
   bool defaultShortcuts = true,
   bool mouseWheel = true,
-  bool ellipsize = false,
+  bool ellipsize = true,
 }) {
   final it = ScrolledContent(window, content, ellipsize: ellipsize);
   window.redrawBuffer = it.redrawBuffer;
