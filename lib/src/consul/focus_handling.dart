@@ -17,7 +17,7 @@ abstract mixin class FocusHandling {
     redraw();
   }
 
-  void focusNext() {
+  void focusPrevious() {
     final current = _focused;
     if (current == null) {
       _updateFocus();
@@ -32,7 +32,7 @@ abstract mixin class FocusHandling {
     _updateFocus();
   }
 
-  void focusPrevious() {
+  void focusNext() {
     final current = _focused;
     if (current == null) {
       _updateFocus();
