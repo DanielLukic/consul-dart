@@ -150,6 +150,15 @@ extension StringExtensions on String {
     return it.toString();
   }
 
+  /// Pad string from both sides, ignoring embedded ansi sequences.
+  String ansiPad(int length, {String pad = " "}) {
+    var it = this;
+    while (it.ansiLength < length) {
+      it = pad + it + pad;
+    }
+    return it.ansiTake(length);
+  }
+
   /// Removes all embedded ANSI sequences.
   String stripped() => ansiStripped(this);
 
