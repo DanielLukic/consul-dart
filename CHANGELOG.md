@@ -1,3 +1,8 @@
+## 0.0.8
+
+- Fix desktop refresh when moving/resizing
+- Add ScrolledContent component (vertical-only for now)
+
 ## 0.0.7
 
 - Fix missing minimize button when window not resizable

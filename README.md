@@ -68,15 +68,15 @@ Example animated gif:
 
 The essentials I want to be done for a "Version 1":
 
-- Taskbar showing all (including minimized) windows
-- Taskbar overflow with all remaining windows
-- Mouse event modifiers
+- Basic dialog system
+- Basic popup system
 
 Some other things on my mind:
 
+- *MAYBE* Taskbar showing all (including minimized) windows
+- *MAYBE* Taskbar overflow with all remaining windows
 - *MAYBE* Blink(?) active (move or resize) window title (or indicate somehow else for small windows especially)
 - *MAYBE* Menubar system
-- *MAYBE* Basic dialog system
 - *MAYBE* Improve handling of terminal resize
 - *MAYBE* Use the table/border functionality of the included dependencies
 - *MAYBE* Make scroll view, border view, etc first class concepts to use "transparently" inside windows
@@ -97,6 +97,7 @@ Some other things on my mind:
 - Resize window with mouse
 - Move window with mouse
 - Help (?) button to show key configuration
+- Add basic (vertical only) scrolled content
 
 ### Bugs
 
