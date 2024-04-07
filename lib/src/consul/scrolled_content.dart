@@ -5,12 +5,18 @@ import 'package:dart_consul/dart_consul.dart';
 ScrolledContent scrolled(
   Window window,
   OnRedraw content, {
+  String? header,
   bool extendName = true,
   bool defaultShortcuts = true,
   bool mouseWheel = true,
   bool ellipsize = true,
 }) {
-  final it = ScrolledContent(window, content, ellipsize: ellipsize);
+  final it = ScrolledContent(
+    window,
+    content,
+    header: header,
+    ellipsize: ellipsize,
+  );
   window.redrawBuffer = it.redrawBuffer;
   if (extendName) {
     window.name = "${window.name} ≡ ▼/▲ j/k";
@@ -33,12 +39,14 @@ ScrolledContent scrolled(
 class ScrolledContent {
   Window window;
   OnRedraw content;
+  String? header;
   bool ellipsize;
   int scrollOffset = 0;
 
   ScrolledContent(
     this.window,
     this.content, {
+    this.header,
     this.ellipsize = false,
   });
 
@@ -50,9 +58,11 @@ class ScrolledContent {
   String? redrawBuffer() {
     final rows = content()?.split("\n");
     if (rows == null) return null;
-    final maxScroll = max(0, rows.length - window.height);
+    final headerLines = header?.split("\n") ?? [];
+    final offset = headerLines.length;
+    final maxScroll = max(0, rows.length - window.height - offset);
     scrollOffset = scrollOffset.clamp(0, maxScroll);
-    final maxHeight = min(rows.length, window.height);
+    final maxHeight = min(rows.length, window.height - offset);
     var snap = rows.skip(scrollOffset).take(maxHeight).toList();
     if (ellipsize && rows.length > window.height) {
       if (scrollOffset > 0) {
@@ -62,6 +72,6 @@ class ScrolledContent {
         snap[snap.length - 1] = " ▼ ▼ ▼ ".gray().reset();
       }
     }
-    return snap.join("\n");
+    return (headerLines + snap).join("\n");
   }
 }
