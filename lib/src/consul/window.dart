@@ -11,9 +11,8 @@ class Window with AutoDispose, KeyHandling, _WindowDecoration {
 
   String name;
   Set<WindowFlag> flags = {};
-  Position position;
-  WindowSize size;
-
+  Position _position;
+  WindowSize _size;
   WindowState _state;
 
   /// Used to restore back from [WindowState.minimized] when state before minimize was
@@ -59,12 +58,14 @@ class Window with AutoDispose, KeyHandling, _WindowDecoration {
   Window(
     this.id,
     this.name, {
-    this.position = Position.unsetInitially,
-    this.size = const WindowSize.defaultMinMax(Size(40, 20)),
+    Position position = Position.unsetInitially,
+    WindowSize size = const WindowSize.defaultMinMax(Size(40, 20)),
     WindowState state = WindowState.normal,
     Set<WindowFlag>? flags,
     OnRedraw? redraw,
-  }) : _state = state {
+  })  : _state = state,
+        _size = size,
+        _position = position {
     this.flags = flags ??
         {
           WindowFlag.closeable,
@@ -91,8 +92,24 @@ class Window with AutoDispose, KeyHandling, _WindowDecoration {
 
   @override
   String toString() {
-    final s = size.current;
+    final s = _size.current;
     final f = flags.map((e) => e.name.take(2)).join(",");
-    return "Window(name=$name,id=$id,position=$position,size=$s,flags=$f,state=${state.name}))";
+    return "Window(name=$name,id=$id,position=$_position,size=$s,flags=$f,state=${state.name}))";
+  }
+}
+
+extension WindowAccessors on Window {
+  WindowSize get size => _size;
+
+  set size(WindowSize it) {
+    _size = it;
+    requestRedraw();
+  }
+
+  Position get position => _position;
+
+  set position(Position it) {
+    _position = it;
+    requestRedraw();
   }
 }
