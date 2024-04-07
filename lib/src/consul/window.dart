@@ -85,10 +85,16 @@ class Window with AutoDispose, KeyHandling, _WindowDecoration {
 
   /// Used primarily to draw "system" overlays when moving or resizing windows. But can be used
   /// for anything really. Like additional layers per window.
-  void addOverlay(WindowOverlay it) => _overlays.add(it);
+  void addOverlay(WindowOverlay it) {
+    _overlays.add(it);
+    requestRedraw();
+  }
 
   /// Counterpart to [addOverlay] for removing an overlay.
-  void removeOverlay(WindowOverlay it) => _overlays.remove(it);
+  void removeOverlay(WindowOverlay it) {
+    _overlays.remove(it);
+    requestRedraw();
+  }
 
   @override
   String toString() {
