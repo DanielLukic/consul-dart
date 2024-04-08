@@ -18,8 +18,8 @@ require(bool check, String message, String value) {
 safely(Function block) {
   try {
     block();
-  } catch (it) {
-    logError("safely failed - ignored: $it");
+  } catch (it, trace) {
+    logError("safely failed - ignored: $it", trace);
   }
 }
 
