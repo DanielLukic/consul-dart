@@ -1,5 +1,11 @@
 part of 'desktop.dart';
 
+typedef Callback = void Function();
+
+extension NotifyAllCallbacks on Set<Callback> {
+  void notifyAll() => forEach((e) => e());
+}
+
 typedef KeyMap = Map<String, Iterable<(String, String)>>;
 
 /// Window buffers are simply [String]s with newlines after every row.

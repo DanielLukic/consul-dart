@@ -16,9 +16,9 @@ starfield(Desktop desktop) {
       size: WindowSize.min(Size(40, 20)),
     );
 
-    window.onSizeChanged = () => _update(window);
-    window.onStateChanged = () => _update(window);
-    window.onStateChanged();
+    window.onSizeChanged.add(() => _update(window));
+    window.onStateChanged.add(() => _update(window));
+    _update(window);
 
     window.onKey(
       "q",

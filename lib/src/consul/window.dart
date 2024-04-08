@@ -23,7 +23,7 @@ class Window with AutoDispose, KeyHandling, _WindowDecoration {
 
   set state(WindowState value) {
     _state = value;
-    onStateChanged();
+    onStateChanged.notifyAll();
   }
 
   Size Function() _desktopSize = () => Size.zero;
@@ -38,10 +38,10 @@ class Window with AutoDispose, KeyHandling, _WindowDecoration {
   OnMouseEvent onMouseEvent = (event) => null;
 
   /// Install hook to get notified on size changes.
-  void Function() onSizeChanged = () {};
+  final Set<Callback> onSizeChanged = {};
 
   /// Install hook to get notified on state changes.
-  void Function() onStateChanged = () {};
+  final Set<Callback> onStateChanged = {};
 
   /// Call this to request a redraw. Note that it will be a nop until the window is actually opened
   /// on the desktop via [Desktop.openWindow]. (And it will be a nop after closing the window. Doh.)

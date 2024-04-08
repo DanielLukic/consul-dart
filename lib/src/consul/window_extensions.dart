@@ -66,7 +66,7 @@ extension WindowExtensions on Window {
 
   _resize(int width, int height) {
     size = WindowSize(Size(width, height), size.min, size.max);
-    onSizeChanged();
+    onSizeChanged.notifyAll();
   }
 
   _resize_(Size size) => _resize(size.width, size.height);

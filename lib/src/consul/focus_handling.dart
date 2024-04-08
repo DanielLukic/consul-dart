@@ -12,8 +12,8 @@ abstract mixin class FocusHandling {
         _windows.lastWhereOrNull((it) => it.focusable && !it.isMinimized);
     if (current == _focused) return;
 
-    current?.onStateChanged();
-    _focused?.onStateChanged();
+    current?.onStateChanged.notifyAll();
+    _focused?.onStateChanged.notifyAll();
     redraw();
   }
 

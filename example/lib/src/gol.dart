@@ -40,8 +40,8 @@ gameOfLife(Desktop desktop) {
       );
     }
 
-    window.onSizeChanged = update;
-    window.onStateChanged = update;
+    window.onSizeChanged.add(update);
+    window.onStateChanged.add(update);
     window.onMouseEvent = (it) {
       eventDebugLog.add("???");
       gol.set(it.x * 2, it.y * 4);
