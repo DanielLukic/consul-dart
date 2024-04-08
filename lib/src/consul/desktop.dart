@@ -127,8 +127,6 @@ class Desktop
         raiseWindow(it);
       case ("resize-window", Window it, Size size_):
         it._resizeClamped(size_.width, size_.height);
-      default:
-        eventDebugLog.add("unhandled: $msg");
     }
   }
 
