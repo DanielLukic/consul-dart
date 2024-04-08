@@ -1,4 +1,16 @@
+import 'dart:io';
+
 import 'package:ansi/ansi.dart';
+
+fileSink(String filename) {
+  final file = File(filename);
+  var parent = Directory(filename).parent;
+  if (!parent.existsSync()) parent.createSync();
+  final sink = file.openWrite();
+  return (e) => sink.writeln(e);
+}
+
+var sink = print;
 
 var logLevel = LogLevel.info;
 
@@ -37,9 +49,9 @@ log(Object? message, [LogLevel? level, StackTrace? trace]) {
     case LogLevel.none:
       break;
   }
-  print(full);
+  sink(full);
 
-  if (trace != null) print(trace.toString());
+  if (trace != null) sink(trace.toString());
 }
 
 logInfo(Object? message) => log(message, LogLevel.info);
