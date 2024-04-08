@@ -2,6 +2,17 @@ import 'dart:math';
 
 import 'package:dart_consul/dart_consul.dart';
 
+final _nameSuffix = " ≡ ▼/▲ j/k";
+
+extension StrExt on String {
+  String removeSuffix(String suffix) {
+    if (endsWith(suffix)) {
+      return substring(0, length - suffix.length);
+    }
+    return this;
+  }
+}
+
 ScrolledContent scrolled(
   Window window,
   OnRedraw content, {
@@ -19,7 +30,12 @@ ScrolledContent scrolled(
   );
   window.redrawBuffer = it.redrawBuffer;
   if (extendName) {
-    window.name = "${window.name} ≡ ▼/▲ j/k";
+    window.onFocusChanged.add(() {
+      window.name = window.name.removeSuffix(_nameSuffix);
+      if (window.isFocused) {
+        window.name = "${window.name} ≡ ▼/▲ j/k";
+      }
+    });
   }
   if (defaultShortcuts) {
     window.onKey("j", description: "Scroll down", action: () => it.scroll(1));

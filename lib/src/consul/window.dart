@@ -35,6 +35,8 @@ class Window with AutoDispose, KeyHandling, _WindowDecoration {
   /// Override this to intercept/receive mouse events. It is important to return true here as long
   /// as mouse events are consumed. Then end with a false after some action is done. Only after
   /// returning false here, another consumer and/or new action is allowed to start.
+  /// TODO Should be a [List] instead. Ordered. Stop at first non-null response.
+  /// TODO This way [Disposable] can be used to remove ih [chainOnMouseEvent].
   OnMouseEvent onMouseEvent = (event) => null;
 
   /// Install hook to get notified on size changes.
