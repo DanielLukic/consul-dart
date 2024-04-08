@@ -61,6 +61,7 @@ class Desktop
   StreamSubscription? _tick;
 
   KeyHandling? _keyInterceptor;
+  Function(KeyEvent)? _keyStealer;
 
   /// Currently available width for the desktop.
   int get columns => _conIO.columns();
@@ -102,7 +103,29 @@ class Desktop
     );
   }
 
-  void _handleKeyEvent(KeyEvent it) {
+  Disposable stealKeys(Function(KeyEvent) stealer) {
+    if (_keyStealer != null) {
+      throw StateError("already stolen - check logic/state");
+    }
+    _keyStealer = stealer;
+    return Disposable.wrap(() => unstealKeys(stealer));
+  }
+
+  void unstealKeys(Function(KeyEvent) stealer) {
+    if (_keyStealer != stealer) {
+      throw StateError("already disposed or changed - check logic/state");
+    }
+    _keyStealer = null;
+  }
+
+  void handleStolen(KeyEvent it) => _handleKeyEvent(it, false);
+
+  void _handleKeyEvent(KeyEvent it, [bool allowStealing = true]) {
+    if (_keyStealer != null && allowStealing) {
+      _keyStealer!(it);
+      return;
+    }
+
     if (_keyInterceptor != null) {
       _keyInterceptor?._onKeyEvent(it);
       return;
