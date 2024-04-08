@@ -6,7 +6,7 @@ abstract interface class Disposable {
   void dispose();
 
   /// Wrap some dispose call into this disposable for later disposition.
-  static wrapDispose(Function dispose) => _Disposable(dispose);
+  static wrap(Function dispose) => _Disposable(dispose);
 }
 
 /// Holds potentially multiple [Disposable]s to be [dispose]d in one call.
@@ -15,9 +15,9 @@ abstract interface class Disposable {
 class CompositeDisposable implements Disposable {
   final _disposables = <Disposable>[];
 
-  void addDisposable(Disposable disposable) => _disposables.add(disposable);
+  void add(Disposable disposable) => _disposables.add(disposable);
 
-  void wrapDispose(Function dispose) => _disposables.add(_wrap(dispose));
+  void wrap(dynamic dispose) => _disposables.add(_wrap(dispose));
 
   @override
   void dispose() {

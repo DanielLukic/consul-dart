@@ -98,7 +98,7 @@ mixin KeyHandling {
     }
     var it = _Matcher(patterns, description, action);
     _matchers.add(it);
-    return Disposable.wrapDispose(() => _matchers.remove(it));
+    return Disposable.wrap(() => _matchers.remove(it));
   }
 
   Iterable<(String, String)> keyMapEntries() =>
