@@ -12,7 +12,7 @@ abstract interface class Disposable {
 /// Holds potentially multiple [Disposable]s to be [dispose]d in one call.
 /// Removes all [Disposable]s when [dispose] is called. Can be reused after
 /// [dispose] has been called.
-mixin CompositeDisposable implements Disposable {
+class CompositeDisposable implements Disposable {
   final _disposables = <Disposable>[];
 
   void addDisposable(Disposable disposable) => _disposables.add(disposable);
