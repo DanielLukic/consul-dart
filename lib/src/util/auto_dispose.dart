@@ -45,6 +45,8 @@ Disposable _wrap(something) {
     it = _Disposable(() => something.close());
   } else if (something is StreamSubscription) {
     it = _Disposable(() => something.cancel());
+  } else if (something is Function()) {
+    it = _Disposable(() => something());
   } else if (something is Disposable) {
     it = something;
   } else {
