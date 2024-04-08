@@ -43,6 +43,11 @@ class Window with AutoDispose, KeyHandling, _WindowDecoration {
   /// Install hook to get notified on state changes.
   final Set<Callback> onStateChanged = {};
 
+  /// Install hook to get notified on focus changes. Note that
+  /// [onStateChanged] can be used for this, too. The difference being that
+  /// [onFocusChanged] will be called only for focus changes.
+  final Set<Callback> onFocusChanged = {};
+
   /// Call this to request a redraw. Note that it will be a nop until the window is actually opened
   /// on the desktop via [Desktop.openWindow]. (And it will be a nop after closing the window. Doh.)
   Function requestRedraw = () {};

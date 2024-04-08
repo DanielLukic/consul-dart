@@ -14,6 +14,8 @@ abstract mixin class FocusHandling {
 
     current?.onStateChanged.notifyAll();
     _focused?.onStateChanged.notifyAll();
+    current?.onFocusChanged.notifyAll();
+    _focused?.onFocusChanged.notifyAll();
     redraw();
   }
 
