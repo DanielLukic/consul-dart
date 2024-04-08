@@ -21,7 +21,8 @@ abstract mixin class _MouseActions {
       return;
     }
 
-    for (final it in _windows.reversed) {
+    final scan = [..._windows.reversed];
+    for (final it in scan) {
       final p = it.decoratedPosition();
       final relative = event.relativeTo(p);
       final action = it._onMouseEvent(relative);
