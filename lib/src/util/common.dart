@@ -103,6 +103,10 @@ extension IntExtensions on int {
 }
 
 extension StringExtensions on String {
+  /// Remove the last [count] bytes from this [String]. Returns empty
+  /// [String] if [count] >= [length].
+  String dropLast(int count) => substring(0, max(0, length - count));
+
   /// Take the first [count] characters from this. Ignoring special unicode character handling.
   /// This operates on the "pure bytes" only.
   String take(int count) => substring(0, min(count, length));
