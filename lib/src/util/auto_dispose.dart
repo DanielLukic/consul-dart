@@ -67,11 +67,12 @@ mixin AutoDispose {
     for (var it in _disposables.values) {
       it.dispose();
     }
+    _disposables.clear();
   }
 
   /// Dispose the [Disposable] associated with the given [tag]. Nop if nothing registered for this
   /// tag.
-  void dispose(String tag) => _disposables[tag]?.dispose();
+  void dispose(String tag) => _disposables.remove(tag)?.dispose();
 
   /// Set up a [Disposable] for the given [something], using the given [tag]. If the tag already
   /// has a [Disposable] assigned, the assigned one is disposed and the new one replaces it.
@@ -80,7 +81,7 @@ mixin AutoDispose {
   /// has an unsupported type. In that case, wrap it into a [Disposable] before passing it to
   /// [autoDispose].
   void autoDispose(String tag, dynamic something) {
-    _disposables.remove(tag)?.dispose();
+    dispose(tag);
     _disposables[tag] = _wrap(something);
   }
 }
