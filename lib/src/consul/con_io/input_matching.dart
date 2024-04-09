@@ -167,6 +167,7 @@ mixin _InputMatching {
   // probably fail in multiple ways on different setups.. and surely won't work for Windows and
   // probably not even for MacOS... but it's enough for my use case for now.. ‾\_('')_/‾
   final _controls = {
+    "<BACKSPACE>": Control.Backspace,
     "<DEL>": Control.Delete,
     "<ENTER>": Control.Enter,
     "<ESC>": Control.Escape,

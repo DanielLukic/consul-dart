@@ -10,7 +10,7 @@ extension on List<int> {
 
 extension on int {
   String get printable {
-    if (this == 8) return "<DEL>";
+    if (this == 8) return "<BACKSPACE>";
     if (this == 9) return "<TAB>";
     if (this == 10) return "<ENTER>";
     if (this == 13) return "<RETURN>";
