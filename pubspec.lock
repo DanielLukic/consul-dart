@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
+  dart_minilog:
+    dependency: "direct main"
+    description:
+      name: dart_minilog
+      sha256: "34b243506e53f8142135e8ec8ba89ee831b3c87bb3dd7802522c42eea7a3c828"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   ffi:
     dependency: transitive
     description:

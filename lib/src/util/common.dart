@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'log.dart';
+import 'package:dart_minilog/dart_minilog.dart';
 
 final ansiReset = '\u001B[0m';
 final ansiMatcher = RegExp(r'\u001B\[[^m]+m');
@@ -173,5 +173,5 @@ extension ConsulStringExtensions on String {
   /// Length without ANSI sequences.
   int get ansiLength => stripped().length;
 
-  // TODO Revisit this naming madness.. :-D
+// TODO Revisit this naming madness.. :-D
 }
