@@ -25,8 +25,8 @@ class DebugLog {
 
   String _timestamped((DateTime, String) e) {
     // lovely :-D
-    final timestamp = e.$1.toIso8601String().split("T").last;
-    return "$timestamp: ${e.$2}";
+    final timestamp = e.$1.toIso8601String().split("T").last.split('.').first;
+    return "$timestamp ${e.$2}";
   }
 }
 
