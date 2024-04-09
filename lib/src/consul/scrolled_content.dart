@@ -2,8 +2,6 @@ import 'dart:math';
 
 import 'package:dart_consul/dart_consul.dart';
 
-final _nameSuffix = " ≡ ▼/▲ j/k";
-
 extension StrExt on String {
   String removeSuffix(String suffix) {
     if (endsWith(suffix)) {
@@ -17,6 +15,7 @@ ScrolledContent scrolled(
   Window window,
   OnRedraw content, {
   String? header,
+  String nameExtension = " ≡ ▼/▲ j/k",
   bool extendName = true,
   bool defaultShortcuts = true,
   bool mouseWheel = true,
@@ -31,9 +30,9 @@ ScrolledContent scrolled(
   window.redrawBuffer = it.redrawBuffer;
   if (extendName) {
     window.onFocusChanged.add(() {
-      window.name = window.name.removeSuffix(_nameSuffix);
+      window.name = window.name.removeSuffix(nameExtension);
       if (window.isFocused) {
-        window.name = "${window.name} ≡ ▼/▲ j/k";
+        window.name = "${window.name}$nameExtension";
       }
     });
   }
