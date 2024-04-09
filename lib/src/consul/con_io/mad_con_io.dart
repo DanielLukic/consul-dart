@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:dart_console2/dart_console2.dart' as dc;
+import 'package:dart_console/dart_console.dart' as dc;
 import 'package:dart_consul/src/consul/desktop.dart';
 
 import '../../../dart_consul.dart';
