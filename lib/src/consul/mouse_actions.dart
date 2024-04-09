@@ -23,8 +23,16 @@ abstract mixin class _MouseActions {
 
     final scan = [..._windows.reversed];
     for (final it in scan) {
+      // skip invisible windows:
+      if (it.isClosed || it.isMinimized) continue;
+
       final p = it.decoratedPosition();
       final relative = event.relativeTo(p);
+
+      // check outside this window first:
+      if (relative.x < 0 || relative.y < 0) continue;
+      if (relative.x >= it.width || relative.y >= it.decoratedHeight) continue;
+
       final action = it._onMouseEvent(relative);
       if (action == null) continue;
 
