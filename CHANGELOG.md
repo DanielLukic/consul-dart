@@ -1,3 +1,14 @@
+## 0.0.9
+
+- Fix mouse events dispatch to visible windows only
+- Fix `AutoDispose` to dispose once only
+- Use minilog package
+- Make log window configurable
+- Expose `dart_consul/common.dart` with extensions and ansi helpers
+- Map <C-h> to <Backspace>
+- Update to `dart_console 4.0.1`
+- Add key input stealing for input fields etc
+
 ## 0.0.8
 
 - Fix desktop refresh when moving/resizing
