@@ -2,14 +2,15 @@ import '../dart_consul.dart';
 
 addDebugLog(
   Desktop desktop, {
-  String key = "<C-w>l",
+  String name = "Log",
+  String? key,
   WindowState state = WindowState.normal,
   Size size = const Size.autoWidth(10),
   Position position = const RelativePosition.fromBottom(yOffset: -1),
 }) {
   final window = Window(
-    "debug",
-    "Event Debug Log",
+    "log",
+    name,
     state: state,
     size: WindowSize.min(size),
     position: position,
@@ -23,6 +24,12 @@ addDebugLog(
     ellipsize: true,
   );
 
+  if (key != null) _addToggleKey(desktop, key, window);
+
+  desktop.openWindow(window);
+}
+
+void _addToggleKey(Desktop desktop, String key, Window window) {
   desktop.onKey(key, description: "Toggle showing debug log", action: () {
     final it = desktop.findWindow("debug");
     switch (it?.state) {
@@ -36,6 +43,4 @@ addDebugLog(
         desktop.minimizeWindow(window);
     }
   });
-
-  desktop.openWindow(window);
 }
