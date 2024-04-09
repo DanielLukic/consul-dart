@@ -7,6 +7,7 @@ addDebugLog(
   WindowState state = WindowState.normal,
   Size size = const Size.autoWidth(10),
   Position position = const RelativePosition.fromBottom(yOffset: -1),
+  bool Function(String)? filter,
 }) {
   final window = Window(
     "log",
@@ -18,9 +19,10 @@ addDebugLog(
 
   eventDebugLog.redraw = () => window.requestRedraw();
 
+  final f = filter ?? (e) => true;
   scrolled(
     window,
-    () => eventDebugLog.allReversed().join("\n"),
+    () => eventDebugLog.allReversed().where(f).join("\n"),
     ellipsize: true,
   );
 
