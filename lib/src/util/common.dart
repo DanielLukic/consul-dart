@@ -23,7 +23,7 @@ safely(Function block) {
   }
 }
 
-extension KotlinEsqueOps<T> on T {
+extension ConsulKotlinEsqueOps<T> on T {
   /// Kotlin-esque "operator" to take `this` if [condition] is `true`, or else return `null`.
   T? takeIf(bool condition) => condition ? this : null;
 
@@ -38,7 +38,7 @@ extension KotlinEsqueOps<T> on T {
   }
 }
 
-extension ListExtensions<E> on List<E> {
+extension ConsulListExtensions<E> on List<E> {
   /// Drop first [count] items from `this` list, returning the remainder as a new list.
   List<E> drop(int count) => sublist(min(count, length));
 
@@ -81,13 +81,13 @@ extension ListExtensions<E> on List<E> {
   List<E> takeLast(int count) => sublist(max(0, length - count));
 }
 
-extension HexList on List<int> {
+extension ConsulHexList on List<int> {
   /// Convert the given `List<int>` into a hex string representation of the low 8 bits of each int.
   String toByteHexString({String delimiter = ""}) =>
       map((e) => e.toHex(2).toUpperCase()).join(delimiter);
 }
 
-extension IntExtensions on int {
+extension ConsulIntExtensions on int {
   // Turn this int into a hex string, limiting to the given [length]. For
   // bytes the length would be 2 etc.
   String toHex(int length) => toRadixString(16).padLeft(length).take(length);
@@ -102,7 +102,7 @@ extension IntExtensions on int {
   Duration get seconds => Duration(seconds: this);
 }
 
-extension StringExtensions on String {
+extension ConsulStringExtensions on String {
   /// Remove the last [count] bytes from this [String]. Returns empty
   /// [String] if [count] >= [length].
   String dropLast(int count) => substring(0, max(0, length - count));
