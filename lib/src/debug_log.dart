@@ -1,6 +1,6 @@
 import '../dart_consul.dart';
 
-addDebugLog(
+Window addDebugLog(
   Desktop desktop, {
   String name = "Log",
   String? key,
@@ -29,6 +29,8 @@ addDebugLog(
   if (key != null) _addToggleKey(desktop, key, window);
 
   desktop.openWindow(window);
+
+  return window;
 }
 
 void _addToggleKey(Desktop desktop, String key, Window window) {
