@@ -103,6 +103,10 @@ extension ConsulIntExtensions on int {
 }
 
 extension ConsulStringExtensions on String {
+  /// Remove the first [count] bytes from this [String]. Returns empty
+  /// [String] if [count] >= [length].
+  String drop(int count) => substring(min(count, length));
+
   /// Remove the last [count] bytes from this [String]. Returns empty
   /// [String] if [count] >= [length].
   String dropLast(int count) => substring(0, max(0, length - count));
