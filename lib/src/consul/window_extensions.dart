@@ -28,6 +28,8 @@ extension WindowExtensions on Window {
 
   int get height => size.current.height;
 
+  int get decoratedHeight => size.current.height + (undecorated ? 0 : 1);
+
   /// Ensure the window [position] is an [AbsolutePosition]. This is required
   /// for some operations.
   void fixPosition() => position = decoratedPosition();
