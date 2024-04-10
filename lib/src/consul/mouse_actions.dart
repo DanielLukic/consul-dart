@@ -96,14 +96,15 @@ abstract class BaseOngoingMouseAction implements OngoingMouseAction {
   @override
   var done = false;
 
-  BaseOngoingMouseAction(this.window, this.event, this.sendMessage);
+  BaseOngoingMouseAction(this.window, this.event)
+      : sendMessage = window.sendMessage;
 }
 
 /// Predefined action to close the window that generates this action.
 /// Triggers on button release. Uses the [Desktop] built-in "close-window"
 /// message.
 class CloseWindowAction extends BaseOngoingMouseAction {
-  CloseWindowAction(super.window, super.event, super.sendMessage);
+  CloseWindowAction(super.window, super.event);
 
   @override
   onMouseEvent(MouseEvent event) {
@@ -119,7 +120,7 @@ class CloseWindowAction extends BaseOngoingMouseAction {
 /// Predefined action to toggle maximize the window that generates this action.
 /// Triggers on button release.
 class MaximizeWindowAction extends BaseOngoingMouseAction {
-  MaximizeWindowAction(super.window, super.event, super.sendMessage);
+  MaximizeWindowAction(super.window, super.event);
 
   @override
   onMouseEvent(MouseEvent event) {
@@ -135,7 +136,7 @@ class MaximizeWindowAction extends BaseOngoingMouseAction {
 /// Predefined action to minimize the window that generates this action.
 /// Triggers on button release.
 class MinimizeWindowAction extends BaseOngoingMouseAction {
-  MinimizeWindowAction(super.window, super.event, super.sendMessage);
+  MinimizeWindowAction(super.window, super.event);
 
   @override
   onMouseEvent(MouseEvent event) {
@@ -152,7 +153,7 @@ class MinimizeWindowAction extends BaseOngoingMouseAction {
 class MoveWindowAction extends BaseOngoingMouseAction {
   late final AbsolutePosition _basePosition;
 
-  MoveWindowAction(super.window, super.event, super.sendMessage) {
+  MoveWindowAction(super.window, super.event) {
     _basePosition = window.position.toAbsolute(
       window._desktopSize(),
       window.size.current,
@@ -173,7 +174,7 @@ class MoveWindowAction extends BaseOngoingMouseAction {
 class ResizeWindowAction extends BaseOngoingMouseAction {
   final Size _baseSize;
 
-  ResizeWindowAction(super.window, super.event, super.sendMessage)
+  ResizeWindowAction(super.window, super.event)
       : _baseSize = window.size.current;
 
   @override
@@ -187,7 +188,7 @@ class ResizeWindowAction extends BaseOngoingMouseAction {
 
 /// Predefined action to raise/restore the window that generates this action.
 class RaiseWindowAction extends BaseOngoingMouseAction {
-  RaiseWindowAction(super.window, super.event, super.sendMessage) {
+  RaiseWindowAction(super.window, super.event) {
     sendMessage(("raise-window", window));
     done = true;
   }

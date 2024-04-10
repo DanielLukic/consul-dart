@@ -43,13 +43,13 @@ extension WindowMousing on Window {
         final x = (it.x - _controlsOffset) ~/ 3 * 3 + _controlsOffset + 1;
         final control = ansiStripped(_titlebar).substring(x, x + 1);
         return switch (control) {
-          "X" => CloseWindowAction(this, it, sendMessage),
-          "O" => MaximizeWindowAction(this, it, sendMessage),
-          "_" => MinimizeWindowAction(this, it, sendMessage),
+          "X" => CloseWindowAction(this, it),
+          "O" => MaximizeWindowAction(this, it),
+          "_" => MinimizeWindowAction(this, it),
           _ => null,
         };
       } else if (movable) {
-        return MoveWindowAction(this, it, sendMessage);
+        return MoveWindowAction(this, it);
       }
       return null;
     }
@@ -60,7 +60,7 @@ extension WindowMousing on Window {
     if (isLmbDown && it.y == height - 1 && it.x == width - 1 && resizable) {
       if (!isMaximized) {
         sendMessage(("raise-window", this));
-        return ResizeWindowAction(this, it, sendMessage);
+        return ResizeWindowAction(this, it);
       }
     }
 
@@ -68,8 +68,7 @@ extension WindowMousing on Window {
     if (it.x >= 0 && it.x < width && it.y > 0 && it.y < height) {
       final consumed = onMouseEvent(it);
       if (consumed != null) return consumed;
-
-      if (isLmbDown) return RaiseWindowAction(this, it, sendMessage);
+      if (isLmbDown) return RaiseWindowAction(this, it);
     }
 
     // no action here, pass on null to let someone else handle it:
