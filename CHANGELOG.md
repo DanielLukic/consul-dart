@@ -1,3 +1,8 @@
+## 0.0.10
+
+- Allow ANSI in desktop background
+- Simplify `BaseOngoingMouseAction` (for krok term)
+
 ## 0.0.9
 
 - Fix mouse events dispatch to visible windows only
