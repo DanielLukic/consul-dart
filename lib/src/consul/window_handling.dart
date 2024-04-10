@@ -7,7 +7,7 @@ abstract mixin class _WindowHandling {
 
   final _restoreSizes = <Window, Size>{};
 
-  int _background = '░'.codeUnits.first;
+  Cell _background = Cell('░'.codeUnits.first);
 
   abstract Window? _focused;
 
@@ -26,7 +26,7 @@ abstract mixin class _WindowHandling {
     _updateOutput();
   }
 
-  _drawBackground() => _buffer.fill(_background);
+  _drawBackground() => _buffer.fillWithCell(_background);
 
   _drawWindows(int columns, int rows) {
     for (var window in _windows) {
@@ -83,7 +83,7 @@ abstract mixin class _WindowHandling {
 class MockWindowHandling with _WindowHandling {
   final lines = <int, String>{};
 
-  String get background => String.fromCharCode(_background);
+  String get background => String.fromCharCode(_background.charCode);
 
   void drawFrame() {
     _redrawDesktop(columns: 40, rows: 10);

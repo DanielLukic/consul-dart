@@ -28,6 +28,15 @@ class Buffer {
     }
   }
 
+  /// Fill the buffer with the given cell, allowing for ANSI sequences.
+  fillWithCell(Cell cell) {
+    for (var i = 0; i < _buffer.length; i++) {
+      for (var j = 0; j < _buffer[i].length; j++) {
+        _buffer[i][j] = cell;
+      }
+    }
+  }
+
   /// Draw [data], given as a String with '\n' as line separators, at the position [x], [y] into the
   /// buffer.
   drawBuffer(int x, int y, String data) {

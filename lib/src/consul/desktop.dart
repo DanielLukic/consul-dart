@@ -173,10 +173,16 @@ class Desktop
         description: "Close focused window", action: closeFocusedWindow);
   }
 
-  /// Change the background character. Does not redraw the desktop. Call [_redrawDesktop] as
-  /// necessary.
+  /// Change the background character to the given [charCode].
   setBackground(int charCode) {
-    _background = charCode;
+    _background = Cell(charCode);
+    redraw();
+  }
+
+  /// Change the background character to the given [Cell], allowing for ANSI
+  /// sequences in the background.
+  setBackgroundCell(Cell cell) {
+    _background = cell;
     redraw();
   }
 
