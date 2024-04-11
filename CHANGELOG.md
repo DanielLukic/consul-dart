@@ -1,3 +1,7 @@
+## 0.0.11
+
+- Fix partial matching with nested key maps
+
 ## 0.0.10
 
 - Allow ANSI in desktop background
