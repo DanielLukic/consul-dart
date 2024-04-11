@@ -7,7 +7,10 @@ class DebugLog {
 
   void Function() redraw = () {};
 
-  void clear() => _entries.clear();
+  void clear() {
+    _entries.clear();
+    redraw();
+  }
 
   void add(message) {
     while (_entries.length >= 100) {
