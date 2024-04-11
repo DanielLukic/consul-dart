@@ -1,9 +1,18 @@
 part of 'desktop.dart';
 
-enum _MatchResult {
-  gotNothing,
-  matchedAndTriggered,
-  partialOnly,
+class _MatchResult {
+  final Iterable<_Matcher> matches;
+  final Iterable<_Matcher> partials;
+  final Iterable<_Matcher> completed;
+
+  _MatchResult(this.matches, this.partials, this.completed);
+
+  _MatchResult operator +(_MatchResult other) {
+    return _MatchResult(matches + other.matches, partials + other.partials,
+        completed + other.completed);
+  }
+
+  static final empty = _MatchResult([], [], []);
 }
 
 mixin KeyHandling {
@@ -11,9 +20,7 @@ mixin KeyHandling {
 
   int get keyTimeoutMillis => _keyTimeoutMillis;
 
-  set keyTimeoutMillis(int value) {
-    _keyTimeoutMillis = value < 0 ? 0 : value;
-  }
+  set keyTimeoutMillis(int value) => _keyTimeoutMillis = value < 0 ? 0 : value;
 
   final _matchers = <_Matcher>[];
   Timer? _autoReset;
@@ -21,45 +28,28 @@ mixin KeyHandling {
   KeyHandling? _nested;
 
   _onKeyEvent(KeyEvent it) {
-    // if nested handler matched and triggered, reset "this" and stop here:
-    if (_nested?._match(it) == _MatchResult.matchedAndTriggered) {
-      _reset();
-    } else
-    // if "this" matched and triggered, reset the nested handler:
-    if (_match(it) == _MatchResult.matchedAndTriggered) {
-      _nested?._reset();
-    }
-  }
-
-  void _reset() {
-    _autoReset?.cancel();
-    _resetMatchers();
-  }
-
-  _MatchResult _match(KeyEvent it) {
     _autoReset?.cancel();
 
-    // provide the current event to all registered handlers:
-    for (final matcher in _matchers) {
-      matcher.consume(it);
-    }
-
-    final matches = _matchers.where((element) => element.isMatch());
-    final partials = _matchers.where((element) => element.isPartialMatch());
-
-    // eventDebugLog.add("matchers: $_matchers");
+    final nested = _nested?._match(it) ?? _MatchResult.empty;
+    final result = nested + _match(it);
+    final matches = result.matches;
+    final partials = result.partials;
 
     // if match found, but no partials, reset matching, trigger first match, and be done here:
     if (matches.isNotEmpty && partials.isEmpty) {
-      matches.firstOrNull?.trigger();
-      _resetMatchers();
-      return _MatchResult.matchedAndTriggered;
+      // prioritize completed partial matches. this allows a global "gx" to
+      // override a local "x".
+      final completed = result.completed.firstOrNull;
+      final match = completed ?? matches.firstOrNull;
+      match?.trigger();
+      _reset();
+      return;
     }
 
     // if nothing matched at all, immediately reset and be done:
     if (matches.isEmpty && partials.isEmpty) {
-      _resetMatchers();
-      return _MatchResult.gotNothing;
+      _reset();
+      return;
     }
 
     // otherwise we have partial matches.
@@ -69,16 +59,31 @@ mixin KeyHandling {
       _autoReset = Timer(keyTimeoutMillis.millis, () {
         final matches = _matchers.where((element) => element.isMatch());
         matches.firstOrNull?.trigger();
-        _resetMatchers();
+        _reset();
       });
     }
+  }
 
-    return _MatchResult.partialOnly;
+  void _reset() {
+    _nested?._reset();
+    _autoReset?.cancel();
+    _resetMatchers();
+  }
+
+  _MatchResult _match(KeyEvent it) {
+    for (final matcher in _matchers) {
+      matcher.consume(it);
+    }
+
+    final matches = _matchers.where((element) => element.isMatch());
+    final partials = _matchers.where((element) => element.isPartialMatch());
+    final completed = _matchers.where((element) => element.isCompletedMatch());
+    return _MatchResult(matches, partials, completed);
   }
 
   void _resetMatchers() {
-    for (var element in _matchers) {
-      element.reset();
+    for (final e in _matchers) {
+      e.reset();
     }
   }
 
@@ -115,20 +120,29 @@ class _Matcher {
   final String description;
   final Function _handler;
 
+  bool _wasPartial = false;
   String _buffer = "";
 
   _Matcher(this.patterns, this.description, this._handler);
 
-  void consume(KeyEvent it) => _buffer = _buffer + it.printable;
+  void consume(KeyEvent it) {
+    _buffer = _buffer + it.printable;
+    _wasPartial = _wasPartial | isPartialMatch();
+  }
 
   bool isPartialMatch() =>
       !isMatch() && patterns.any((it) => it.startsWith(_buffer));
+
+  bool isCompletedMatch() => isMatch() && _wasPartial;
 
   bool isMatch() => patterns.any((it) => it == _buffer);
 
   void trigger() => _handler();
 
-  void reset() => _buffer = "";
+  void reset() {
+    _wasPartial = false;
+    _buffer = "";
+  }
 
   @override
   String toString() => "$patterns <=> $_buffer";
