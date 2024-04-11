@@ -101,8 +101,6 @@ Window _prepareKeymapWindow(Desktop desktop) {
     description: "Scroll one line up",
     action: () {
       _y -= 1;
-      eventDebugLog.clear();
-      eventDebugLog.add("UP: $_y");
       window.requestRedraw();
     },
   );
@@ -113,8 +111,6 @@ Window _prepareKeymapWindow(Desktop desktop) {
     description: "Scroll one line down",
     action: () {
       _y += 1;
-      eventDebugLog.clear();
-      eventDebugLog.add("DOWN: $_y");
       window.requestRedraw();
     },
   );
