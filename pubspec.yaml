@@ -1,6 +1,6 @@
 name: dart_consul
 description: Basic console windowing system (TUI). Because why not. Supports keyboard and mouse driven interaction.
-version: 0.0.11
+version: 0.0.12
 homepage: https://github.com/DanielLukic/consul-dart
 repository: https://github.com/DanielLukic/consul-dart
 topics: [ console, terminal, tui ]

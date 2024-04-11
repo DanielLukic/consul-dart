@@ -1,3 +1,10 @@
+## 0.0.12
+
+- Fix partial matching with nested key maps
+- Fix mouse handling for undecorated (and tiny) windows
+- Autofill new buffers with space
+- Make debug log more versatile and reusable
+
 ## 0.0.11
 
 - Fix partial matching with nested key maps
