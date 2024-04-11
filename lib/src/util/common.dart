@@ -23,6 +23,17 @@ safely(Function block) {
   }
 }
 
+extension ConsulIterableOps<E> on Iterable<E> {
+  Iterable<E> operator +(Iterable<E> other) sync* {
+    for (final e in this) {
+      yield e;
+    }
+    for (final o in other) {
+      yield o;
+    }
+  }
+}
+
 extension ConsulKotlinEsqueOps<T> on T {
   /// Kotlin-esque "operator" to take `this` if [condition] is `true`, or else return `null`.
   T? takeIf(bool condition) => condition ? this : null;
