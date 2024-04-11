@@ -57,7 +57,6 @@ mixin KeyHandling {
     // auto reset these after a timeout if a timeout is set:
     if (_keyTimeoutMillis != 0) {
       _autoReset = Timer(keyTimeoutMillis.millis, () {
-        final matches = _matchers.where((element) => element.isMatch());
         matches.firstOrNull?.trigger();
         _reset();
       });
