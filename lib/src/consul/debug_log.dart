@@ -1,36 +1,36 @@
 part of 'desktop.dart';
 
-/// Basic debug log for "on-screen" (where else? ^^) display. Holds the ten last [RawEvent]s
-/// received from the terminal.
-class DebugLog {
-  final _entries = <(DateTime, String)>[];
+abstract interface class LogView {
+  List<String> get entries;
+}
 
-  void Function() redraw = () {};
+/// Basic auto-timestamped log.
+class DebugLog implements LogView {
+  final void Function() _redraw;
+
+  @override
+  final entries = <String>[];
+
+  final int maxSize;
+
+  DebugLog({required Function() redraw, this.maxSize = 100}) : _redraw = redraw;
 
   void clear() {
-    _entries.clear();
-    redraw();
+    entries.clear();
+    _redraw();
   }
 
   void add(message) {
-    while (_entries.length >= 100) {
-      _entries.removeAt(0);
+    while (entries.length >= maxSize) {
+      entries.removeLast();
     }
-    _entries.add((DateTime.now(), message.toString()));
-    redraw();
+    entries.insert(0, _timestamped(DateTime.now(), message.toString()));
+    _redraw();
   }
 
-  Iterable<String> allReversed() =>
-      _entries.reversed.map((e) => _timestamped(e));
-
-  Iterable<String> reversed(int count) =>
-      _entries.reversed.take(count).map((e) => _timestamped(e));
-
-  String _timestamped((DateTime, String) e) {
+  String _timestamped(DateTime dt, String message) {
     // lovely :-D
-    final timestamp = e.$1.toIso8601String().split("T").last.split('.').first;
-    return "$timestamp ${e.$2}";
+    final timestamp = dt.toIso8601String().split("T").last.split('.').first;
+    return "$timestamp $message";
   }
 }
-
-final eventDebugLog = DebugLog();

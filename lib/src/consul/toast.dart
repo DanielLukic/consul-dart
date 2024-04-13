@@ -40,7 +40,6 @@ abstract mixin class ToastHandling {
       _active = null;
       if (window != null) closeWindow(window);
       if (_pending.isEmpty) return;
-      eventDebugLog.add("pending toasts: $_pending");
       toast(_pending.removeAt(0));
     });
   }

@@ -43,7 +43,6 @@ gameOfLife(Desktop desktop) {
     window.onSizeChanged.add(update);
     window.onStateChanged.add(update);
     window.onMouseEvent = (it) {
-      eventDebugLog.add("???");
       gol.set(it.x * 2, it.y * 4);
       return null;
     };
@@ -77,7 +76,6 @@ class GOL {
   }
 
   void set(int x, int y) {
-    eventDebugLog.add("set $x $y");
     for (var i = 0; i < 5; i++) {
       x += _random.nextInt(7) - 3;
       y += _random.nextInt(7) - 3;

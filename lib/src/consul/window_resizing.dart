@@ -28,12 +28,6 @@ class _WindowResizing with KeyHandling implements WindowOverlay {
   }
 
   resize(int dx, int dy) {
-    eventDebugLog.clear();
-    eventDebugLog.add("resize: $dx $dy");
-    eventDebugLog.add("current: ${_window.size.current}");
-    eventDebugLog.add("min: ${_window.size.min}");
-    eventDebugLog.add("max: ${_window.size.max}");
-
     final current = _window.size.current;
     _window.fixPosition();
     _window._resizeClamped(current.width + dx, current.height + dy);

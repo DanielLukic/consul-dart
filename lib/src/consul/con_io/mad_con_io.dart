@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:dart_console/dart_console.dart' as dc;
 import 'package:dart_consul/src/consul/desktop.dart';
+import 'package:dart_minilog/dart_minilog.dart';
 
 import '../../../dart_consul.dart';
 import '../../util/common.dart';
@@ -61,7 +62,7 @@ class MadConIO with _InputMatching implements ConIO {
     final next = bytes.drop(skip);
     if (next.isNotEmpty) {
       final hex = next.toByteHexString(delimiter: ' ');
-      eventDebugLog.add("skip $skip => $hex");
+      logVerbose("skip $skip => $hex");
       _onStdIn(next);
     }
   }

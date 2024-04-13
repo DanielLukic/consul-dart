@@ -51,8 +51,6 @@ void _update(Window window) {
   });
 
   window.autoDispose("tick", tick);
-
-  eventDebugLog.add("stars: ${_starfield?.width} x ${_starfield?.height}");
 }
 
 class _Starfield {

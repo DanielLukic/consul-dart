@@ -97,7 +97,7 @@ class Desktop
     autoDispose(
       "sigwinch",
       ProcessSignal.sigwinch.watch().listen((event) {
-        eventDebugLog.add("terminal resized: $columns x $rows");
+        logVerbose("terminal resized: $columns x $rows");
         _sizeChange.add(Size(columns, rows));
       }),
     );

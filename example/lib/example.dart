@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_consul/dart_consul.dart';
+import 'package:dart_minilog/dart_minilog.dart';
 
 import 'src/demo_keys.dart';
 import 'src/gol.dart';
@@ -56,8 +57,10 @@ Future createDesktop(ConIO conIO) async {
   addDemoKeys(desktop);
   addAnsiDemo(desktop);
 
+  final log = DebugLog(redraw: () => desktop.redraw());
   addDebugLog(
     desktop,
+    log: log,
     key: "<C-w>l",
     position: RelativePosition.fromBottom(yOffset: -1),
   );
@@ -67,6 +70,16 @@ Future createDesktop(ConIO conIO) async {
     key: "<C-?>",
     position: RelativePosition.fromBottomRight(),
   );
+
+  // redirect log output into our [DebugLog]:
+  sink = (e) => log.add(e);
+  logLevel = LogLevel.verbose;
+
+  logVerbose("verbose");
+  logDebug("debug");
+  logInfo("info");
+  logWarn("warn");
+  logError("error");
 
   return await desktop.run();
 }

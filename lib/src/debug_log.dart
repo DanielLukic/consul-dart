@@ -2,6 +2,7 @@ import '../dart_consul.dart';
 
 Window addDebugLog(
   Desktop desktop, {
+  required LogView log,
   String name = "Log",
   String? key,
   WindowState state = WindowState.normal,
@@ -17,12 +18,10 @@ Window addDebugLog(
     position: position,
   );
 
-  eventDebugLog.redraw = () => window.requestRedraw();
-
   final f = filter ?? (e) => true;
   scrolled(
     window,
-    () => eventDebugLog.allReversed().where(f).join("\n"),
+    () => log.entries.where(f).join("\n"),
     ellipsize: true,
   );
 
