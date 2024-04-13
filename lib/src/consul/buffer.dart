@@ -8,7 +8,7 @@ class Buffer {
 
   /// Create a new buffer with the given [width] and [height] as initial size.
   Buffer(this.width, this.height)
-      : _buffer = List.generate(height, (it) => List.filled(width, Cell(0)));
+      : _buffer = List.generate(height, (it) => List.filled(width, Cell(32)));
 
   /// Resize the buffer to the given [width] and [height], dropping all content if the size actually
   /// changed.
@@ -16,7 +16,7 @@ class Buffer {
     if (this.width == width && this.height == height) return;
     this.width = width;
     this.height = height;
-    _buffer = List.generate(height, (it) => List.filled(width, Cell(0)));
+    _buffer = List.generate(height, (it) => List.filled(width, Cell(32)));
   }
 
   /// Fill the buffer with the given character code.
