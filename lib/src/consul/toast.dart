@@ -8,7 +8,7 @@ abstract mixin class ToastHandling {
 
   void closeWindow(Window window);
 
-  void toast(anything) {
+  void toast(anything, {Duration duration = const Duration(seconds: 1)}) {
     if (_active != null) {
       _pending.add(anything.toString());
       return;
@@ -35,7 +35,7 @@ abstract mixin class ToastHandling {
     openWindow(window);
     _active = window;
 
-    Timer(2.seconds, () {
+    Timer(duration, () {
       final window = _active;
       _active = null;
       if (window != null) closeWindow(window);
