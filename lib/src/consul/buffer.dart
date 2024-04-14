@@ -1,5 +1,8 @@
 part of 'desktop.dart';
 
+/// The default border tiles used in [drawBorder].
+const defaultBorder = ['┏', '━', '┓', '┃', '┃', '┗', '━', '┛'];
+
 /// Generic char code buffer for pre-rendering a "screen" before dumping it into the console.
 class Buffer {
   int width;
@@ -17,6 +20,24 @@ class Buffer {
     this.width = width;
     this.height = height;
     _buffer = List.generate(height, (it) => List.filled(width, Cell(32)));
+  }
+
+  /// Draw a border using [style] as the pieces. Only the actual cells of the
+  /// border are changed. The inner area is not changed.
+  drawBorder(int x, int y, int width, int height,
+      [List<String> style = defaultBorder]) {
+    for (var i = x; i < x + width; i++) {
+      drawBuffer(x + i, y, defaultBorder[1]);
+      drawBuffer(x + i, y + height - 1, defaultBorder[6]);
+    }
+    for (var i = y; i < y + height; i++) {
+      drawBuffer(x, y + i, defaultBorder[3]);
+      drawBuffer(x + width - 1, y + i, defaultBorder[4]);
+    }
+    drawBuffer(x, y, defaultBorder[0]);
+    drawBuffer(x + width - 1, y, defaultBorder[2]);
+    drawBuffer(x, y + height - 1, defaultBorder[5]);
+    drawBuffer(x + width - 1, y + height - 1, defaultBorder[7]);
   }
 
   /// Fill the buffer with the given character code.
