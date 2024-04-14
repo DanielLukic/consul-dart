@@ -47,7 +47,7 @@ class ControlKey extends KeyEvent {
       : super(alt: alt ?? false, ctrl: ctrl ?? false, shift: shift ?? false);
 
   @override
-  String toString() => "$key: alt=$alt ctrl=$ctrl shift=$shift";
+  String toString() => "<${key.name}>: alt=$alt ctrl=$ctrl   shift=$shift";
 
   @override
   String get printable {
@@ -67,16 +67,19 @@ class InputKey extends KeyEvent {
   InputKey(this.char, this.code, {bool? alt, bool? ctrl, bool? shift})
       : super(alt: alt ?? false, ctrl: ctrl ?? false, shift: shift ?? false);
 
+  String get _char => code == 32 ? '<Space>' : char;
+
   @override
-  String toString() => "$char($code): alt=$alt ctrl=$ctrl shift=$shift";
+  String toString() => "$_char($code): alt=$alt ctrl=$ctrl shift=$shift";
 
   @override
   String get printable {
-    if (!alt && !ctrl && !shift) return char;
+    if (!alt && !ctrl && !shift) return _char;
     final prefix = StringBuffer();
     if (alt) prefix.write("A-");
     if (ctrl) prefix.write("C-");
     if (shift) prefix.write("S-");
+    if (code == 32) return "<${prefix}Space>";
     return "<$prefix${char.toLowerCase()}>";
   }
 }
