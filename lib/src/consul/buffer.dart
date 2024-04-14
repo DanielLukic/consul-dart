@@ -58,6 +58,13 @@ class Buffer {
     }
   }
 
+  /// Draw [rows] at same column [x], one beneath the other, starting at [y].
+  drawRows(int x, int y, Iterable<String> rows) {
+    for (final (i, r) in rows.indexed) {
+      drawBuffer(x, y + i, r);
+    }
+  }
+
   /// Draw [data], given as a String with '\n' as line separators, at the position [x], [y] into the
   /// buffer.
   drawBuffer(int x, int y, String data) {
