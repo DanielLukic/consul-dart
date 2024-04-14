@@ -11,6 +11,8 @@ abstract mixin class _WindowHandling {
 
   abstract Window? _focused;
 
+  Window? get _dialog;
+
   void _updateRow(int row, String data);
 
   _removeWindow(Window window) {
@@ -22,14 +24,25 @@ abstract mixin class _WindowHandling {
     _buffer.update(columns, rows);
     _differ.update(columns, rows);
     _drawBackground();
-    _drawWindows(columns, rows);
+    _drawWindows(columns, rows, _windows);
+    _drawDialog(columns, rows);
     _updateOutput();
   }
 
   _drawBackground() => _buffer.fillWithCell(_background);
 
-  _drawWindows(int columns, int rows) {
-    for (var window in _windows) {
+  void _drawDialog(int columns, int rows) {
+    final dialog = _dialog;
+    if (dialog != null) {
+      final background = _buffer.frame().split('\n');
+      final dimmed = background.map((e) => e.stripped().dim().gray());
+      _buffer.drawRows(0, 0, dimmed);
+      _drawWindows(columns, rows, [dialog]);
+    }
+  }
+
+  _drawWindows(int columns, int rows, List<Window> windows) {
+    for (var window in windows) {
       if (window.state == WindowState.minimized) continue;
       _layoutWindow(window);
 
@@ -84,6 +97,9 @@ class MockWindowHandling with _WindowHandling {
   final lines = <int, String>{};
 
   String get background => String.fromCharCode(_background.charCode);
+
+  @override
+  Window? get _dialog => null;
 
   void drawFrame() {
     _redrawDesktop(columns: 40, rows: 10);

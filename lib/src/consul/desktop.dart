@@ -11,6 +11,7 @@ import 'package:rxdart/transformers.dart';
 part 'buffer.dart';
 part 'con_io.dart';
 part 'debug_log.dart';
+part 'dialog_handling.dart';
 part 'focus_handling.dart';
 part 'key_event.dart';
 part 'key_handling.dart';
@@ -50,6 +51,7 @@ class Desktop
         FocusHandling,
         KeyHandling,
         ToastHandling,
+        _DialogHandling,
         _MouseActions,
         _WindowHandling {
   final ConIO _conIO;
@@ -121,6 +123,12 @@ class Desktop
   void handleStolen(KeyEvent it) => _handleKeyEvent(it, false);
 
   void _handleKeyEvent(KeyEvent it, [bool allowStealing = true]) {
+    final dialog = _dialog;
+    if (dialog != null) {
+      dialog._onKeyEvent(it);
+      return;
+    }
+
     if (_keyStealer != null && allowStealing) {
       _keyStealer!(it);
       return;

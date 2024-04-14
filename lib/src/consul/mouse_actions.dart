@@ -7,6 +7,8 @@ part of 'desktop.dart';
 abstract mixin class _MouseActions {
   Size get size;
 
+  Window? get _dialog;
+
   List<Window> get _windows;
 
   OngoingMouseAction? _ongoingMouseAction;
@@ -21,7 +23,9 @@ abstract mixin class _MouseActions {
       return;
     }
 
-    final scan = [..._windows.reversed];
+    // if a dialog is open, it can be the only target:
+    final dialog = _dialog;
+    final scan = dialog != null ? [dialog] : [..._windows.reversed];
     for (final it in scan) {
       // skip invisible windows:
       if (it.isClosed || it.isMinimized) continue;
