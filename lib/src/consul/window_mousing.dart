@@ -35,37 +35,13 @@ extension WindowMousing on Window {
     final isLmbDown =
         it is MouseButtonEvent && it.kind == MouseButtonKind.lmbDown;
 
-    // check for titlebar click:
-    if (isLmbDown && it.y == 0 && it.x >= 0 && it.x < width) {
-      sendMessage(("raise-window", this));
-      if (it.x >= _controlsOffset) {
-        // lovely... :-D
-        final x = (it.x - _controlsOffset) ~/ 3 * 3 + _controlsOffset + 1;
-        final control = ansiStripped(_titlebar).substring(x, x + 1);
-        return switch (control) {
-          "X" => CloseWindowAction(this, it),
-          "O" => MaximizeWindowAction(this, it),
-          "_" => MinimizeWindowAction(this, it),
-          _ => null,
-        };
-      } else if (movable) {
-        return MoveWindowAction(this, it);
-      }
-      return null;
-    }
-
-    final height = _decoratedSize(this).current.height;
-
-    // check for resize control click:
-    if (isLmbDown && it.y == height - 1 && it.x == width - 1 && resizable) {
-      if (!isMaximized) {
-        sendMessage(("raise-window", this));
-        return ResizeWindowAction(this, it);
-      }
+    if (!undecorated) {
+      if (_isClickOnTitlebar(it)) return _handleClickOnTitlebar(it);
+      if (_isClickOnResize(it)) return _handleClickOnResize(it);
     }
 
     // check for inside click:
-    if (it.x >= 0 && it.x < width && it.y > 0 && it.y < height) {
+    if (it.x >= 0 && it.x < width && it.y >= 0 && it.y < height) {
       final consumed = onMouseEvent(it);
       if (consumed != null) return consumed;
       if (isLmbDown) return RaiseWindowAction(this, it);
@@ -73,5 +49,40 @@ extension WindowMousing on Window {
 
     // no action here, pass on null to let someone else handle it:
     return null;
+  }
+
+  bool _isClickOnTitlebar(MouseEvent it) =>
+      it.isDown && it.y == 0 && it.x >= 0 && it.x < width;
+
+  OngoingMouseAction? _handleClickOnTitlebar(MouseEvent it) {
+    sendMessage(("raise-window", this));
+    if (it.x >= _controlsOffset && _controlsOffset >= 0) {
+      // lovely... :-D
+      final x = (it.x - _controlsOffset) ~/ 3 * 3 + _controlsOffset + 1;
+      final control = ansiStripped(_titlebar).substring(x, x + 1);
+      return switch (control) {
+        "X" => CloseWindowAction(this, it),
+        "O" => MaximizeWindowAction(this, it),
+        "_" => MinimizeWindowAction(this, it),
+        _ => null,
+      };
+    } else if (movable) {
+      return MoveWindowAction(this, it);
+    }
+    // TODO allow titlebar intercept to handle custom controls
+    return null;
+  }
+
+  bool _isClickOnResize(MouseEvent it) {
+    if (!resizable) return false;
+    if (!it.isDown) return false;
+    // not using height - 1 because of decoration/titlebar:
+    return it.x == width - 1 && it.y == height;
+  }
+
+  OngoingMouseAction? _handleClickOnResize(MouseEvent it) {
+    if (isMaximized) return null;
+    sendMessage(("raise-window", this));
+    return ResizeWindowAction(this, it);
   }
 }

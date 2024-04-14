@@ -16,6 +16,7 @@ mixin _WindowDecoration {
     final List<String> lines;
     if (window.undecorated) {
       lines = [...buffer.split("\n").take(window.height)];
+      _controlsOffset = -1;
     } else {
       final controls = _buildControls(window);
       final title = _buildTitle(window, controls);
