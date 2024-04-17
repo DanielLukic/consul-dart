@@ -1,18 +1,20 @@
 part of 'desktop.dart';
 
-class _MatchResult {
+class MatchResult {
   final Iterable<_Matcher> matches;
   final Iterable<_Matcher> partials;
   final Iterable<_Matcher> completed;
 
-  _MatchResult(this.matches, this.partials, this.completed);
+  bool get isEmpty => matches.isEmpty && partials.isEmpty && completed.isEmpty;
 
-  _MatchResult operator +(_MatchResult other) {
-    return _MatchResult(matches + other.matches, partials + other.partials,
+  MatchResult(this.matches, this.partials, this.completed);
+
+  MatchResult operator +(MatchResult other) {
+    return MatchResult(matches + other.matches, partials + other.partials,
         completed + other.completed);
   }
 
-  static final empty = _MatchResult([], [], []);
+  static final empty = MatchResult([], [], []);
 }
 
 mixin KeyHandling {
@@ -30,8 +32,8 @@ mixin KeyHandling {
   _onKeyEvent(KeyEvent it) {
     _autoReset?.cancel();
 
-    final nested = _nested?._match(it) ?? _MatchResult.empty;
-    final result = nested + _match(it);
+    final nested = _nested?.match(it) ?? MatchResult.empty;
+    final result = nested + match(it);
     final matches = result.matches;
     final partials = result.partials;
 
@@ -69,7 +71,7 @@ mixin KeyHandling {
     _resetMatchers();
   }
 
-  _MatchResult _match(KeyEvent it) {
+  MatchResult match(KeyEvent it) {
     for (final matcher in _matchers) {
       matcher.consume(it);
     }
@@ -77,7 +79,7 @@ mixin KeyHandling {
     final matches = _matchers.where((element) => element.isMatch());
     final partials = _matchers.where((element) => element.isPartialMatch());
     final completed = _matchers.where((element) => element.isCompletedMatch());
-    return _MatchResult(matches, partials, completed);
+    return MatchResult(matches, partials, completed);
   }
 
   void _resetMatchers() {
