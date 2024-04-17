@@ -2,6 +2,8 @@ import 'package:dart_consul/dart_consul.dart';
 import 'package:dart_consul/src/util/common.dart';
 import 'package:test/test.dart';
 
+import 'helper.dart';
+
 final reset = ansiReset;
 final red = "".red().substring(0, 5);
 
@@ -128,5 +130,12 @@ void main() {
     sut.drawBuffer(-2, 0, "!!!".red());
     final actual = sut.frame();
     expect(actual, equals("$red!$reset    "));
+  });
+
+  test("draws border", () {
+    final sut = Buffer(5, 3);
+    sut.drawBorder(0, 0, 5, 3, simpleBorderStyle('*'));
+    sut.dump();
+    expect(sut.lines(), containsAllInOrder(["*****", "*   *", "*****"]));
   });
 }
