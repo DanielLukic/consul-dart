@@ -346,6 +346,12 @@ class Desktop
     if (current.closeable) closeWindow(current);
   }
 
+  /// Focus window identified by [id]. Nop if window not found or not focusable.
+  void focusById(String id) {
+    final match = _windows.firstWhereOrNull((e) => e.id == id);
+    if (match != null && match.focusable) raiseWindow(match);
+  }
+
   /// Forward [msg] to all subscribers.
   sendMessage(msg) => _subscriptions.sink.add(msg);
 
