@@ -1,8 +1,7 @@
 import 'package:dart_consul/dart_consul.dart';
-import 'package:dart_consul/src/util/common.dart';
 import 'package:test/test.dart';
 
-strip(String? it) => ansiStripped(it!);
+import 'helper.dart';
 
 void main() {
   late MockWindowHandling sut;
@@ -75,19 +74,3 @@ void main() {
     expect(sut.line(1), startsWith("░≡ name ≡≡≡ [_][O][X]"));
   });
 }
-
-Window minimalWindow({String? n, Position? p, Size? s, Set<WindowFlag>? f}) =>
-    Window(
-      "id",
-      n ?? "name",
-      position: p ?? AbsolutePosition(0, 0),
-      size: WindowSize.min(s ?? Size(20, 5)),
-      flags: f,
-      redraw: () => "X",
-    );
-
-fromTopLeft(int xo, int yo) =>
-    RelativePosition.fromTopLeft(xOffset: xo, yOffset: yo);
-
-fromBottomRight(int xo, int yo) =>
-    RelativePosition.fromBottomRight(xOffset: xo, yOffset: yo);
