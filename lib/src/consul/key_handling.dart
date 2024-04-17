@@ -15,6 +15,8 @@ class MatchResult {
   }
 
   static final empty = MatchResult([], [], []);
+
+  static final consumed = MatchResult([], [], []);
 }
 
 mixin KeyHandling {
