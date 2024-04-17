@@ -37,18 +37,16 @@ class Buffer {
   /// border are changed. The inner area is not changed.
   drawBorder(int x, int y, int width, int height,
       [List<String> style = defaultBorder]) {
-    for (var i = x; i < x + width; i++) {
-      drawBuffer(x + i, y, defaultBorder[1]);
-      drawBuffer(x + i, y + height - 1, defaultBorder[6]);
-    }
+    drawBuffer(x, y, ''.padRight(width, style[1]));
+    drawBuffer(x, y + height - 1, ''.padRight(width, style[6]));
     for (var i = y; i < y + height; i++) {
-      drawBuffer(x, y + i, defaultBorder[3]);
-      drawBuffer(x + width - 1, y + i, defaultBorder[4]);
+      drawBuffer(x, y + i, style[3]);
+      drawBuffer(x + width - 1, y + i, style[4]);
     }
-    drawBuffer(x, y, defaultBorder[0]);
-    drawBuffer(x + width - 1, y, defaultBorder[2]);
-    drawBuffer(x, y + height - 1, defaultBorder[5]);
-    drawBuffer(x + width - 1, y + height - 1, defaultBorder[7]);
+    drawBuffer(x, y, style[0]);
+    drawBuffer(x + width - 1, y, style[2]);
+    drawBuffer(x, y + height - 1, style[5]);
+    drawBuffer(x + width - 1, y + height - 1, style[7]);
   }
 
   /// Fill the buffer with the given character code.
