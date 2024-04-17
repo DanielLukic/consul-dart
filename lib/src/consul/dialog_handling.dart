@@ -48,6 +48,22 @@ abstract mixin class _DialogHandling {
 
   void openWindow(Window window);
 
+  Dialog openDialog() {
+    final w = Window(
+      'dialog',
+      'dialog',
+      position: RelativePosition.autoCentered(),
+      flags: {WindowFlag.undecorated, WindowFlag.unmovable},
+    );
+    openWindow(w);
+
+    final active = _dialog;
+    if (active != null) _dialogStack.add(active);
+    _dialog = w;
+
+    return Dialog(w, () => _popDialog(w));
+  }
+
   void query(String msg, void Function(QueryResult) onResult) {
     final dialog = _openQueryDialog(msg, onResult);
     if (dialog == null) return;
@@ -79,23 +95,67 @@ abstract mixin class _DialogHandling {
     window.onKey('<Return>', aliases: ['o', 'y'], description: 'Confirm dialog',
         action: () {
       onResult(QueryResult.positive);
-      _popDialog();
+      _popDialog(window);
     });
 
     window.onKey('<Escape>', aliases: ['q'], description: 'Cancel dialog',
         action: () {
       onResult(QueryResult.cancel);
-      _popDialog();
+      _popDialog(window);
     });
 
     return window;
   }
 
-  void _popDialog() {
-    final d = _dialog;
-    if (d == null) return;
-    closeWindow(d);
-    _dialog = null;
+  void _popDialog(Window window) {
+    closeWindow(window);
+    if (_dialog != window) {
+      logError('window not current dialog: $window <-> $_dialog');
+      return;
+    }
+    if (_dialog == window) _dialog = null;
     if (_dialogStack.isNotEmpty) _dialog = _dialogStack.removeLast();
+  }
+}
+
+class Dialog with AutoDispose, KeyHandling {
+  final Window _window;
+
+  Function _dismiss;
+
+  OnRedraw redraw = () => "";
+
+  Function(MouseEvent) onMouseEvent = (_) {};
+
+  set onKeyEvent(KeyHandling it) => _nested = it;
+
+  void requestRedraw() => _window.requestRedraw();
+
+  @override
+  MatchResult match(KeyEvent it) => _nested?.match(it) ?? MatchResult.empty;
+
+  Dialog(this._window, this._dismiss) {
+    _window._nested = this;
+    _window.chainOnMouseEvent((e) => onMouseEvent(e));
+    _window.redrawBuffer = () {
+      final content = redraw();
+      if (content == null) return null;
+      final rows = content.split('\n');
+      final width = rows.map((e) => e.ansiLength).fold(0, (w, r) => max(w, r));
+      final height = rows.length;
+      var resize = _window.size.current.width != width;
+      resize |= _window.size.current.height != height;
+      if (resize) {
+        _window.size = WindowSize.fixed(Size(width, height));
+      }
+
+      return content;
+    };
+  }
+
+  void dismiss() {
+    disposeAll();
+    _dismiss();
+    _dismiss = () {};
   }
 }
