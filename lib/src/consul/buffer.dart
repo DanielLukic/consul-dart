@@ -134,6 +134,9 @@ class Buffer {
 
   /// Return this buffer as a String with '\n' as line separator for dumping into the console.
   String frame() => _buffer.map((line) => line.join()).join('\n');
+
+  /// For consistency, [render] and [frame] can be used interchangeably.
+  String render() => frame();
 }
 
 /// Represents an ansi cell: A character, plus an optional ansi sequence before it and a "reset
