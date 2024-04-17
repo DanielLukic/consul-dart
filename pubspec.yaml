@@ -12,7 +12,7 @@ dependencies:
   ansi: ^0.4.2
   console: ^4.1.0
   dart_console: ^4.0.1
-  dart_minilog: ^0.0.1
+  dart_minilog: ^0.0.2
   rxdart: ^0.27.7
 
 dev_dependencies:
