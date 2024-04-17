@@ -210,6 +210,9 @@ class WindowSize {
   final Size min;
   final Size max;
 
+  @override
+  String toString() => 'current=$current,min=$min,max=$max';
+
   const WindowSize(this.current, this.min, this.max);
 
   const WindowSize.max(this.current)
