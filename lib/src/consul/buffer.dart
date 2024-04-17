@@ -3,6 +3,17 @@ part of 'desktop.dart';
 /// The default border tiles used in [drawBorder].
 const defaultBorder = ['┏', '━', '┓', '┃', '┃', '┗', '━', '┛'];
 
+const roundedBorder = ['╭', '─', '╮', '│', '┃', '╰', '─', '╯'];
+
+const inputBorder = [' ', ' ', ' ', '>', '<', '┈', '┈', '─'];
+
+List<String> simpleBorderStyle(String spec) {
+  if (spec.length == 1) {
+    return List.generate(8, (index) => spec[0]);
+  }
+  throw ArgumentError('not yet supported: $spec');
+}
+
 /// Generic char code buffer for pre-rendering a "screen" before dumping it into the console.
 class Buffer {
   int width;
