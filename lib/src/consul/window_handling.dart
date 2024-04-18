@@ -24,24 +24,27 @@ abstract mixin class _WindowHandling {
     _buffer.update(columns, rows);
     _differ.update(columns, rows);
     _drawBackground();
-    _drawWindows(columns, rows, _windows);
-    _drawDialog(columns, rows);
+    _drawWindows(columns, rows, _windows.where((e) => !e.alwaysOnTop));
+    if (_dialog != null) _dimContent();
+    if (_dialog != null) _drawDialog(columns, rows);
+    _drawWindows(columns, rows, _windows.where((e) => e.alwaysOnTop));
     _updateOutput();
   }
 
   _drawBackground() => _buffer.fillWithCell(_background);
 
-  void _drawDialog(int columns, int rows) {
-    final dialog = _dialog;
-    if (dialog != null) {
-      final background = _buffer.frame().split('\n');
-      final dimmed = background.map((e) => e.stripped().dim().gray());
-      _buffer.drawRows(0, 0, dimmed);
-      _drawWindows(columns, rows, [dialog]);
-    }
+  void _dimContent() {
+    final background = _buffer.frame().split('\n');
+    final dimmed = background.map((e) => e.stripped().dim().gray());
+    _buffer.drawRows(0, 0, dimmed);
   }
 
-  _drawWindows(int columns, int rows, List<Window> windows) {
+  void _drawDialog(int columns, int rows) {
+    final dialog = _dialog;
+    if (dialog != null) _drawWindows(columns, rows, [dialog]);
+  }
+
+  _drawWindows(int columns, int rows, Iterable<Window> windows) {
     for (var window in windows) {
       if (window.state == WindowState.minimized) continue;
       _layoutWindow(window);

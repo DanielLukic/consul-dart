@@ -195,6 +195,8 @@ class Size {
 /// [Window]s can have any combination of these flags set to change their
 /// behavior.
 enum WindowFlag {
+  /// Special in that these will be drawn even if a dialog is showing.
+  alwaysOnTop,
   closeable,
   maximizable,
   minimizable,

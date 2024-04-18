@@ -16,6 +16,8 @@ extension WindowExtensions on Window {
 
   bool get undecorated => flags.contains(WindowFlag.undecorated);
 
+  bool get alwaysOnTop => flags.contains(WindowFlag.alwaysOnTop);
+
   bool get isClosed => state == WindowState.closed;
 
   bool get isMaximized => state == WindowState.maximized;
