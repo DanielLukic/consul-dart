@@ -13,6 +13,8 @@ abstract mixin class _WindowHandling {
 
   Window? get _dialog;
 
+  bool get dimWhenOverlapped;
+
   void _updateRow(int row, String data);
 
   _removeWindow(Window window) {
@@ -45,25 +47,51 @@ abstract mixin class _WindowHandling {
   }
 
   _drawWindows(int columns, int rows, Iterable<Window> windows) {
-    for (var window in windows) {
+    final all = windows.toList();
+    for (final (i, window) in all.indexed) {
       if (window.state == WindowState.minimized) continue;
       _layoutWindow(window);
 
       final decoratedPosition = window.decoratedPosition();
       final buffer = window._decorateBuffer(window);
+      final pos = decoratedPosition;
       if (buffer != null) {
-        _buffer.drawBuffer(decoratedPosition.x, decoratedPosition.y, buffer);
+        _buffer.drawBuffer(pos.x, pos.y, buffer);
       }
 
       for (final overlay in window._overlays) {
         final inside = VirtualBuffer(
           _buffer,
-          decoratedPosition,
+          pos,
           window.size.current,
         );
         overlay.decorate(inside);
       }
+
+      if (dimWhenOverlapped) {
+        final dim = _shouldDim(i, all);
+        if (dim) _drawDimmed(window, pos);
+      }
     }
+  }
+
+  bool _shouldDim(int i, List<Window> all) {
+    var dim = false;
+    for (var j = i + 1; j < all.length; j++) {
+      final w = all[j];
+      if (w.isMinimized || w.isClosed) continue;
+      if (w.overlaps(all[i])) dim = true;
+      if (dim) break;
+    }
+    return dim;
+  }
+
+  void _drawDimmed(Window window, AbsolutePosition pos) {
+    final size = window._decoratedSize(window).current;
+    final String content = _buffer.grab(pos.x, pos.y, size.width, size.height);
+    final dimmed =
+        content.split('\n').map((e) => e.stripped().dim()).join('\n');
+    _buffer.drawBuffer(pos.x, pos.y, dimmed);
   }
 
   void _layoutWindow(Window window) {
@@ -98,6 +126,9 @@ abstract mixin class _WindowHandling {
 // TODO What would be the Dart equivalent of Kotlin `internal`?
 class MockWindowHandling with _WindowHandling {
   final lines = <int, String>{};
+
+  @override
+  bool get dimWhenOverlapped => false;
 
   String get background => String.fromCharCode(_background.charCode);
 

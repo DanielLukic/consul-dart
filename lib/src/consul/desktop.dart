@@ -59,6 +59,9 @@ class Desktop
   final _invalidated = StreamController<DateTime>.broadcast();
   final _sizeChange = StreamController<Size>.broadcast();
 
+  @override
+  var dimWhenOverlapped = true;
+
   FPS _maxFPS;
   StreamSubscription? _tick;
 
