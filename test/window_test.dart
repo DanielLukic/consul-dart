@@ -73,4 +73,25 @@ void main() {
     //then
     expect(sut.line(1), startsWith("░≡ name ≡≡≡ [_][O][X]"));
   });
+
+  test("overlaps", () {
+    final a = _window(5, 5);
+    final b = _window(7, 7);
+    expect(a.overlaps(b), isTrue);
+  });
+
+  test("does not overlap", () {
+    final a = _window(5, 5);
+    final b = _window(12, 5);
+    expect(a.overlaps(b), isFalse);
+  });
+
+  test("does not overlap", () {
+    final a = _window(5, 5);
+    final b = _window(10, 5);
+    expect(a.overlaps(b), isFalse);
+  });
 }
+
+Window _window(int x, int y) => Window('a', 'a',
+    position: AbsolutePosition(x, y), size: WindowSize.fixed(Size(5, 5)));

@@ -74,4 +74,20 @@ extension WindowExtensions on Window {
   }
 
   _resize_(Size size) => _resize(size.width, size.height);
+
+  bool overlaps(Window other) {
+    final aPos = decoratedPosition();
+    final bPos = other.decoratedPosition();
+    final aSize = _decoratedSize(this).current;
+    final bSize = _decoratedSize(other).current;
+    final xMin1 = aPos.x;
+    final xMin2 = bPos.x;
+    final xMax1 = aPos.x + aSize.width;
+    final xMax2 = bPos.x + bSize.width;
+    final yMin1 = aPos.y;
+    final yMin2 = bPos.y;
+    final yMax1 = aPos.y + aSize.height;
+    final yMax2 = bPos.y + bSize.height;
+    return xMin1 < xMax2 && xMin2 < xMax1 && yMin1 < yMax2 && yMin2 < yMax1;
+  }
 }
