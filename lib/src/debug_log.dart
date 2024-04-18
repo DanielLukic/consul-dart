@@ -3,6 +3,7 @@ import '../dart_consul.dart';
 Window addDebugLog(
   Desktop desktop, {
   required LogView log,
+  String id = "log",
   String name = "Log",
   String? key,
   WindowState state = WindowState.normal,
@@ -11,7 +12,7 @@ Window addDebugLog(
   bool Function(String)? filter,
 }) {
   final window = Window(
-    "log",
+    id,
     name,
     state: state,
     size: WindowSize.min(size),
