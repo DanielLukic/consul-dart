@@ -1,10 +1,6 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
-import 'dart:math';
-
 import 'package:dart_consul/dart_consul.dart';
-
-var _y = 0;
 
 void addAutoHelp(
   Desktop desktop, {
@@ -43,8 +39,6 @@ OngoingMouseAction? _showKeymapOnClick(
 }
 
 void _showKeymap(Desktop desktop, Window window) {
-  _y = 0;
-
   final it = desktop.findWindow("keymap");
   switch (it?.state) {
     case null:
@@ -68,25 +62,11 @@ Window _prepareKeymapWindow(Desktop desktop) {
 
   window.flags.remove(WindowFlag.resizable);
 
-  window.redrawBuffer = () {
-    final lines = _gatherKeymap(desktop.keyMap());
-
-    final available = window.height - 4;
-    final maxScroll = max(0, lines.length - available);
-    _y = _y.clamp(0, maxScroll);
-
-    final maxShown = min(_y + available, lines.length) - _y;
-
-    // TODO There really should be a Border + Buffer concept available for something like this...
-    // TODO But not for Version 1... :-D
-
-    final maxWidth = window.width - 4;
-    final controls = "Scroll down/up: <Down>/<Up> or j/k";
-    final shown = ["", ...lines.sublist(_y, _y + maxShown), "", controls];
-    final formatted = shown.map((e) => "║ ${e.padRight(maxWidth)} ║");
-    final bottom = "╚" + "".padRight(maxWidth + 2, "═") + "╝";
-    return [...formatted, bottom].join("\n");
-  };
+  scrolled(
+    window,
+    () => _gatherKeymap(desktop.keyMap()).join('\n'),
+    borderStyle: doubleBorder,
+  );
 
   window.onKey(
     "x",
@@ -95,34 +75,22 @@ Window _prepareKeymapWindow(Desktop desktop) {
     action: () => desktop.closeWindow(window),
   );
 
-  window.onKey(
-    "k",
-    aliases: ["<Up>"],
-    description: "Scroll one line up",
-    action: () {
-      _y -= 1;
-      window.requestRedraw();
-    },
-  );
-
-  window.onKey(
-    "j",
-    aliases: ["<Down>"],
-    description: "Scroll one line down",
-    action: () {
-      _y += 1;
-      window.requestRedraw();
-    },
-  );
-
   return window;
 }
 
 List<String> _gatherKeymap(KeyMap keyMap) {
+  final sections =
+      List<MapEntry<String, Iterable<(String, String)>>>.from(keyMap.entries);
+  sections.sort((a, b) {
+    if (a.key == "Desktop") return -1;
+    return a.key.compareTo(b.key);
+  });
+
   final lines = <String>[];
-  for (final section in keyMap.entries) {
+  for (final section in sections) {
     final header = section.key;
-    final entries = section.value.map((e) => "◉ ${e.$1}: ${e.$2}");
+    final entries = section.value.map((e) => "◉ ${e.$1}: ${e.$2}").toList();
+    entries.sort();
 
     // empty line before every section but the first:
     if (lines.isNotEmpty) lines.add("");
