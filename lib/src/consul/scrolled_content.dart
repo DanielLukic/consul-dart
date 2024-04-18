@@ -20,12 +20,14 @@ ScrolledContent scrolled(
   bool defaultShortcuts = true,
   bool mouseWheel = true,
   bool ellipsize = true,
+  List<String>? borderStyle,
 }) {
   final it = ScrolledContent(
     window,
     content,
     header: header,
     ellipsize: ellipsize,
+    borderStyle: borderStyle,
   );
   window.redrawBuffer = it.redrawBuffer;
   if (extendName) {
@@ -57,12 +59,14 @@ class ScrolledContent {
   String? header;
   bool ellipsize;
   int scrollOffset = 0;
+  List<String>? borderStyle;
 
   ScrolledContent(
     this.window,
     this.content, {
     this.header,
     this.ellipsize = false,
+    this.borderStyle,
   });
 
   void scroll(int delta) {
@@ -71,15 +75,17 @@ class ScrolledContent {
   }
 
   String? redrawBuffer() {
+    final height = borderStyle != null ? window.height - 2 : window.height;
+
     final rows = content()?.split("\n");
     if (rows == null) return null;
     final headerLines = header?.split("\n") ?? [];
     final offset = headerLines.length;
-    final maxScroll = max(0, rows.length - window.height - offset);
+    final maxScroll = max(0, rows.length - height - offset);
     scrollOffset = scrollOffset.clamp(0, maxScroll);
-    final maxHeight = min(rows.length, window.height - offset);
+    final maxHeight = min(rows.length, height - offset);
     var snap = rows.skip(scrollOffset).take(maxHeight).toList();
-    if (ellipsize && rows.length > window.height) {
+    if (ellipsize && rows.length > height) {
       if (scrollOffset > 0) {
         snap[0] = " ▲ ▲ ▲ ".gray().reset();
       }
@@ -87,6 +93,12 @@ class ScrolledContent {
         snap[snap.length - 1] = " ▼ ▼ ▼ ".gray().reset();
       }
     }
-    return (headerLines + snap).join("\n");
+    final data = (headerLines + snap).join("\n");
+    if (borderStyle == null) return data;
+
+    final buffer = Buffer(window.width, window.height);
+    buffer.drawBuffer(2, 1, data);
+    buffer.drawBorder(0, 0, window.width, window.height, borderStyle!);
+    return buffer.render();
   }
 }
