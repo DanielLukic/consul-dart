@@ -1,10 +1,8 @@
 part of 'desktop.dart';
 
-/// The default border tiles used in [drawBorder].
 const defaultBorder = ['┏', '━', '┓', '┃', '┃', '┗', '━', '┛'];
-
+const doubleBorder = ['╔', '═', '╗', '║', '║', '╚', '═', '╝'];
 const roundedBorder = ['╭', '─', '╮', '│', '┃', '╰', '─', '╯'];
-
 const inputBorder = [' ', ' ', ' ', '>', '<', '┈', '┈', '─'];
 
 List<String> simpleBorderStyle(String spec) {
