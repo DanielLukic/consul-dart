@@ -28,7 +28,7 @@ abstract mixin class ToastHandling {
       "Toast: $anything",
       size: WindowSize.fixed(Size(width + 4, 3)),
       position: RelativePosition.fromBottom(yOffset: -3),
-      flags: {WindowFlag.undecorated},
+      flags: {WindowFlag.alwaysOnTop, WindowFlag.undecorated},
       redraw: () => message,
     );
 
