@@ -2,7 +2,7 @@ part of 'desktop.dart';
 
 const defaultBorder = ['┏', '━', '┓', '┃', '┃', '┗', '━', '┛'];
 const doubleBorder = ['╔', '═', '╗', '║', '║', '╚', '═', '╝'];
-const roundedBorder = ['╭', '─', '╮', '│', '┃', '╰', '─', '╯'];
+const roundedBorder = ['╭', '─', '╮', '│', '│', '╰', '─', '╯'];
 const inputBorder = [' ', ' ', ' ', '>', '<', '┈', '┈', '─'];
 
 List<String> simpleBorderStyle(String spec) {
