@@ -15,7 +15,9 @@ class DesktopNotification {
 const int _maxNotifications = 5;
 const int _maxNotificationLines = 3;
 
-final List<(DesktopNotification, Window, DateTime)> _shownNotifications = [];
+typedef _NotificationEntry = (DesktopNotification, Window, DateTime);
+
+final List<_NotificationEntry> _shownNotifications = [];
 
 extension DesktopNotifications on Desktop {
   void clearNotifications() {
@@ -47,11 +49,8 @@ extension DesktopNotifications on Desktop {
     if (ts.difference(now).inMinutes < -10) _closeOldestNotification();
   }
 
-  void _closeOldestNotification() {
-    final (_, w, _) = _shownNotifications.removeAt(0);
-    closeWindow(w);
-    _updateNotifications();
-  }
+  void _closeOldestNotification() =>
+      _closeNotification(_shownNotifications.removeAt(0));
 
   void _updateNotifications() {
     var offset = 0;
@@ -82,14 +81,19 @@ extension DesktopNotifications on Desktop {
     w.chainOnMouseEvent((e) {
       if (e.isUp) {
         sendMessage(dn.onClickMsg);
-        _shownNotifications.remove(it);
-        closeWindow(w);
-        _updateNotifications();
+        _closeNotification(it);
       }
       return NopMouseAction(w);
     });
     _shownNotifications.add(it);
     openWindow(w);
+    _updateNotifications();
+  }
+
+  void _closeNotification(_NotificationEntry it) {
+    if (_selected == it) _selected = null;
+    _shownNotifications.remove(it);
+    closeWindow(it.$2);
     _updateNotifications();
   }
 
