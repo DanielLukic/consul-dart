@@ -6,9 +6,9 @@ abstract mixin class FocusHandling {
   void redraw();
   Window? _focused;
 
-  _updateFocus() {
+  _updateFocus({Window? override}) {
     final current = _focused;
-    _focused =
+    _focused = override ??
         _windows.lastWhereOrNull((it) => it.focusable && !it.isMinimized);
     if (current == _focused) return;
 

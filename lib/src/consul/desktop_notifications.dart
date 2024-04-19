@@ -19,12 +19,66 @@ typedef _NotificationEntry = (DesktopNotification, Window, DateTime);
 
 final List<_NotificationEntry> _shownNotifications = [];
 
+_NotificationEntry? _selected;
+
 extension DesktopNotifications on Desktop {
   void clearNotifications() {
     dispose('notifications-timer');
     while (_shownNotifications.isNotEmpty) {
       _closeOldestNotification();
     }
+  }
+
+  void triggerLatestNotification() {
+    final s = _shownNotifications.lastOrNull;
+    if (s != null) _triggerNotification(s);
+  }
+
+  void _triggerNotification(_NotificationEntry it) {
+    sendMessage(it.$1.onClickMsg);
+    _closeNotification(it);
+  }
+
+  void selectNotificationArea() {
+    if (_shownNotifications.isEmpty) return;
+
+    _selected ??= _shownNotifications.lastOrNull;
+    _forceFocusSelectedNotification();
+  }
+
+  void _forceFocusSelectedNotification() {
+    if (_selected != null) _updateFocus(override: _selected?.$2);
+    redraw();
+  }
+
+  void selectPreviousNotification() {
+    if (_shownNotifications.isEmpty) return;
+
+    final s = _selected;
+    if (s == null) {
+      _selected = _shownNotifications.lastOrNull;
+    } else {
+      var i = _shownNotifications.indexOf(s) - 1;
+      if (i < 0) i = _shownNotifications.length - 1;
+      _selected = _shownNotifications[i];
+    }
+
+    _forceFocusSelectedNotification();
+  }
+
+  void selectNextNotification() {
+    if (_shownNotifications.isEmpty) return;
+
+    final s = _selected;
+    if (s == null) {
+      _selected = _shownNotifications.firstOrNull;
+    } else {
+      var i = _shownNotifications.indexOf(s) + 1;
+      if (i > _shownNotifications.length - 1) i = 0;
+      _selected = _shownNotifications[i];
+    }
+
+    _forceFocusSelectedNotification();
   }
 
   void notify(DesktopNotification dn) {
@@ -75,14 +129,35 @@ extension DesktopNotifications on Desktop {
         WindowFlag.undecorated,
         WindowFlag.unmovable,
       },
-      redraw: () => b.frame(),
+      redraw: () => _drawNotification(dn).frame(),
     );
     final it = (dn, w, DateTime.timestamp());
+    w.onKey('<Escape>', description: 'Unfocus notification area', action: () {
+      _selected = null;
+      _updateFocus();
+      redraw();
+    });
+    w.onKey('<Return>', description: 'Trigger notification action', action: () {
+      _triggerNotification(it);
+    });
+    w.onKey('x', description: 'Close notification', action: () {
+      _closeNotification(it);
+      selectPreviousNotification();
+    });
+    w.onKey(
+      'j',
+      aliases: ['<Tab>'],
+      description: 'Previous notification',
+      action: () => selectPreviousNotification(),
+    );
+    w.onKey(
+      'k',
+      aliases: ['<S-Tab>'],
+      description: 'Next notification',
+      action: () => selectNextNotification(),
+    );
     w.chainOnMouseEvent((e) {
-      if (e.isUp) {
-        sendMessage(dn.onClickMsg);
-        _closeNotification(it);
-      }
+      if (e.isUp) _triggerNotification(it);
       return NopMouseAction(w);
     });
     _shownNotifications.add(it);
@@ -103,9 +178,13 @@ extension DesktopNotifications on Desktop {
     buffer.drawBuffer(40 - dn.tag.length, 1, dn.tag);
     buffer.drawBuffer(2, 1, dn.title);
     buffer.drawBuffer(2, 3, lines.join('\n'));
-    buffer.drawBorder(0, 0, buffer.width, buffer.height, roundedBorder);
+    final style = _isSelected(dn) ? doubleBorder : roundedBorder;
+    buffer.drawBorder(0, 0, buffer.width, buffer.height, style);
     return buffer;
   }
+
+  bool _isSelected(DesktopNotification dn) =>
+      _selected?.$1 == dn && _selected?.$2 == _focused;
 }
 
 extension on String {

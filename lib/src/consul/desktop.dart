@@ -174,6 +174,12 @@ class Desktop
         description: "Focus previous window", action: focusPrevious);
     onKey("<C-n>x",
         description: "Clear desktop notifications", action: clearNotifications);
+    onKey("<C-n><Return>",
+        description: "Trigger latest notification",
+        action: triggerLatestNotification);
+    onKey("<C-n>n",
+        description: "Select notification area",
+        action: selectNotificationArea);
     onKey("<C-w>_",
         description: "Minimize focused window", action: minimizeFocusedWindow);
     onKey("<C-w>m",
