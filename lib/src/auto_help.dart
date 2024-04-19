@@ -5,6 +5,7 @@ import 'package:dart_consul/dart_consul.dart';
 void addAutoHelp(
   Desktop desktop, {
   String key = "<C-?>",
+  List<String> aliases = const [],
   Position position = const RelativePosition.fromBottomRight(),
 }) {
   final button = Window(
@@ -20,6 +21,7 @@ void addAutoHelp(
   button.onMouseEvent = (it) => _showKeymapOnClick(it, desktop, window);
   desktop.onKey(
     key,
+    aliases: aliases,
     description: "Show help screen",
     action: () => _showKeymap(desktop, window),
   );
