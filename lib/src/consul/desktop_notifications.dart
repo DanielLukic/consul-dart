@@ -18,6 +18,13 @@ const int _maxNotificationLines = 3;
 final List<(DesktopNotification, Window, DateTime)> _shownNotifications = [];
 
 extension DesktopNotifications on Desktop {
+  void clearNotifications() {
+    dispose('notifications-timer');
+    while (_shownNotifications.isNotEmpty) {
+      _closeOldestNotification();
+    }
+  }
+
   void notify(DesktopNotification dn) {
     autoDispose(
       'notifications-timer',

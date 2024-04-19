@@ -172,6 +172,8 @@ class Desktop
     onKey("<Tab>", description: "Focus next window", action: focusNext);
     onKey("<S-Tab>",
         description: "Focus previous window", action: focusPrevious);
+    onKey("<C-n>x",
+        description: "Clear desktop notifications", action: clearNotifications);
     onKey("<C-w>_",
         description: "Minimize focused window", action: minimizeFocusedWindow);
     onKey("<C-w>m",
