@@ -11,6 +11,7 @@ import 'package:rxdart/transformers.dart';
 part 'buffer.dart';
 part 'con_io.dart';
 part 'debug_log.dart';
+part 'desktop_notifications.dart';
 part 'dialog_handling.dart';
 part 'focus_handling.dart';
 part 'key_event.dart';
