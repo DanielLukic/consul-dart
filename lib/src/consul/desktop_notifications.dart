@@ -71,7 +71,17 @@ extension DesktopNotifications on Desktop {
       },
       redraw: () => b.frame(),
     );
-    _shownNotifications.add((dn, w, DateTime.timestamp()));
+    final it = (dn, w, DateTime.timestamp());
+    w.chainOnMouseEvent((e) {
+      if (e.isUp) {
+        sendMessage(dn.onClickMsg);
+        _shownNotifications.remove(it);
+        closeWindow(w);
+        _updateNotifications();
+      }
+      return NopMouseAction(w);
+    });
+    _shownNotifications.add(it);
     openWindow(w);
     _updateNotifications();
   }
