@@ -77,8 +77,8 @@ enum MouseButtonKind {
 
   bool get isDown =>
       this == MouseButtonKind.lmbDown ||
-          this == MouseButtonKind.mmbDown ||
-          this == MouseButtonKind.rmbDown;
+      this == MouseButtonKind.mmbDown ||
+      this == MouseButtonKind.rmbDown;
 
   bool get isUp =>
       this == MouseButtonKind.lmbUp ||
