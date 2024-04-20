@@ -6,11 +6,11 @@ class MouseGestures with AutoDispose implements OngoingMouseAction {
   @override
   final Window window;
 
-  void Function(OngoingMouseAction) resetMouseAction;
+  final Desktop desktop;
 
-  /// Create a gesture detector for the [window], passing in the
-  /// [Desktop.resetMouseAction] function.
-  MouseGestures(this.window, this.resetMouseAction);
+  /// Create a gesture detector for the [window]. The [desktop] is required
+  /// to keep potentially other installed event handlers working.
+  MouseGestures(this.window, this.desktop);
 
   /// Will be called when a drag action is detected. Return
   /// [OngoingMouseAction.done] from this to stop intercepting mouse events.
@@ -31,6 +31,7 @@ class MouseGestures with AutoDispose implements OngoingMouseAction {
     }
 
     if (event.isDown) {
+      desktop.raiseWindow(window);
       _reset(start: event, trackClick: true);
       return this;
     }
@@ -47,7 +48,7 @@ class MouseGestures with AutoDispose implements OngoingMouseAction {
     } else {
       _clickedAt = null;
     }
-    resetMouseAction(this);
+    desktop.resetMouseAction(this);
   }
 
   MouseEvent? _start;
