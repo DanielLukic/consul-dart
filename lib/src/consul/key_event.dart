@@ -47,7 +47,7 @@ class ControlKey extends KeyEvent {
       : super(alt: alt ?? false, ctrl: ctrl ?? false, shift: shift ?? false);
 
   @override
-  String toString() => "<${key.name}>: alt=$alt ctrl=$ctrl   shift=$shift";
+  String toString() => "<${key.name}>: alt=$alt ctrl=$ctrl shift=$shift";
 
   @override
   String get printable {
