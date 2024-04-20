@@ -18,6 +18,7 @@ part 'key_event.dart';
 part 'key_handling.dart';
 part 'mouse_actions.dart';
 part 'mouse_event.dart';
+part 'mouse_gestures.dart';
 part 'toast.dart';
 part 'types.dart';
 part 'window.dart';
