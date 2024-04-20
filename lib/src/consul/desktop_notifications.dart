@@ -158,7 +158,7 @@ extension DesktopNotifications on Desktop {
     );
     w.chainOnMouseEvent((e) {
       if (e.isUp) _triggerNotification(it);
-      return NopMouseAction(w);
+      return ConsumedMouseAction(w);
     });
     _shownNotifications.add(it);
     openWindow(w);

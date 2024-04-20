@@ -75,8 +75,8 @@ abstract interface class OngoingMouseAction {
 
 /// Immediately done. Use this to block duplicate event handling in chained
 /// mouse event handlers.
-class NopMouseAction extends OngoingMouseAction {
-  NopMouseAction(this.window);
+class ConsumedMouseAction extends OngoingMouseAction {
+  ConsumedMouseAction(this.window);
 
   @override
   final Window window;

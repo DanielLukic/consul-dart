@@ -18,7 +18,7 @@ extension WindowMousing on Window {
   void onWheelUp(void Function() quickAction) {
     chainOnMouseEvent((e) => e.onWheelUp((it) {
           quickAction();
-          return NopMouseAction(this);
+          return ConsumedMouseAction(this);
         }));
   }
 
@@ -27,7 +27,7 @@ extension WindowMousing on Window {
   void onWheelDown(void Function() quickAction) {
     chainOnMouseEvent((e) => e.onWheelDown((it) {
           quickAction();
-          return NopMouseAction(this);
+          return ConsumedMouseAction(this);
         }));
   }
 
