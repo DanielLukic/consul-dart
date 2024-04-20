@@ -124,4 +124,9 @@ extension MouseEventExtensions on MouseEvent {
     }
     return null;
   }
+
+  /// Shortcut to handle a wheel event without triggering an
+  /// [OngoingMouseAction].
+  OngoingMouseAction? onWheel(OnMouseEvent handler) =>
+      this is MouseWheelEvent ? handler(this) : null;
 }

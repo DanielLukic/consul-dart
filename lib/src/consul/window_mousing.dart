@@ -31,6 +31,14 @@ extension WindowMousing on Window {
         }));
   }
 
+  /// Shortcut for the common functionality of handling a mouse wheel event.
+  void onWheel(void Function(MouseWheelEvent) quickAction) {
+    chainOnMouseEvent((e) => e.onWheel((it) {
+          quickAction(it as MouseWheelEvent);
+          return ConsumedMouseAction(this);
+        }));
+  }
+
   OngoingMouseAction? _onMouseEvent(MouseEvent it) {
     final isLmbDown =
         it is MouseButtonEvent && it.kind == MouseButtonKind.lmbDown;
