@@ -1,3 +1,14 @@
+## 0.0.13
+
+- Introduced `MouseGestures` to simply mouse event handling
+- Add basic query dialog system
+- Add basic DUI layout and components
+- Add basic dialog handling system
+- Add basic desktop notifications system
+- Add border styles
+- Add `WindowFlag.alwaysOnTop`
+- Add `Desktop.dimWhenOverlapped` option
+
 ## 0.0.12
 
 - Fix partial matching with nested key maps
