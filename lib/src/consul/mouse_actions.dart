@@ -13,6 +13,10 @@ abstract mixin class _MouseActions {
 
   OngoingMouseAction? _ongoingMouseAction;
 
+  void resetMouseAction(OngoingMouseAction it) {
+    if (_ongoingMouseAction == it) _ongoingMouseAction = null;
+  }
+
   void _handleMouseEvent(MouseEvent event) {
     final ongoing = _ongoingMouseAction;
     if (ongoing != null) {
