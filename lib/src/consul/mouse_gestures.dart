@@ -16,14 +16,14 @@ class MouseGestures with AutoDispose implements OngoingMouseAction {
   /// [OngoingMouseAction.done] from this to stop intercepting mouse events.
   OngoingMouseAction Function(MouseEvent)? onDrag;
 
-  void Function()? onClick;
-  void Function()? onDoubleClick;
-  void Function()? onLongClick;
+  void Function(MouseEvent)? onClick;
+  void Function(MouseEvent)? onDoubleClick;
+  void Function(MouseEvent)? onLongClick;
 
   /// Will be called with the click pattern. For example 'SSL' for double
   /// short plus long click. Note that [onMultiClick] will be called in
   /// addition to one of the more specific click callbacks.
-  void Function(String)? onMultiClick;
+  void Function(MouseEvent, String)? onMultiClick;
 
   OngoingMouseAction? process(MouseEvent event) {
     if (event is MouseWheelEvent) {
@@ -109,10 +109,13 @@ class MouseGestures with AutoDispose implements OngoingMouseAction {
     autoDispose(
         'autoClick',
         Timer(300.millis, () {
-          if (_clicks == 'S') onClick?.call();
-          if (_clicks == 'SS') onDoubleClick?.call();
-          if (_clicks == 'L') onLongClick?.call();
-          onMultiClick?.call(_clicks);
+          final s = _start;
+          if (s != null) {
+            if (_clicks == 'S') onClick?.call(s);
+            if (_clicks == 'SS') onDoubleClick?.call(s);
+            if (_clicks == 'L') onLongClick?.call(s);
+            onMultiClick?.call(s, _clicks);
+          }
           _reset();
         }));
   }
