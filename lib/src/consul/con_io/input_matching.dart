@@ -170,7 +170,6 @@ mixin _InputMatching {
   final _controls = {
     "<BACKSPACE>": Control.Backspace,
     "<DEL>": Control.Delete,
-    "<ENTER>": Control.Enter,
     "<ESC>": Control.Escape,
     "<ESC>OM": Control.NumPadEnter,
     "<ESC>OP": Control.F1,
