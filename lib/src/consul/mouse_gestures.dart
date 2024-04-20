@@ -78,7 +78,8 @@ class MouseGestures with AutoDispose implements OngoingMouseAction {
     final s = _start;
     if (s == null) throw StateError('ongoing detection without start');
     if (event.x != s.x || event.y != s.y) {
-      _delegate = onDrag?.call(s);
+      final d = onDrag ?? (s) => _StealUntilUp(window, s);
+      _delegate = d(s);
       _delegate?.onMouseEvent(event);
       return;
     }
@@ -114,5 +115,15 @@ class MouseGestures with AutoDispose implements OngoingMouseAction {
           onMultiClick?.call(_clicks);
           _reset();
         }));
+  }
+}
+
+class _StealUntilUp extends BaseOngoingMouseAction {
+  _StealUntilUp(super.window, super.event);
+
+  @override
+  void onMouseEvent(MouseEvent event) {
+    logInfo('stolen $event');
+    done = event.isUp;
   }
 }
