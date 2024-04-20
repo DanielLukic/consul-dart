@@ -149,7 +149,8 @@ mixin _InputMatching {
       if (kind != null) event = MouseButtonEvent(kind, x, y);
     }
 
-    final skip = min(bytes.indexOf('m'.codeUnitAt(0)), 'M'.codeUnitAt(0));
+    // printable <ESC> has 5 characters but is 1 byte in bytes. therefore: - 4
+    final skip = it.end - 4;
     return (event, skip);
   }
 
@@ -205,4 +206,12 @@ mixin _InputMatching {
     "<RETURN>": Control.Return,
     "<TAB>": Control.Tab,
   };
+}
+
+class TestMatching with _InputMatching {
+  (dynamic, int) matchEvent(List<int> bytes, String printable) =>
+      _matchEvent(bytes, printable);
+
+  (MouseEvent?, int) handleMouseEvent(List<int> bytes, RegExpMatch it) =>
+      _handleMouseEvent(bytes, it);
 }

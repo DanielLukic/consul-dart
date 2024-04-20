@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:dart_console/dart_console.dart' as dc;
 import 'package:dart_consul/src/consul/desktop.dart';
@@ -50,8 +49,10 @@ class MadConIO with _InputMatching implements ConIO {
     var (event, skip) = _matchEvent(bytes, printable);
 
     // if nothing matched, pump out an Unidentified event:
-    event = event ?? Unidentified(debug);
-    skip = bytes.length;
+    if (event == null) {
+      event = event ?? Unidentified(debug);
+      skip = bytes.length;
+    }
 
     // final line = "${event.toString().padRight(80)} RAW: $debug";
     // eventDebugLog.add(line);

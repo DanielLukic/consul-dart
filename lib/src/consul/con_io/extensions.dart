@@ -4,11 +4,11 @@ extension on int? {
   bool get isSigIntTrigger => this == 3;
 }
 
-extension on List<int> {
+extension ConsulPrintableList on List<int> {
   String get printable => map((it) => it.printable).join();
 }
 
-extension on int {
+extension ConsulPrintableInt on int {
   String get printable {
     if (this == 8) return "<BACKSPACE>";
     if (this == 9) return "<TAB>";
