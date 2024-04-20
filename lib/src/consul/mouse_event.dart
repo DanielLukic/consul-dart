@@ -26,6 +26,16 @@ sealed class MouseEvent {
     final self = this;
     return self is MouseButtonEvent && self.kind.isUp;
   }
+
+  bool get isWheelDown {
+    final self = this;
+    return self is MouseWheelEvent && self.kind.isDown ? true : false;
+  }
+
+  bool get isWheelUp {
+    final self = this;
+    return self is MouseWheelEvent && self.kind.isUp ? true : false;
+  }
 }
 
 MouseWheelKind mouseWheelKind(bool down) =>
@@ -34,6 +44,12 @@ MouseWheelKind mouseWheelKind(bool down) =>
 enum MouseWheelKind {
   wheelDown,
   wheelUp,
+}
+
+extension MouseWheelKindExtension on MouseWheelKind {
+  bool get isDown => this == MouseWheelKind.wheelDown;
+
+  bool get isUp => this == MouseWheelKind.wheelUp;
 }
 
 class MouseWheelEvent extends MouseEvent {
