@@ -240,6 +240,8 @@ class DuiTextInput extends DuiFocusable {
 
   Pattern? filter;
 
+  void Function(String) onChange = (_) {};
+
   DuiTextInput({
     required String id,
     this.limitLength,
@@ -264,10 +266,12 @@ class DuiTextInput extends DuiFocusable {
         if (m.end != checked.length) return MatchResult.empty;
       }
       input = checked;
+      onChange(input);
       return MatchResult.consumed;
     }
     if (it is ControlKey && it.key == Control.Backspace) {
       input = input.dropLast(1);
+      onChange(input);
       return MatchResult.consumed;
     }
     return MatchResult.empty;
