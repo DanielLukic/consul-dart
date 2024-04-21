@@ -38,7 +38,18 @@ mixin KeyHandling {
     _autoReset?.cancel();
 
     final nested = this.nested?.match(it) ?? MatchResult.empty;
-    final result = nested + match(it);
+    if (nested == MatchResult.consumed) {
+      _reset();
+      return nested;
+    }
+
+    final ours = match(it);
+    if (ours == MatchResult.consumed) {
+      _reset();
+      return ours;
+    }
+
+    final result = nested + ours;
     final matches = result.matches;
     final partials = result.partials;
 
