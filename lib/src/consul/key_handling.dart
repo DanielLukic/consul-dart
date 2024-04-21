@@ -39,12 +39,14 @@ mixin KeyHandling {
 
     final nested = this.nested?.match(it) ?? MatchResult.empty;
     if (nested == MatchResult.consumed) {
+      logVerbose('nested consumed -> reset');
       _reset();
       return nested;
     }
 
     final ours = match(it);
     if (ours == MatchResult.consumed) {
+      logVerbose('ours consumed -> reset');
       _reset();
       return ours;
     }

@@ -6,6 +6,7 @@ import 'package:dart_minilog/dart_minilog.dart';
 
 extension DialogExtensions on Dialog {
   void attach(DuiLayout layout) {
+    nested = layout;
     redraw = layout.redraw;
     onKeyEvent = layout;
     onMouseEvent = layout.onMouseEvent;
@@ -22,7 +23,7 @@ class DuiLayout with KeyHandling {
       if (e case DuiFocusable f) f.isFocused = (e) => e == focused;
     });
     focused = DuiContainer.focusablesFrom(_element).firstOrNull;
-    _nested = focused;
+    nested = focused;
   }
 
   Function() requestRedraw = () {};
@@ -39,24 +40,14 @@ class DuiLayout with KeyHandling {
       return _tabChange(-1);
     }
 
-    final f = focused;
-    if (f != null) {
-      final mr = f.consumeMatch(it);
-      if (mr == MatchResult.consumed) {
-        logVerbose('focused consumed $it');
-        return mr;
-      } else {
-        logInfo(mr);
-        return super.match(it);
-      }
-    } else {
-      final smr = super.match(it);
-      if (smr.isEmpty) {
-        return MatchResult.empty;
-      } else {
-        return smr;
-      }
-    }
+    final nested = this.nested?.match(it) ?? MatchResult.empty;
+    logVerbose('nested $nested');
+    if (nested == MatchResult.consumed) return nested;
+
+    final ours = super.match(it);
+    logVerbose('ours $ours');
+
+    return nested + ours;
   }
 
   MatchResult _tabChange(int direction) {
@@ -68,6 +59,7 @@ class DuiLayout with KeyHandling {
       final next = (index + direction) % focusable.length;
       focused = focusable[next];
     }
+    nested = focused;
     return MatchResult.consumed;
   }
 
@@ -76,8 +68,6 @@ class DuiLayout with KeyHandling {
 
 abstract class DuiFocusable extends BaseElement with KeyHandling {
   late bool Function(DuiFocusable) isFocused;
-
-  MatchResult consumeMatch(KeyEvent it) => MatchResult.empty;
 
   String renderUnfocused(int maxWidth);
 
@@ -218,7 +208,7 @@ class DuiTextInput extends DuiFocusable {
   }
 
   @override
-  MatchResult consumeMatch(KeyEvent it) {
+  MatchResult match(KeyEvent it) {
     if (it is InputKey) {
       if (it.printable == "<C-u>") input = "";
 
