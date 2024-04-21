@@ -101,8 +101,8 @@ mixin KeyHandling {
   }) {
     final patterns = [pattern, ...aliases];
     if (_matchers.any((m) => m.overlaps(patterns))) {
-      final found = _matchers.map((e) => (e.patterns, e.description));
-      throw ArgumentError("pattern overlap: $found", patterns.toString());
+      final found = _matchers.map((e) => (e.patterns, e.description)).join(',');
+      throw ArgumentError('pattern overlap: $found', patterns.join(','));
     }
     var it = _Matcher(patterns, description, action);
     _matchers.add(it);
