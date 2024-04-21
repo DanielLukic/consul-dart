@@ -253,7 +253,7 @@ class DuiPadding extends BaseElement implements DuiContainer {
   final int right;
   final int bottom;
 
-  DuiPadding.hv(DuiElement wrapped, {int h = 0, int v = 0})
+  DuiPadding.hv({int h = 0, int v = 0, required DuiElement wrapped})
       : this(wrapped, left: h, top: v, right: h, bottom: v);
 
   DuiPadding(

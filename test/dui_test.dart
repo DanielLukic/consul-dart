@@ -82,14 +82,14 @@ void main() {
     //given
     sut(DuiBorder(
       DuiPadding.hv(
-        DuiColumn(
+        h: 1,
+        v: 0,
+        wrapped: DuiColumn(
           [
             DuiPadding(DuiTitle("TITLE"), bottom: 1),
             DuiText("TEXT"),
           ],
         ),
-        h: 1,
-        v: 0,
       ),
       style: simpleBorderStyle('*'),
     ));
@@ -103,14 +103,14 @@ void main() {
     //given
     final sut = DuiBorder(
       DuiPadding.hv(
-        DuiColumn(
+        h: 1,
+        v: 0,
+        wrapped: DuiColumn(
           [
             DuiPadding(DuiTitle("TITLE"), bottom: 1),
             DuiText("TEXT"),
           ],
         ),
-        h: 1,
-        v: 0,
       ),
       style: simpleBorderStyle('*'),
     );
@@ -122,7 +122,9 @@ void main() {
     final layout = DuiLayout(
       DuiBorder(
         DuiPadding.hv(
-          DuiColumn(
+          h: 2,
+          v: 1,
+          wrapped: DuiColumn(
             [
               DuiPadding(DuiTitle('Set alert'), bottom: 1),
               DuiText.fromLines([
@@ -139,8 +141,6 @@ void main() {
               )
             ],
           ),
-          h: 2,
-          v: 1,
         ),
       ),
     );
