@@ -14,6 +14,9 @@ class MatchResult {
         completed + other.completed);
   }
 
+  @override
+  String toString() => '$matches,$partials,$completed';
+
   static final empty = MatchResult([], [], []);
 
   static final consumed = MatchResult([], [], []);
@@ -29,12 +32,12 @@ mixin KeyHandling {
   final _matchers = <Matcher>[];
   Timer? _autoReset;
 
-  KeyHandling? _nested;
+  KeyHandling? nested;
 
-  _onKeyEvent(KeyEvent it) {
+  MatchResult handleKeyEvent(KeyEvent it) {
     _autoReset?.cancel();
 
-    final nested = _nested?.match(it) ?? MatchResult.empty;
+    final nested = this.nested?.match(it) ?? MatchResult.empty;
     final result = nested + match(it);
     final matches = result.matches;
     final partials = result.partials;
@@ -47,13 +50,13 @@ mixin KeyHandling {
       final match = completed ?? matches.firstOrNull;
       match?.trigger();
       _reset();
-      return;
+      return result;
     }
 
     // if nothing matched at all, immediately reset and be done:
     if (matches.isEmpty && partials.isEmpty) {
       _reset();
-      return;
+      return result;
     }
 
     // otherwise we have partial matches.
@@ -65,10 +68,11 @@ mixin KeyHandling {
         _reset();
       });
     }
+    return result;
   }
 
   void _reset() {
-    _nested?._reset();
+    nested?._reset();
     _autoReset?.cancel();
     _resetMatchers();
   }

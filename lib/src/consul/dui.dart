@@ -22,6 +22,7 @@ class DuiLayout with KeyHandling {
       if (e case DuiFocusable f) f.isFocused = (e) => e == focused;
     });
     focused = DuiContainer.focusablesFrom(_element).firstOrNull;
+    _nested = focused;
   }
 
   Function() requestRedraw = () {};
@@ -45,6 +46,7 @@ class DuiLayout with KeyHandling {
         logVerbose('focused consumed $it');
         return mr;
       } else {
+        logInfo(mr);
         return super.match(it);
       }
     } else {
@@ -72,7 +74,7 @@ class DuiLayout with KeyHandling {
   DuiFocusable? focused;
 }
 
-abstract class DuiFocusable extends BaseElement {
+abstract class DuiFocusable extends BaseElement with KeyHandling {
   late bool Function(DuiFocusable) isFocused;
 
   MatchResult consumeMatch(KeyEvent it) => MatchResult.empty;

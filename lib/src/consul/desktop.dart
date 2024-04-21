@@ -130,7 +130,7 @@ class Desktop
   void _handleKeyEvent(KeyEvent it, [bool allowStealing = true]) {
     final dialog = _dialog;
     if (dialog != null) {
-      dialog._onKeyEvent(it);
+      dialog.handleKeyEvent(it);
       return;
     }
 
@@ -140,15 +140,15 @@ class Desktop
     }
 
     if (_keyInterceptor != null) {
-      _keyInterceptor?._onKeyEvent(it);
+      _keyInterceptor?.handleKeyEvent(it);
       return;
     }
 
     // when focus changes, reset unfocused window/handler:
-    if (_nested != _focused) _nested?._reset();
+    if (nested != _focused) nested?._reset();
 
-    _nested = _focused;
-    _onKeyEvent(it);
+    nested = _focused;
+    handleKeyEvent(it);
   }
 
   void _onMessage(dynamic msg) {

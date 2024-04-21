@@ -127,15 +127,15 @@ class Dialog with AutoDispose, KeyHandling {
 
   Function(MouseEvent) onMouseEvent = (_) {};
 
-  set onKeyEvent(KeyHandling it) => _nested = it;
+  set onKeyEvent(KeyHandling it) => nested = it;
 
   void requestRedraw() => _window.requestRedraw();
 
   @override
-  MatchResult match(KeyEvent it) => _nested?.match(it) ?? MatchResult.empty;
+  MatchResult match(KeyEvent it) => nested?.match(it) ?? MatchResult.empty;
 
   Dialog(this._window, this._dismiss) {
-    _window._nested = this;
+    _window.nested = this;
     _window.chainOnMouseEvent((e) => onMouseEvent(e));
     _window.redrawBuffer = () {
       final content = redraw();
