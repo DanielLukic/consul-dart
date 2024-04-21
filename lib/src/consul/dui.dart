@@ -398,9 +398,13 @@ class DuiColumn extends BaseElement implements DuiContainer {
 
 class DuiRow extends BaseElement implements DuiContainer {
   final List<DuiElement> _elements = [];
+  final bool autoSpace;
 
-  DuiRow([List<DuiElement> elements = const []]) {
-    _elements.addAll(elements);
+  DuiRow(List<DuiElement> elements, {this.autoSpace = true}) {
+    for (final e in elements) {
+      _elements.add(e);
+      if (autoSpace && e != elements.lastOrNull) _elements.add(DuiSpace());
+    }
   }
 
   void add(DuiElement element) => _elements.add(element);
