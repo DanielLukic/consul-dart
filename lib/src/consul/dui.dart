@@ -399,8 +399,13 @@ class DuiColumn extends BaseElement implements DuiContainer {
 class DuiRow extends BaseElement implements DuiContainer {
   final List<DuiElement> _elements = [];
   final bool autoSpace;
+  final bool autoAlignY;
 
-  DuiRow(List<DuiElement> elements, {this.autoSpace = true}) {
+  DuiRow(
+    List<DuiElement> elements, {
+    this.autoSpace = true,
+    this.autoAlignY = true,
+  }) {
     for (final e in elements) {
       _elements.add(e);
       if (autoSpace && e != elements.lastOrNull) _elements.add(DuiSpace());
@@ -431,7 +436,8 @@ class DuiRow extends BaseElement implements DuiContainer {
     final buffer = Buffer(width(), height());
     var column = 0;
     for (final e in _elements) {
-      buffer.drawBuffer(column, 0, e.render(buffer.width));
+      final y = autoAlignY ? (buffer.height - e.height()) ~/ 2 : 0;
+      buffer.drawBuffer(column, y, e.render(buffer.width));
       column += e.width();
     }
     return buffer.frame();
