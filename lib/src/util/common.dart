@@ -38,6 +38,9 @@ extension ConsulKotlinEsqueOps<T> on T {
   /// Kotlin-esque "operator" to take `this` if [condition] is `true`, or else return `null`.
   T? takeIf(bool condition) => condition ? this : null;
 
+  /// Kotlin-esque "operator" to take `this` if [condition] is `true`, or else return `null`.
+  T? takeIf_(bool Function(T) condition) => condition(this) ? this : null;
+
   /// Kotlin-esque "operator" to execute [transform] on `this`. Allows `?.let(...)` instead of
   /// `if (something != null) something."transform"` in case the latter reads worse.
   R let<R>(R Function(T) transform) => transform(this);
