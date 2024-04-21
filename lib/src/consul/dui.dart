@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:dart_consul/common.dart';
 import 'package:dart_consul/dart_consul.dart';
 import 'package:dart_minilog/dart_minilog.dart';
@@ -392,6 +393,59 @@ class DuiRow extends BaseElement implements DuiContainer {
       buffer.drawBuffer(column, 0, e.render(buffer.width));
       column += e.width();
     }
+    return buffer.frame();
+  }
+}
+
+class DuiSwitcher<T> extends DuiFocusable {
+  final List<(String, T)> entries;
+  late T? selected;
+
+  void Function(T) onSelection = (_) {};
+
+  DuiSwitcher(this.entries, {T? selected, bool defaultKeys = true}) {
+    this.selected = selected ?? entries.firstOrNull?.$2;
+    if (!defaultKeys) return;
+    onKey('j', description: 'Select next entry', action: () => select(1));
+    onKey('k', description: 'Select previous entry', action: () => select(-1));
+  }
+
+  void select(int direction) {
+    if (entries.isEmpty) return;
+    final index = entries.indexWhere((e) => e.$2 == selected);
+    if (selected == null || index == -1) {
+      if (direction > 0) selected = entries.firstOrNull?.$2;
+      if (direction < 0) selected = entries.lastOrNull?.$2;
+    } else {
+      final was = selected;
+      final target = (index + direction) % entries.length;
+      final now = entries[target].$2;
+      if (was != now) onSelection(now);
+      selected = now;
+    }
+  }
+
+  @override
+  int width() {
+    if (entries.isEmpty) return 0;
+    return entries.map((e) => e.$1.length).max + 4;
+  }
+
+  @override
+  int height() {
+    if (entries.isEmpty) return 0;
+    return 3;
+  }
+
+  @override
+  String renderUnfocused(int maxWidth) {
+    if (entries.isEmpty) return "";
+    final label = entries.where((e) => e.$2 == selected).firstOrNull?.$1;
+    if (label == null) return "";
+    final buffer = Buffer(width(), height());
+    buffer.drawBuffer(1, 1, label);
+    buffer.drawBuffer(width() - 2, 1, '◥');
+    buffer.drawBorder(0, 0, width(), height(), roundedBorder);
     return buffer.frame();
   }
 }
