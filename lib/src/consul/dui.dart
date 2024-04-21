@@ -19,8 +19,9 @@ class DuiLayout with KeyHandling {
   DuiLayout(this._element) {
     DuiContainer.doForEach(_element, (e) {
       e.requestRedraw = () => requestRedraw();
+      if (e case DuiFocusable f) f.isFocused = (e) => e == focused;
     });
-    _focused = DuiContainer.focusablesFrom(_element).firstOrNull;
+    focused = DuiContainer.focusablesFrom(_element).firstOrNull;
   }
 
   Function() requestRedraw = () {};
@@ -31,10 +32,13 @@ class DuiLayout with KeyHandling {
 
   @override
   MatchResult match(KeyEvent it) {
-    // TODO steal (s-)tab to change focus
-    // TODO focus on buttons
+    if (it.printable == '<Tab>') {
+      return _tabChange(1);
+    } else if (it.printable == '<S-Tab>') {
+      return _tabChange(-1);
+    }
 
-    final f = _focused;
+    final f = focused;
     if (f != null) {
       final mr = f.consumeMatch(it);
       if (mr == MatchResult.consumed) {
@@ -53,12 +57,36 @@ class DuiLayout with KeyHandling {
     }
   }
 
-  DuiFocusable? _focused;
+  MatchResult _tabChange(int direction) {
+    final focusable = DuiContainer.focusablesFrom(_element);
+    final index = focusable.indexWhere((e) => identical(e, focused));
+    if (index == -1) {
+      focused = focusable.firstOrNull;
+    } else {
+      final next = (index + direction) % focusable.length;
+      focused = focusable[next];
+    }
+    return MatchResult.consumed;
+  }
+
+  DuiFocusable? focused;
 }
 
-abstract interface class DuiFocusable {
-  MatchResult consumeMatch(KeyEvent it) {
-    return MatchResult.empty;
+abstract class DuiFocusable extends BaseElement {
+  late bool Function(DuiFocusable) isFocused;
+
+  MatchResult consumeMatch(KeyEvent it) => MatchResult.empty;
+
+  String renderUnfocused(int maxWidth);
+
+  @override
+  String render(int maxWidth) {
+    if (!isFocused(this)) return renderUnfocused(maxWidth);
+
+    final unfocused = renderUnfocused(maxWidth);
+    final buffer = Buffer(width(), height());
+    buffer.drawBuffer(0, 0, unfocused.stripped().whiteBright());
+    return buffer.frame();
   }
 }
 
@@ -169,7 +197,7 @@ class DuiText extends BaseElement {
   String render(int maxWidth) => text;
 }
 
-class DuiTextInput extends BaseElement implements DuiFocusable {
+class DuiTextInput extends DuiFocusable {
   String _input = "";
 
   int? limitLength;
@@ -218,7 +246,7 @@ class DuiTextInput extends BaseElement implements DuiFocusable {
   int height() => 3;
 
   @override
-  String render(int maxWidth) {
+  String renderUnfocused(int maxWidth) {
     final buffer = Buffer(width(), height());
     buffer.drawBuffer(1, 1, input);
     buffer.drawBorder(0, 0, width(), height(), inputBorder);
