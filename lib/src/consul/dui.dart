@@ -134,10 +134,14 @@ class DuiSpace extends BaseElement {
   String render(int maxWidth) => Buffer(width(), height()).render();
 }
 
-class DuiButton extends BaseElement {
+class DuiButton extends DuiFocusable {
   final String text;
 
-  DuiButton(this.text);
+  void Function() onClick = () {};
+
+  DuiButton(this.text, {bool defaultKeys = true}) {
+    onKey('<Return>', description: 'Trigger button', action: () => onClick());
+  }
 
   @override
   int width() =>
@@ -147,7 +151,7 @@ class DuiButton extends BaseElement {
   int height() => text.split('\n').length + 2;
 
   @override
-  String render(int maxWidth) {
+  String renderUnfocused(int maxWidth) {
     final buffer = Buffer(width(), height());
     buffer.drawBorder(0, 0, width(), height(), roundedBorder);
     buffer.drawBuffer(1, 1, text);
