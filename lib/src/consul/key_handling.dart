@@ -1,9 +1,9 @@
 part of 'desktop.dart';
 
 class MatchResult {
-  final Iterable<_Matcher> matches;
-  final Iterable<_Matcher> partials;
-  final Iterable<_Matcher> completed;
+  final Iterable<Matcher> matches;
+  final Iterable<Matcher> partials;
+  final Iterable<Matcher> completed;
 
   bool get isEmpty => matches.isEmpty && partials.isEmpty && completed.isEmpty;
 
@@ -26,7 +26,7 @@ mixin KeyHandling {
 
   set keyTimeoutMillis(int value) => _keyTimeoutMillis = value < 0 ? 0 : value;
 
-  final _matchers = <_Matcher>[];
+  final _matchers = <Matcher>[];
   Timer? _autoReset;
 
   KeyHandling? _nested;
@@ -104,7 +104,7 @@ mixin KeyHandling {
       final found = _matchers.map((e) => (e.patterns, e.description)).join(',');
       throw ArgumentError('pattern overlap: $found', patterns.join(','));
     }
-    var it = _Matcher(patterns, description, action);
+    var it = Matcher(patterns, description, action);
     _matchers.add(it);
     return Disposable.wrap(() => _matchers.remove(it));
   }
@@ -113,12 +113,12 @@ mixin KeyHandling {
       _matchers.map((e) => (e.patterns.toString(), e.description));
 }
 
-extension on _Matcher {
+extension on Matcher {
   bool overlaps(List<String> patterns) =>
       this.patterns.any((e) => patterns.contains(e));
 }
 
-class _Matcher {
+class Matcher {
   final List<String> patterns;
   final String description;
   final Function _handler;
@@ -126,7 +126,7 @@ class _Matcher {
   bool _wasPartial = false;
   String _buffer = "";
 
-  _Matcher(this.patterns, this.description, this._handler);
+  Matcher(this.patterns, this.description, this._handler);
 
   void consume(KeyEvent it) {
     _buffer = _buffer + it.printable;
