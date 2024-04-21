@@ -262,8 +262,8 @@ class DuiTextInput extends DuiFocusable {
       }
       if (filter != null) {
         final m = filter!.matchAsPrefix(checked);
-        if (m == null) return MatchResult.empty;
-        if (m.end != checked.length) return MatchResult.empty;
+        if (m == null) return super.match(it);
+        if (m.end != checked.length) return super.match(it);
       }
       input = checked;
       onChange(input);
@@ -274,7 +274,7 @@ class DuiTextInput extends DuiFocusable {
       onChange(input);
       return MatchResult.consumed;
     }
-    return MatchResult.empty;
+    return super.match(it);
   }
 
   @override
