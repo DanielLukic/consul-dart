@@ -14,7 +14,7 @@ void main() {
   });
 
   DuiLayout sut(DuiElement it) {
-    final sut = DuiLayout(it);
+    final sut = DuiLayout(root: it);
     final window = minimalWindow(f: {WindowFlag.undecorated});
     window.redrawBuffer = sut.redraw;
     out.addWindow(window);
@@ -23,11 +23,11 @@ void main() {
 
   test("draws simple button", () {
     //given
-    sut(DuiButton("TEXT"));
+    sut(DuiButton(id: '', text: "TEXT"));
     //when
     out.drawFrame();
     //then
-    expect(out.line(0), startsWith("TEXT "));
+    expect(out.line(1), startsWith('│TEXT│' ));
   });
 
   test("draws simple text", () {
@@ -120,7 +120,7 @@ void main() {
 
   test("actual dialog", () {
     final layout = DuiLayout(
-      DuiBorder(
+      root: DuiBorder(
         DuiPadding.hv(
           h: 2,
           v: 1,
@@ -134,9 +134,9 @@ void main() {
               DuiText(''),
               DuiRow(
                 [
-                  DuiTextInput(limitLength: 20, preset: "10.00"),
-                  DuiSpace(2),
-                  DuiButton("Create [<Return>]"),
+                  DuiTextInput(id: '', limitLength: 20, preset: "10.00"),
+                  DuiSpace(width: 2),
+                  DuiButton(id: '', text: "Create [<Return>]"),
                 ],
               )
             ],
@@ -150,7 +150,7 @@ void main() {
 
   test('border provides focusable element', () {
     //given
-    final container = DuiBorder(DuiTextInput());
+    final container = DuiBorder(DuiTextInput(id: ''));
     //when
     final actual = container.focusables();
     //then
@@ -159,7 +159,7 @@ void main() {
 
   test('column provides focusable elements', () {
     //given
-    final container = DuiColumn([DuiTextInput(), DuiTextInput()]);
+    final container = DuiColumn([DuiTextInput(id: ''), DuiTextInput(id: '')]);
     //when
     final actual = container.focusables();
     //then

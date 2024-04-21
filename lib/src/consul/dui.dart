@@ -15,15 +15,38 @@ extension DialogExtensions on Dialog {
   }
 }
 
+class DuiState {
+  final void Function() onChange;
+
+  final _data = <String, dynamic>{};
+
+  DuiState(this.onChange);
+
+  dynamic operator [](String key) => _data[key];
+
+  void operator []=(String key, dynamic value) {
+    if (identical(_data[key], value)) return;
+    if (_data[key] == value) return;
+    _data[key] = value;
+    onChange();
+  }
+}
+
 class DuiLayout with KeyHandling {
+  late final DuiState _state;
   final DuiElement _element;
 
-  DuiLayout(this._element) {
+  DuiLayout({DuiState? state, required DuiElement root}) : _element = root {
+    _state = state ?? DuiState(() => requestRedraw());
+
     DuiContainer.doForEach(_element, (e) {
       e.requestRedraw = () => requestRedraw();
       if (e case DuiFocusable f) f.isFocused = (e) => e == focused;
     });
-    focused = DuiContainer.focusablesFrom(_element).firstOrNull;
+    final focusables = DuiContainer.focusablesFrom(_element);
+    final focusedId = _state['DuiLayout#focused#id'];
+    focused = focusables.firstWhereOrNull((e) => e.id == focusedId);
+    focused ??= focusables.firstOrNull;
     nested = focused;
   }
 
@@ -60,6 +83,7 @@ class DuiLayout with KeyHandling {
       final next = (index + direction) % focusable.length;
       focused = focusable[next];
     }
+    _state['DuiLayout#focused#id'] = focused?.id;
     nested = focused;
     return MatchResult.consumed;
   }
@@ -68,6 +92,10 @@ class DuiLayout with KeyHandling {
 }
 
 abstract class DuiFocusable extends BaseElement with KeyHandling {
+  DuiFocusable(String id) {
+    super.id = id;
+  }
+
   late bool Function(DuiFocusable) isFocused;
 
   String renderUnfocused(int maxWidth);
@@ -140,7 +168,11 @@ class DuiButton extends DuiFocusable {
 
   void Function() onClick = () {};
 
-  DuiButton(this.text, {bool defaultKeys = true}) {
+  DuiButton({
+    required String id,
+    required this.text,
+    bool defaultKeys = true,
+  }) : super(id) {
     onKey('<Return>', description: 'Trigger button', action: () => onClick());
   }
 
@@ -208,7 +240,12 @@ class DuiTextInput extends DuiFocusable {
 
   Pattern? filter;
 
-  DuiTextInput({this.limitLength, String? preset, this.filter}) {
+  DuiTextInput({
+    required String id,
+    this.limitLength,
+    String? preset,
+    this.filter,
+  }) : super(id) {
     if (preset != null) _input = preset;
   }
 
@@ -403,7 +440,12 @@ class DuiSwitcher<T> extends DuiFocusable {
 
   void Function(T) onSelection = (_) {};
 
-  DuiSwitcher(this.entries, {T? selected, bool defaultKeys = true}) {
+  DuiSwitcher({
+    required String id,
+    required this.entries,
+    T? selected,
+    bool defaultKeys = true,
+  }) : super(id) {
     this.selected = selected ?? entries.firstOrNull?.$2;
     if (!defaultKeys) return;
     onKey('j', description: 'Select next entry', action: () => select(1));
