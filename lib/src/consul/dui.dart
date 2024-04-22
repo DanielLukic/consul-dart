@@ -149,15 +149,18 @@ abstract class BaseElement implements DuiElement {
 }
 
 class DuiSpace extends BaseElement {
-  final int size;
+  final int _width;
+  final int _height;
 
-  DuiSpace([this.size = 1]);
+  DuiSpace({int width = 1, int height = 1})
+      : _width = width,
+        _height = height;
 
   @override
-  int width() => size;
+  int width() => _width;
 
   @override
-  int height() => size;
+  int height() => _height;
 
   @override
   String render(int maxWidth) => Buffer(width(), height()).render();
