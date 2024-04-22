@@ -1,3 +1,13 @@
+## 0.0.14
+
+- Auto-raise window when using `MouseGestures`
+- Fix handling of multiple/fast mouse events
+- Provide <C-j> as is instead of mapped to <Enter>
+- Switch dialog elements via (S-)Tab
+- Improve DUI key handling
+- Add `DuiSwitcher` component
+- Introduce poor man's reactive `DuiState`
+
 ## 0.0.13
 
 - Introduced `MouseGestures` to simply mouse event handling
