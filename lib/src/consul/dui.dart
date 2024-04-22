@@ -92,7 +92,9 @@ class DuiLayout with KeyHandling {
 }
 
 abstract class DuiFocusable extends BaseElement with KeyHandling {
-  DuiFocusable(String id) {
+  bool enabled;
+
+  DuiFocusable(String id, this.enabled) {
     super.id = id;
   }
 
@@ -102,11 +104,20 @@ abstract class DuiFocusable extends BaseElement with KeyHandling {
 
   @override
   String render(int maxWidth) {
-    if (!isFocused(this)) return renderUnfocused(maxWidth);
+    final mod = isFocused(this)
+        ? whiteBright
+        : !enabled
+            ? gray
+            : null;
 
-    final unfocused = renderUnfocused(maxWidth);
+    if (mod == null) return renderUnfocused(maxWidth);
+
+    final unfocused = renderUnfocused(maxWidth).split('\n');
+    final modded = unfocused.map((e) => mod(e.stripped())).toList();
     final buffer = Buffer(width(), height());
-    buffer.drawBuffer(0, 0, unfocused.stripped().whiteBright());
+    for (var y = 0; y < height(); y++) {
+      buffer.drawBuffer(0, y, modded[y]);
+    }
     return buffer.frame();
   }
 }
@@ -118,7 +129,7 @@ abstract interface class DuiContainer {
 
   static List<DuiFocusable> focusablesFrom(DuiElement it) => switch (it) {
         DuiContainer x => x.focusables(),
-        DuiFocusable f => [f],
+        DuiFocusable f when f.enabled => [f],
         _ => const [],
       };
 
@@ -174,9 +185,12 @@ class DuiButton extends DuiFocusable {
   DuiButton({
     required String id,
     required this.text,
+    bool enabled = true,
     bool defaultKeys = true,
-  }) : super(id) {
-    onKey('<Return>', description: 'Trigger button', action: () => onClick());
+  }) : super(id, enabled) {
+    if (enabled) {
+      onKey('<Return>', description: 'Trigger button', action: () => onClick());
+    }
   }
 
   @override
@@ -250,7 +264,7 @@ class DuiTextInput extends DuiFocusable {
     this.limitLength,
     String? preset,
     this.filter,
-  }) : super(id) {
+  }) : super(id, true) {
     if (preset != null) _input = preset;
   }
 
@@ -462,7 +476,7 @@ class DuiSwitcher<T> extends DuiFocusable {
     required this.entries,
     T? selected,
     bool defaultKeys = true,
-  }) : super(id) {
+  }) : super(id, true) {
     this.selected = selected ?? entries.firstOrNull?.$2;
     if (!defaultKeys) return;
     onKey('j', description: 'Select next entry', action: () => select(1));
