@@ -1,6 +1,4 @@
-part of 'mad_con_io.dart';
-
-extension on int? {
+extension SigIntExtension on int? {
   bool get isSigIntTrigger => this == 3;
 }
 
@@ -28,16 +26,5 @@ extension ConsulPrintableInt on int {
   String get alphaChar => String.fromCharCode(96 + this);
 }
 
-extension on dc.Console {
-  set cursor(bool enabled) {
-    if (enabled) {
-      showCursor();
-    } else {
-      hideCursor();
-    }
-  }
-
-  set mouseMode(bool value) {
-    write("\x1b[?1000;1002;1003;1006;1015${value ? 'h' : 'l'}");
-  }
-}
+String mouseModeCode(bool value) =>
+    '\x1b[?1000;1002;1003;1006;1015${value ? 'h' : 'l'}';

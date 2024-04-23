@@ -2,17 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_console/dart_console.dart' as dc;
+import 'package:dart_consul/src/consul/con_io/extensions.dart';
 import 'package:dart_consul/src/consul/desktop.dart';
 import 'package:dart_minilog/dart_minilog.dart';
 
 import '../../../dart_consul.dart';
 import '../../util/common.dart';
-
-part 'extensions.dart';
-part 'input_matching.dart';
+import 'input_matching.dart';
 
 /// A [ConIO] implementation using [dart_console] for "raw mode" handling.
-class MadConIO with _InputMatching implements ConIO {
+class MadConIO with InputMatching implements ConIO {
   final _console = dc.Console();
   final _subscriptions = <StreamSubscription>[];
 
@@ -26,7 +25,7 @@ class MadConIO with _InputMatching implements ConIO {
   }
 
   _onStdIn(List<int> bytes) {
-    if (bytes.firstOrNull.isSigIntTrigger && !_interceptSigInt) {
+    if (bytes.firstOrNull.isSigIntTrigger && !interceptSigInt) {
       close();
       exit(0);
     }
@@ -46,7 +45,7 @@ class MadConIO with _InputMatching implements ConIO {
     final debug = RawEvent(bytes, printable);
 
     // otherwise filter what we need via patterns:
-    var (event, skip) = _matchEvent(bytes, printable);
+    var (event, skip) = matchEvent(bytes, printable);
 
     // if nothing matched, pump out an Unidentified event:
     if (event == null) {
@@ -54,11 +53,8 @@ class MadConIO with _InputMatching implements ConIO {
       skip = bytes.length;
     }
 
-    // final line = "${event.toString().padRight(80)} RAW: $debug";
-    // eventDebugLog.add(line);
-
-    if (event is KeyEvent) _keyEventHandler?.let((it) => it(event));
-    if (event is MouseEvent) _mouseEventHandler?.let((it) => it(event));
+    if (event is KeyEvent) onKeyEvent(event);
+    if (event is MouseEvent) onMouseEvent(event);
 
     final next = bytes.drop(skip);
     if (next.isNotEmpty) {
@@ -80,25 +76,14 @@ class MadConIO with _InputMatching implements ConIO {
     }
   }
 
-  var _interceptSigInt = false;
+  @override
+  bool interceptSigInt = false;
 
   @override
-  bool get interceptSigInt => _interceptSigInt;
+  KeyHandler onKeyEvent = (e) {};
 
   @override
-  set interceptSigInt(enabled) => _interceptSigInt = enabled;
-
-  @override
-  KeyHandler? get onKeyEvent => _keyEventHandler;
-
-  @override
-  set onKeyEvent(KeyHandler? value) => _keyEventHandler = value;
-
-  @override
-  MouseHandler? get onMouseEvent => _mouseEventHandler;
-
-  @override
-  set onMouseEvent(MouseHandler? value) => _mouseEventHandler = value;
+  MouseHandler onMouseEvent = (e) {};
 
   @override
   int columns() => _console.windowWidth;
@@ -115,4 +100,16 @@ class MadConIO with _InputMatching implements ConIO {
 
   @override
   void write(String buffer) => _console.write(buffer);
+}
+
+extension on dc.Console {
+  set cursor(bool enabled) {
+    if (enabled) {
+      showCursor();
+    } else {
+      hideCursor();
+    }
+  }
+
+  set mouseMode(bool value) => write(mouseModeCode(value));
 }

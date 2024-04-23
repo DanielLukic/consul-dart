@@ -1,4 +1,6 @@
 import 'package:dart_consul/dart_consul.dart';
+import 'package:dart_consul/src/consul/con_io/extensions.dart';
+import 'package:dart_consul/src/consul/con_io/input_matching.dart';
 import 'package:test/test.dart';
 
 // 1B 5B 3C 33 32 3B 36 39 3B 32 30 4D 1B 5B 3C 30 3B 36 39 3B 32 30 6D

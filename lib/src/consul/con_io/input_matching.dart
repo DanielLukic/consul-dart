@@ -1,12 +1,11 @@
-part of 'mad_con_io.dart';
+import 'package:dart_consul/common.dart';
+import 'package:dart_consul/dart_consul.dart';
+import 'package:dart_consul/src/consul/con_io/extensions.dart';
 
-mixin _InputMatching {
+mixin InputMatching {
   static const _esc = 0x1B;
   static const _ctl = 0x5B;
   static const _bs = 0x7F;
-
-  KeyHandler? _keyEventHandler;
-  MouseHandler? _mouseEventHandler;
 
   // mouse events with these groups:
   // 1. button/action info 2. x 3. y and 4. release/press (m/M)
@@ -19,7 +18,8 @@ mixin _InputMatching {
     return control != null ? ControlKey(control, alt: alt) : null;
   }
 
-  (dynamic, int) _matchEvent(List<int> bytes, String printable) {
+  (dynamic, int) matchEvent(List<int> bytes, [String? printable]) {
+    printable ??= bytes.printable;
     //
     // (pure madness :-D)
     //
@@ -154,7 +154,7 @@ mixin _InputMatching {
     return (event, skip);
   }
 
-  KeyEvent? _lookup(List<int> suffix, int mod) {
+  ControlKey? _lookup(List<int> suffix, int mod) {
     final stripped = [_esc, _ctl, ...suffix].printable;
     final found = _controls[stripped];
     if (found == null) return null;
@@ -207,10 +207,7 @@ mixin _InputMatching {
   };
 }
 
-class TestMatching with _InputMatching {
-  (dynamic, int) matchEvent(List<int> bytes, String printable) =>
-      _matchEvent(bytes, printable);
-
+class TestMatching with InputMatching {
   (MouseEvent?, int) handleMouseEvent(List<int> bytes, RegExpMatch it) =>
       _handleMouseEvent(bytes, it);
 }

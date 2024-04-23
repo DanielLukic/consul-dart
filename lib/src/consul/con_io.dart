@@ -7,10 +7,10 @@ abstract interface class ConIO {
   bool interceptSigInt = false;
 
   /// When set, will receive all understood [KeyEvent]s.
-  KeyHandler? onKeyEvent;
+  abstract KeyHandler onKeyEvent;
 
   /// When set, will receive all understood [MouseEvent]s.
-  MouseHandler? onMouseEvent;
+  abstract MouseHandler onMouseEvent;
 
   /// Current terminal width in characters.
   int columns();
