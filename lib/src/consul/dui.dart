@@ -33,6 +33,8 @@ class DuiState {
 }
 
 class DuiLayout with KeyHandling {
+  static const String focusedKey = 'DuiLayout#focused#id';
+
   late final DuiState _state;
   final DuiElement _element;
 
@@ -44,11 +46,15 @@ class DuiLayout with KeyHandling {
       if (e case DuiFocusable f) f.isFocused = (e) => e == focused;
     });
     final focusables = DuiContainer.focusablesFrom(_element);
-    final focusedId = _state['DuiLayout#focused#id'];
+    final focusedId = _state[focusedKey];
     focused = focusables.firstWhereOrNull((e) => e.id == focusedId);
     focused ??= focusables.firstOrNull;
     nested = focused;
   }
+
+  static String focusedId(DuiState state) => state[focusedKey];
+
+  static void setFocused(DuiState state, String id) => state[focusedKey] = id;
 
   Function() requestRedraw = () {};
 
@@ -83,7 +89,7 @@ class DuiLayout with KeyHandling {
       final next = (index + direction) % focusable.length;
       focused = focusable[next];
     }
-    _state['DuiLayout#focused#id'] = focused?.id;
+    _state[focusedKey] = focused?.id;
     nested = focused;
     return MatchResult.consumed;
   }
