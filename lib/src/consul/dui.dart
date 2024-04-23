@@ -271,18 +271,20 @@ class DuiTextInput extends DuiFocusable {
   @override
   MatchResult match(KeyEvent it) {
     if (it is InputKey) {
-      if (it.printable == "<C-u>") input = "";
-
-      var checked = input + it.char;
-      if (limitLength != null) {
-        checked = checked.take(limitLength!);
+      if (it.printable == "<C-u>") {
+        input = "";
+      } else {
+        var checked = input + it.char;
+        if (limitLength != null) {
+          checked = checked.take(limitLength!);
+        }
+        if (filter != null) {
+          final m = filter!.matchAsPrefix(checked);
+          if (m == null) return super.match(it);
+          if (m.end != checked.length) return super.match(it);
+        }
+        input = checked;
       }
-      if (filter != null) {
-        final m = filter!.matchAsPrefix(checked);
-        if (m == null) return super.match(it);
-        if (m.end != checked.length) return super.match(it);
-      }
-      input = checked;
       onChange(input);
       return MatchResult.consumed;
     }
