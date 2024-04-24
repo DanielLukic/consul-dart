@@ -90,7 +90,6 @@ enum Control {
   Delete,
   Down,
   End,
-  Enter,
   Escape,
   F1,
   F10,
