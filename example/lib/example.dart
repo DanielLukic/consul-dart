@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_consul/dart_consul.dart';
+import 'package:dart_consul/src/consul/con_io/termlib_con_io.dart';
 import 'package:dart_minilog/dart_minilog.dart';
 
 import 'src/demo_keys.dart';
@@ -9,7 +10,7 @@ import 'src/gol.dart';
 import 'src/starfield.dart';
 
 void main(List<String> args) async {
-  final conIO = MadConIO();
+  final conIO = TermLibConIO();
   try {
     await createDesktop(conIO);
   } finally {

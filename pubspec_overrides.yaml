@@ -1,0 +1,7 @@
+dependency_overrides:
+  termansi:
+    path: ../termkit/packages/termansi
+  termlib:
+    path: ../termkit/packages/termlib
+  termparser:
+    path: ../termkit/packages/termparser

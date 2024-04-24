@@ -29,10 +29,10 @@ packages:
     dependency: transitive
     description:
       name: args
-      sha256: eef6c46b622e0494a36c5a12d10d77fb4e855501a91c1b9ef9339326e58f0596
+      sha256: "7cf60b9f0cc88203c5a190b4cd62a99feea42759a7fa695010eb5de1c0b2252a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.5.0"
   async:
     dependency: transitive
     description:
@@ -109,10 +109,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_console
-      sha256: "35e1dbb96e3b50071b62ea6fd53fdb3371bc466dfa857712e0cb24119ae59278"
+      sha256: "2f94b62ac492892bc5091b8f5d416937974405ececab7ad96e5f8aae9d9f1527"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.2"
   dart_minilog:
     dependency: "direct main"
     description:
@@ -121,6 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.2"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   ffi:
     dependency: transitive
     description:
@@ -369,14 +377,35 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  termansi:
+    dependency: "direct main"
+    description:
+      path: "../termkit/packages/termansi"
+      relative: true
+    source: path
+    version: "0.1.1"
+  termlib:
+    dependency: "direct main"
+    description:
+      path: "../termkit/packages/termlib"
+      relative: true
+    source: path
+    version: "0.1.1"
+  termparser:
+    dependency: "direct main"
+    description:
+      path: "../termkit/packages/termparser"
+      relative: true
+    source: path
+    version: "0.1.1"
   test:
     dependency: "direct dev"
     description:
       name: test
-      sha256: d87214d19fb311997d8128ec501a980f77cb240ac4e7e219accf452813ff473c
+      sha256: d72b538180efcf8413cd2e4e6fcc7ae99c7712e0909eb9223f9da6e6d0ef715f
       url: "https://pub.dev"
     source: hosted
-    version: "1.25.3"
+    version: "1.25.4"
   test_api:
     dependency: transitive
     description:
@@ -389,10 +418,10 @@ packages:
     dependency: transitive
     description:
       name: test_core
-      sha256: "2236f70be1e5ab405c675e88c36935a87dad9e05a506b57dd5c0f617f5aebcb2"
+      sha256: "4d070a6bc36c1c4e89f20d353bfd71dc30cdf2bd0e14349090af360a029ab292"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.1"
+    version: "0.6.2"
   typed_data:
     dependency: transitive
     description:
@@ -413,10 +442,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: a75f83f14ad81d5fe4b3319710b90dec37da0e22612326b696c9e1b8f34bbf48
+      sha256: "3923c89304b715fb1eb6423f017651664a03bf5f4b29983627c4da791f74a4ec"
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.0"
+    version: "14.2.1"
   watcher:
     dependency: transitive
     description:

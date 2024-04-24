@@ -15,6 +15,9 @@ dependencies:
   dart_console: ^4.0.1
   dart_minilog: ^0.0.2
   rxdart: ^0.27.7
+  termansi: ^0.1.1
+  termlib: ^0.1.1
+  termparser: ^0.1.1
 
 dev_dependencies:
   lints: ^3.0.0
