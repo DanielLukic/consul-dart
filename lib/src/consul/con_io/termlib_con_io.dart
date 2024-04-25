@@ -101,9 +101,9 @@ class TermLibConIO implements ConIO {
     final ctrl = ke.modifiers.has(tpe.KeyModifiers.ctrl);
     var shift = ke.modifiers.has(tpe.KeyModifiers.shift);
 
-    logInfo('${bytes.toByteHexString()} ${bytes.printable}');
-    logInfo('a $alt c $ctrl s $shift');
-    logInfo(ke);
+    // logInfo('${bytes.toByteHexString()} ${bytes.printable}');
+    // logInfo('a $alt c $ctrl s $shift');
+    // logInfo(ke);
 
     if (ke.code.name != tpe.KeyCodeName.none) {
       final n = ke.code.name.name.toLowerCase();
