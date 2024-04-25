@@ -186,24 +186,3 @@ extension DesktopNotifications on Desktop {
   bool _isSelected(DesktopNotification dn) =>
       _selected?.$1 == dn && _selected?.$2 == _focused;
 }
-
-extension on String {
-  List<String> autoWrap(int maxLength) {
-    final result = <String>[];
-    final words = split(' ');
-    final buffer = StringBuffer();
-    for (final w in words) {
-      if (buffer.isNotEmpty && buffer.length + 1 + w.length >= maxLength) {
-        result.add(buffer.toString());
-        buffer.clear();
-      }
-      if (buffer.isNotEmpty) buffer.write(' ');
-      buffer.write(w);
-      if (identical(w, words.last) && buffer.isNotEmpty) {
-        result.add(buffer.toString());
-        buffer.clear();
-      }
-    }
-    return result;
-  }
-}
