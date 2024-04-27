@@ -70,6 +70,10 @@ Window _prepareKeymapWindow(Desktop desktop) {
     borderStyle: doubleBorder,
   );
 
+  window.onFocusChanged.add(() {
+    if (!window.isFocused) desktop.minimizeWindow(window);
+  });
+
   window.onKey(
     "x",
     aliases: ["<Escape>", "q"],
