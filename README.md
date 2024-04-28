@@ -27,6 +27,7 @@ Screenshot of the `example.dart` running:
 
 Besides some obvious dart dependencies, these dependencies are used:
 
+- https://pub.dev/packages/termlib for the terminal interaction
 - https://pub.dev/packages/console for the `DrawingCanvas` using the Braille unicode character block
 - https://pub.dev/packages/dart_console for raw terminal access via some native code
 - https://pub.dev/packages/rxdart for "throttleTime", so I don't have to implement this ^^
