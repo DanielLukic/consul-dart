@@ -380,23 +380,26 @@ packages:
   termansi:
     dependency: "direct main"
     description:
-      path: "../termkit/packages/termansi"
-      relative: true
-    source: path
+      name: termansi
+      sha256: "0475d5320c27dc0b07e69c9af37b152497607c5c7f514253ace47ffba12ad2b7"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.1"
   termlib:
     dependency: "direct main"
     description:
-      path: "../termkit/packages/termlib"
-      relative: true
-    source: path
+      name: termlib
+      sha256: ad6ddd77535b8498bd57f419eae18be1d6a1125b9060c1f6714fbf5b8908ebfb
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.1"
   termparser:
     dependency: "direct main"
     description:
-      path: "../termkit/packages/termparser"
-      relative: true
-    source: path
+      name: termparser
+      sha256: "5c23fedffb76857b3d5798246bc4ad79deea627567efdf3b2154b1ebdeb8a85c"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.1"
   test:
     dependency: "direct dev"

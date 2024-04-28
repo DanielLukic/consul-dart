@@ -1,30 +1,28 @@
 import 'dart:io';
 
 import 'package:dart_consul/src/consul/con_io/extensions.dart';
+import 'package:dart_consul/src/consul/con_io/input_matching.dart';
 import 'package:dart_minilog/dart_minilog.dart';
 import 'package:termlib/termlib.dart';
 import 'package:termparser/termparser.dart';
-import 'package:termparser/termparser_events.dart' as tpe;
 
 import '../../../dart_consul.dart';
 import '../../util/common.dart';
 
-class TermLibConIO implements ConIO {
+class TermLibConIO with InputMatching implements ConIO {
   final t = TermLib();
   final p = Parser();
 
   final d = CompositeDisposable();
 
   TermLibConIO() {
-    rawModeReturnQuirk = true;
-    ctrlQuestionMarkQuirk = true;
-    zellijMouseMotionQuirk = true;
     stdin.echoMode = false;
     stdin.lineMode = false;
     t.enableRawMode();
     t.enableAlternateScreen();
     t.enableKeyboardEnhancementFull();
-    t.enableMouseEvents();
+    // t.enableMouseEvents();
+    t.write(mouseModeCode(true));
     t.cursorHide();
     d.wrap(stdin.listen(_onStdIn));
     d.wrap(ProcessSignal.sigint.watch().listen((e) => close()));
@@ -34,7 +32,8 @@ class TermLibConIO implements ConIO {
   close() {
     d.dispose();
     t.cursorShow();
-    t.disableMouseEvents();
+    t.write(mouseModeCode(false));
+    // t.disableMouseEvents();
     t.disableKeyboardEnhancement();
     t.disableAlternateScreen();
     t.disableRawMode();
@@ -42,95 +41,43 @@ class TermLibConIO implements ConIO {
     safely(() => stdin.lineMode = true);
   }
 
-  void _onStdIn(List<int> bytes) {
+  _onStdIn(List<int> bytes) {
     if (bytes.firstOrNull.isSigIntTrigger && !interceptSigInt) {
       close();
-      t.eraseClear();
-      t.flushThenExit(0);
       exit(0);
-    } else {
-      p.advance(bytes);
-      while (p.moveNext()) {
-        _onEvent(p.current, bytes);
-      }
     }
-  }
 
-  void _onEvent(tpe.Event e, List<int> bytes) {
-    if (e case tpe.MouseEvent me) {
-      _onMouseEvent(me);
-    } else if (e case tpe.KeyEvent ke) {
-      _onKeyEvent(ke, bytes);
+    // the main issue: incoming bytes can contain multiple "events". and there is no real separator
+    // (afaik). the approach chosen here is:
+    //
+    // 1. in _matchEvent, using pattern matching, find a longest match, returning the interpreted
+    // event plus the number of bytes to skip.
+    //
+    // 2. if nothing identified, bite the bullet and wrap the whole input in an [Unidentified]
+    // event.
+    //
+    // 3. at the end, skip the interpreted bytes and if there is more, recurse.
+
+    final printable = bytes.printable;
+    final debug = RawEvent(bytes, printable);
+
+    // otherwise filter what we need via patterns:
+    var (event, skip) = matchEvent(bytes, printable);
+
+    // if nothing matched, pump out an Unidentified event:
+    if (event == null) {
+      event = event ?? Unidentified(debug);
+      skip = bytes.length;
     }
-  }
 
-  void _onMouseEvent(tpe.MouseEvent me) {
-    final down = me.button.action == tpe.MouseButtonAction.down;
-    final drag = me.button.action == tpe.MouseButtonAction.drag;
-    final moved = me.button.action == tpe.MouseButtonAction.moved;
-    final up = me.button.action == tpe.MouseButtonAction.up;
-    final wheelDown = me.button.action == tpe.MouseButtonAction.wheelDown;
-    final wheelUp = me.button.action == tpe.MouseButtonAction.wheelUp;
-    final lmb = me.button.button == tpe.MouseButtonKind.left;
-    final rmb = me.button.button == tpe.MouseButtonKind.right;
-    final mmb = me.button.button == tpe.MouseButtonKind.middle;
-    final x = me.x - 1;
-    final y = me.y - 1;
-    final result = switch (me) {
-      _ when lmb && down => MouseButtonEvent(MouseButtonKind.lmbDown, x, y),
-      _ when mmb && down => MouseButtonEvent(MouseButtonKind.mmbDown, x, y),
-      _ when rmb && down => MouseButtonEvent(MouseButtonKind.rmbDown, x, y),
-      _ when lmb && up => MouseButtonEvent(MouseButtonKind.lmbUp, x, y),
-      _ when mmb && up => MouseButtonEvent(MouseButtonKind.mmbUp, x, y),
-      _ when rmb && up => MouseButtonEvent(MouseButtonKind.rmbUp, x, y),
-      _ when wheelDown => MouseWheelEvent(MouseWheelKind.wheelDown, x, y),
-      _ when wheelUp => MouseWheelEvent(MouseWheelKind.wheelUp, x, y),
-      _ when drag || moved && lmb =>
-        MouseMotionEvent(MouseMotionKind.lmb, x, y),
-      _ when drag || moved && mmb =>
-        MouseMotionEvent(MouseMotionKind.mmb, x, y),
-      _ when drag || moved && rmb =>
-        MouseMotionEvent(MouseMotionKind.rmb, x, y),
-      _ => null,
-    };
-    if (result != null) onMouseEvent(result);
-  }
+    if (event is KeyEvent) onKeyEvent(event);
+    if (event is MouseEvent) onMouseEvent(event);
 
-  void _onKeyEvent(tpe.KeyEvent ke, List<int> bytes) {
-    final alt = ke.modifiers.has(tpe.KeyModifiers.alt);
-    final ctrl = ke.modifiers.has(tpe.KeyModifiers.ctrl);
-    var shift = ke.modifiers.has(tpe.KeyModifiers.shift);
-
-    // logInfo('${bytes.toByteHexString()} ${bytes.printable}');
-    // logInfo('a $alt c $ctrl s $shift');
-    // logInfo(ke);
-
-    if (ke.code.name != tpe.KeyCodeName.none) {
-      final n = ke.code.name.name.toLowerCase();
-      var match =
-          Control.values.firstWhereOrNull((e) => e.name.toLowerCase() == n);
-      if (match == null) {
-        switch (ke.code.name) {
-          case tpe.KeyCodeName.backTab:
-            match = Control.Tab;
-            shift = true;
-          case tpe.KeyCodeName.enter:
-            match = Control.Return;
-          default:
-            logWarn('$n not found in ${Control.values}');
-        }
-      }
-      if (match != null) {
-        onKeyEvent(ControlKey(match, alt: alt, ctrl: ctrl, shift: shift));
-      }
-    } else {
-      var ch = ke.code.char;
-      if (ch == ch.toUpperCase() && ch != ch.toLowerCase()) {
-        ch = ch.toLowerCase();
-        shift = true;
-      }
-      final co = ke.code.char.codeUnitAt(0);
-      onKeyEvent(InputKey(ch, co, alt: alt, ctrl: ctrl, shift: shift));
+    final next = bytes.drop(skip);
+    if (next.isNotEmpty) {
+      final hex = next.toByteHexString(delimiter: ' ');
+      logVerbose("skip $skip => $hex");
+      _onStdIn(next);
     }
   }
 
