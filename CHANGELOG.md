@@ -1,3 +1,10 @@
+## 0.0.15
+
+- Switch to `termlib`
+- Remove `Control.enter` in favor or just `Control.return`
+- Add `ColorCanvas` from `dart-krok-term` project
+- Add simple game skeleton/demo
+
 ## 0.0.14
 
 - Auto-raise window when using `MouseGestures`
