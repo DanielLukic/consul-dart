@@ -125,7 +125,7 @@ class Buffer {
 
   void _preserveAnsi(List<Cell> line, int upUntil) {
     // nothing to do if line is replaced until the end:
-    if (upUntil >= line.length) return;
+    if (upUntil < 0 || upUntil >= line.length) return;
 
     // collect the ansi that is about to be broken. it will be placed at the end of the
     // replaced area to have it "continue" underneath.

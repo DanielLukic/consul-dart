@@ -71,11 +71,13 @@ Future createDesktop(ConIO conIO) async {
   logWarn("warn");
   logError("error");
 
+  desktop.focusById('stars');
+
   return await desktop.run();
 }
 
 void addAnsiDemo(Desktop desktop) {
-  desktop.openWindow(Window("ansi-demo", "ANSI Demo",
+  final window = Window("ansi-demo", "ANSI Demo",
       size: WindowSize.fixed(Size(20, 10)),
       position: RelativePosition.autoCentered(),
       redraw: () =>
@@ -86,5 +88,13 @@ void addAnsiDemo(Desktop desktop) {
           "some italic\n".italic() +
           "some underline\n".underline() +
           "some dim\n".dim() +
-          "some strike-through\n".strikeThrough()));
+          "some strike-through\n".strikeThrough());
+
+  window.onKey(
+    "q",
+    description: "Close window",
+    action: () => desktop.closeWindow(window),
+  );
+
+  desktop.openWindow(window);
 }
