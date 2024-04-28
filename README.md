@@ -65,6 +65,10 @@ Example animated gif:
 
 ![Screenshot](https://github.com/DanielLukic/consul-dart/raw/main/images/consul-example.gif)
 
+Here's an update with a quickly hacked together game skeleton:
+
+![Screenshot](images/shooter.gif)
+
 ### To Do
 
 The essentials I want to be done for a "Version 1":
