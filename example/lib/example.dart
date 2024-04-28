@@ -32,17 +32,7 @@ Future createDesktop(ConIO conIO) async {
   // showStarfield() => notify("show-starfield");
   // changeFps() => notify("change-fps");
 
-  // TODO Remove setMenu and make Menu an undecorated Window instead. Handled like any other Window.
-  // desktop.setMenu(//
-  //     Menu("Menu" /*key: 'M' == default*/)
-  //       ..add(Menu("File")..entry("Quit", confirmQuit))
-  //       ..add(Menu("Window")
-  //         ..entry("Game Of Life", showGameOfLife)
-  //         ..entry("Starfield", showStarfield))
-  //       ..add(Menu("Command")..entry("Change FPS", changeFps)) //
-  //     );
-
-  // Note the use of "exit" as message to end [Desktop.run].
+  // Note the use of "quit" as message to end [Desktop.run].
   desktop.subscribe("quit", (_) => desktop.exit()); // TODO confirm dialog
   desktop.subscribe("show-gol", (_) => gameOfLife(desktop));
   desktop.subscribe("show-starfield", (_) => starfield(desktop));
