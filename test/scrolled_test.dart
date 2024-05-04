@@ -55,4 +55,40 @@ void main() {
     //then
     expect(wm.line(2), startsWith('Line 1'));
   });
+
+  test('draws indicator for very small window', () {
+    //given
+    final lines = List.generate(10, (index) => 'Line ${index + 1}').join('\n');
+    final window = minimalWindow(s: Size(20, 4));
+    scrolled(window, () => lines, header: 'Header');
+    wm.addWindow(window);
+    //when
+    wm.drawFrame();
+    //then
+    expect(wm.line(4), startsWith(' ▼ ▼ ▼ '));
+  });
+
+  test('draws indicator for one line too much (no header)', () {
+    //given
+    final lines = List.generate(8, (index) => 'Line ${index + 1}').join('\n');
+    final window = minimalWindow(s: Size(20, 7));
+    scrolled(window, () => lines);
+    wm.addWindow(window);
+    //when
+    wm.drawFrame();
+    //then
+    expect(wm.line(7), startsWith(' ▼ ▼ ▼ '));
+  });
+
+  test('draws indicator for one line too much (header)', () {
+    //given
+    final lines = List.generate(7, (index) => 'Line ${index + 1}').join('\n');
+    final window = minimalWindow(s: Size(20, 7));
+    scrolled(window, () => lines, header: 'Coin Price 24H Balance EST.VALUE');
+    wm.addWindow(window);
+    //when
+    wm.drawFrame();
+    //then
+    expect(wm.line(7), startsWith(' ▼ ▼ ▼ '));
+  });
 }

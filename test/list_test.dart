@@ -77,4 +77,22 @@ void main() {
     //then
     expect(wm.line(2), startsWith('Line 1'));
   });
+
+  test('draws indicator for very small window', () {
+    //given
+    final lines = List.generate(10, (index) => 'Line ${index + 1}');
+    final window = minimalWindow(s: Size(20, 4));
+    final list = ListWindow(
+      window: window,
+      topOff: 2,
+      bottomOff: 3,
+      header: 'Header',
+    );
+    list.updateEntries(lines);
+    wm.addWindow(window);
+    //when
+    wm.drawFrame();
+    //then
+    expect(wm.line(4), startsWith(' ▼ ▼ ▼ '));
+  });
 }

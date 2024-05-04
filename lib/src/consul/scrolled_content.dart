@@ -75,15 +75,15 @@ class ScrolledContent {
   }
 
   String? redrawBuffer() {
-    final height = borderStyle != null ? window.height - 2 : window.height;
+    var height = borderStyle != null ? window.height - 2 : window.height;
 
     final rows = content()?.split("\n");
     if (rows == null) return null;
     final headerLines = header?.split("\n") ?? [];
-    final offset = headerLines.length;
-    final maxScroll = max(0, rows.length - height - offset);
+    height -= headerLines.length;
+    final maxScroll = max(0, rows.length - height);
     scrollOffset = scrollOffset.clamp(0, maxScroll);
-    final maxHeight = min(rows.length, height - offset);
+    final maxHeight = min(rows.length, height);
     var snap = rows.skip(scrollOffset).take(maxHeight).toList();
     if (ellipsize && rows.length > height) {
       if (scrollOffset > 0) {
