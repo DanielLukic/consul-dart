@@ -6,6 +6,7 @@ export 'package:dart_consul/src/consul/color_canvas.dart';
 export 'package:dart_consul/src/consul/con_io/termlib_con_io.dart';
 export 'package:dart_consul/src/consul/desktop.dart';
 export 'package:dart_consul/src/consul/dui.dart';
+export 'package:dart_consul/src/consul/list_window.dart';
 export 'package:dart_consul/src/consul/scrolled_content.dart';
 export 'package:dart_consul/src/debug_log.dart';
 export 'package:dart_consul/src/util/auto_dispose.dart';
