@@ -254,6 +254,9 @@ class Desktop
   Window? findWindow(String id) =>
       _windows.where((it) => it.id == id).firstOrNull;
 
+  /// Currently focused [Window] or `null` if none focused.
+  Window? get focused => _focused;
+
   /// Ensure [window] is not minimized.
   raiseWindow(Window window) {
     if (window.state == WindowState.minimized) {

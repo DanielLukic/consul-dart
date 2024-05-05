@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
+import 'package:dart_consul/common.dart';
 import 'package:dart_consul/dart_consul.dart';
+import 'package:dart_minilog/dart_minilog.dart';
 
 void addAutoHelp(
   Desktop desktop, {
@@ -41,6 +43,8 @@ OngoingMouseAction? _showKeymapOnClick(
 }
 
 void _showKeymap(Desktop desktop, Window window) {
+  Window? focused = desktop.focused;
+
   final it = desktop.findWindow("keymap");
   switch (it?.state) {
     case null:
@@ -52,7 +56,20 @@ void _showKeymap(Desktop desktop, Window window) {
     case WindowState.normal:
       desktop.minimizeWindow(window);
   }
+
+  final content = _gatherKeymap(desktop.keyMap()).join('\n');
+  _scrolled.content = () => content;
+
+  final offset = _sections.firstWhereOrNull((e) => e.$1 == focused?.name)?.$2;
+  if (offset != null && offset > 0) {
+    // minus one because of the scroll indicators at top for non-zero offset:
+    _scrolled.scrollOffset = offset - 1;
+  }
+
+  logInfo(_sections);
 }
+
+late ScrolledContent _scrolled;
 
 Window _prepareKeymapWindow(Desktop desktop) {
   final window = Window(
@@ -64,11 +81,7 @@ Window _prepareKeymapWindow(Desktop desktop) {
 
   window.flags.remove(WindowFlag.resizable);
 
-  scrolled(
-    window,
-    () => _gatherKeymap(desktop.keyMap()).join('\n'),
-    borderStyle: doubleBorder,
-  );
+  _scrolled = scrolled(window, () => '', borderStyle: doubleBorder);
 
   window.onFocusChanged.add(() {
     if (!window.isFocused) desktop.minimizeWindow(window);
@@ -83,6 +96,8 @@ Window _prepareKeymapWindow(Desktop desktop) {
 
   return window;
 }
+
+List<(String, int)> _sections = [];
 
 List<String> _gatherKeymap(KeyMap keyMap) {
   final sections =
@@ -101,6 +116,7 @@ List<String> _gatherKeymap(KeyMap keyMap) {
     // empty line before every section but the first:
     if (lines.isNotEmpty) lines.add("");
 
+    _sections.add((header, lines.length));
     lines.add(header);
     lines.add("");
     lines.addAll(entries);
