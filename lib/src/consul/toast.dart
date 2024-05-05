@@ -17,10 +17,10 @@ abstract mixin class ToastHandling {
     final lines = anything.toString().split("\n").take(3);
     final width = lines.reduce((a, b) => a.length < b.length ? b : a).length;
     final padded = lines.map((e) => e.padRight(width));
-    final decorated = padded.map((e) => "║ $e ║");
-    final border = "".padRight(width + 2, "═");
-    final top = /*****/ "╔$border╗";
-    final bottom = /**/ "╚$border╝";
+    final decorated = padded.map((e) => yellow('║ $e ║'));
+    final border = ''.padRight(width + 2, '═');
+    final top = /*****/ yellow('╔$border╗');
+    final bottom = /**/ yellow('╚$border╝');
     final message = [top, ...decorated, bottom].join("\n");
 
     final window = Window(
