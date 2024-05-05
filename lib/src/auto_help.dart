@@ -110,15 +110,17 @@ List<String> _gatherKeymap(KeyMap keyMap) {
   final lines = <String>[];
   for (final section in sections) {
     final header = section.key;
-    final entries = section.value.map((e) => "◉ ${e.$1}: ${e.$2}").toList();
+    final entries = section.value.map((e) => '${e.$1}: ${e.$2}').toList();
     entries.sort();
 
     // empty line before every section but the first:
-    if (lines.isNotEmpty) lines.add("");
+    if (lines.isNotEmpty) lines.add('');
 
     _sections.add((header, lines.length));
-    lines.add(header);
-    lines.add("");
+
+    final sectionName = header.replaceFirst(RegExp(r'\[.*]'), '');
+    lines.add(bold('◉ $sectionName ◉'));
+    lines.add('');
     lines.addAll(entries);
   }
   return lines;
