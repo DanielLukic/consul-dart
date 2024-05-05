@@ -1,3 +1,10 @@
+## 0.0.16
+
+- Add `ListWindow` (from krok term project)
+- Make toast more visible
+- Make auto-help jump to section for focused window
+- Fix one-off bug in `ScrolledContent`
+
 ## 0.0.15
 
 - Switch to `termlib`
