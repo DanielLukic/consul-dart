@@ -102,13 +102,13 @@ class MouseGestures with AutoDispose implements OngoingMouseAction {
     }
     final n = DateTime.now();
     final delta = n.difference(s);
-    return delta.inMilliseconds < 500 ? 'S' : 'L';
+    return delta.inMilliseconds < 400 ? 'S' : 'L';
   }
 
   void autoClick() {
     autoDispose(
         'autoClick',
-        Timer(300.millis, () {
+        Timer(200.millis, () {
           final s = _start;
           if (s != null) {
             if (_clicks == 'S') onClick?.call(s);
