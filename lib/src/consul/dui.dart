@@ -249,6 +249,16 @@ class DuiText extends BaseElement {
   String render(int maxWidth) => text;
 }
 
+extension on DuiTextInput {
+  void chain(void Function(String) onChange) {
+    final now = this.onChange;
+    this.onChange = (e) {
+      now(e);
+      onChange(e);
+    };
+  }
+}
+
 class DuiTextInput extends DuiFocusable {
   String _input = "";
 
